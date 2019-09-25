@@ -3,16 +3,25 @@ using MultiPlug.Extension.Core;
 using MultiPlug.Base.Exchange;
 using MultiPlug.Extension.Core.Collections;
 using MultiPlug.Extension.Core.Views;
+using MultiPlug.Ext.RasPi.Config.Controllers.Settings;
+using MultiPlug.Ext.RasPi.Config.Properties;
+using MultiPlug.Ext.RasPi.Config.Controllers.Assets;
 
 namespace MultiPlug.Ext.RasPi.Config
 {
     public class RasPiConfig : MultiPlugExtension
     {
+        private ViewBase[] m_Apps = new ViewBase[]
+        {
+            new SettingsApp(),
+            new AssetsEndpoint()
+        };
+
         public override ViewBase[] Apps
         {
             get
             {
-                throw new NotImplementedException();
+                return m_Apps;
             }
         }
 
@@ -28,7 +37,10 @@ namespace MultiPlug.Ext.RasPi.Config
         {
             get
             {
-                throw new NotImplementedException();
+                return new RazorTemplate[]
+                {
+                    new RazorTemplate("RaspPiConfig_Settings_Home", Resources.SettingsHome)
+                };
             }
         }
 

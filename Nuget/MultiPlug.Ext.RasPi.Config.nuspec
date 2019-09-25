@@ -1,0 +1,21 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>MultiPlug.Ext.RasPi.Config</id>
+    <version>1.0.0</version>
+    <title>MultiPlug Raspberry Pi Configuration Extension</title>
+    <authors>4IR.UK</authors>
+    <owners>4IR.UK</owners>
+    <projectUrl>http://www.multiplug.uk/extensions/raspi-config</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/British-Systems/MultiPlug/master/multiplug.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Configure the Raspberry Pi with this MultiPlug Extension</description>
+    <releaseNotes>Run this extension only on a Raspberry Pi using the .Net Mono runtime.
+1.0.0 Nuget name reserve.</releaseNotes>
+    <copyright>4IR.UK British Systems 2019</copyright>
+    <tags>MultiPlug Fog_Computing Raspberry Pi Raspberry_Pi</tags>
+    <dependencies>
+      <dependency id="MultiPlug.Core" version="2.2.53" />
+    </dependencies>
+  </metadata>
+</package>
