@@ -6,7 +6,7 @@
     <title>MultiPlug Raspberry Pi Configuration Extension</title>
     <authors>4IR.UK</authors>
     <owners>4IR.UK</owners>
-    <projectUrl>http://www.multiplug.uk/extensions/raspi-config</projectUrl>
+    <projectUrl>https://github.com/Industry4/MultiPlug.Ext.RasPi.Config</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/British-Systems/MultiPlug/master/multiplug.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Configure the Raspberry Pi with this MultiPlug Extension</description>
