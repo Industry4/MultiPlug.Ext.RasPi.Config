@@ -50,10 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\ConfigFiles\DHCPCD.cs" />
     <Compile Include="Controllers\Assets\AssetsEndpoint.cs" />
     <Compile Include="Controllers\Assets\ImageController.cs" />
     <Compile Include="Controllers\Settings\Home\HomeController.cs" />
     <Compile Include="Controllers\Settings\SettingsApp.cs" />
+    <Compile Include="Models\ConfigFiles\DHCPCD\DHCPcdConfLine.cs" />
+    <Compile Include="Models\ConfigFiles\DHCPCD\NICProperties.cs" />
+    <Compile Include="Models\ConfigFiles\DHCPCD\ReadResult.cs" />
     <Compile Include="Models\Settings\Home.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

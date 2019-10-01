@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>MultiPlug.Ext.RasPi.Config</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <title>MultiPlug Raspberry Pi Configuration Extension</title>
     <authors>4IR.UK</authors>
     <owners>4IR.UK</owners>
@@ -11,6 +11,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Configure the Raspberry Pi with this MultiPlug Extension</description>
     <releaseNotes>Run this extension only on a Raspberry Pi using the .Net Mono runtime.
+1.0.1 Enhancement: Raspberry Pi IP Address Configuration
 1.0.0 Nuget name reserve.</releaseNotes>
     <copyright>4IR.UK British Systems 2019</copyright>
     <tags>MultiPlug Fog_Computing Raspberry Pi Raspberry_Pi</tags>
