@@ -135,28 +135,28 @@ namespace MultiPlug.Ext.RasPi.Config.Components.ConfigFiles
                 {
                     if (Line.Id)
                     {
-                        ConfLine.Add(string.Format("interface {0}\r\n", Line.NICProperties.Id));
+                        ConfLine.Add(string.Format("interface {0}\n", Line.NICProperties.Id));
                     }
                     else if (Line.IPAddress)
                     {
-                        ConfLine.Add(string.Format("static ip_address={0}\r\n", Line.NICProperties.IPAddress));
+                        ConfLine.Add(string.Format("static ip_address={0}\n", Line.NICProperties.IPAddress));
                     }
                     else if (Line.IP6Address)
                     {
-                        ConfLine.Add(string.Format("static ip6_address={0}\r\n", Line.NICProperties.IP6Address));
+                        ConfLine.Add(string.Format("static ip6_address={0}\n", Line.NICProperties.IP6Address));
                     }
                     else if (Line.Routers)
                     {
-                        ConfLine.Add(string.Format("static routers={0}\r\n", string.Join(" ", Line.NICProperties.Routers)));
+                        ConfLine.Add(string.Format("static routers={0}\n", string.Join(" ", Line.NICProperties.Routers)));
                     }
                     else if (Line.DomainNameServers)
                     {
-                        ConfLine.Add(string.Format("static domain_name_servers={0}\r\n", string.Join(" ", Line.NICProperties.DomainNameServers)));
+                        ConfLine.Add(string.Format("static domain_name_servers={0}\n", string.Join(" ", Line.NICProperties.DomainNameServers)));
                     }
                 }
                 else
                 {
-                    ConfLine.Add(string.Format(Line.Line + "\r\n"));
+                    ConfLine.Add(string.Format(Line.Line + "\n"));
                 }
             }
             try
