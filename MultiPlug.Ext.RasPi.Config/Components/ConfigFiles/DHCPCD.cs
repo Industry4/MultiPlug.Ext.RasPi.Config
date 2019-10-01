@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using MultiPlug.Ext.RasPi.Config.Models.ConfigFiles.DHCPCD;
+using System.Text;
 
 namespace MultiPlug.Ext.RasPi.Config.Components.ConfigFiles
 {
@@ -160,7 +161,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.ConfigFiles
             }
             try
             {
-                using (System.IO.StreamWriter file = new System.IO.StreamWriter(FileLocation))
+                using (System.IO.StreamWriter file = new System.IO.StreamWriter(FileLocation, false, new UTF8Encoding(false)))
                 {
                     foreach (string line in ConfLine.ToArray())
                     {
