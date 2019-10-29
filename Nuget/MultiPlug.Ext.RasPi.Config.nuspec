@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>MultiPlug.Ext.RasPi.Config</id>
-    <version>1.0.3</version>
+    <version>1.0.5</version>
     <title>MultiPlug Raspberry Pi Configuration Extension</title>
     <authors>4IR.UK</authors>
     <owners>4IR.UK</owners>
@@ -18,7 +18,7 @@
     <copyright>4IR.UK British Systems 2019</copyright>
     <tags>MultiPlug Fog_Computing Raspberry Pi Raspberry_Pi</tags>
     <dependencies>
-      <dependency id="MultiPlug.Core" version="2.2.53" />
+      <dependency id="MultiPlug.Core" version="2.2.55" />
     </dependencies>
   </metadata>
 </package>

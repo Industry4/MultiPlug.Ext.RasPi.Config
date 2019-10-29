@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MultiPlug.Ext.RasPi.Config</RootNamespace>
     <AssemblyName>MultiPlug.Ext.RasPi.Config</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -31,12 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MultiPlug.Base, Version=1.0.34.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MultiPlug.Base.1.0.34-alpha\lib\net452\MultiPlug.Base.dll</HintPath>
+    <Reference Include="MultiPlug.Base, Version=1.0.36.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\MultiPlug.Base.1.0.36\lib\net472\MultiPlug.Base.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MultiPlug.Extension.Core, Version=1.0.49.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MultiPlug.Extension.Core.1.0.49-alpha\lib\net452\MultiPlug.Extension.Core.dll</HintPath>
+    <Reference Include="MultiPlug.Extension.Core, Version=1.0.51.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\MultiPlug.Extension.Core.1.0.51\lib\net472\MultiPlug.Extension.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />

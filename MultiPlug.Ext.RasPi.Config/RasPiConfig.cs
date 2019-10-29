@@ -1,35 +1,26 @@
 ﻿using System;
 using MultiPlug.Extension.Core;
 using MultiPlug.Base.Exchange;
-using MultiPlug.Extension.Core.Collections;
-using MultiPlug.Extension.Core.Views;
 using MultiPlug.Ext.RasPi.Config.Controllers.Settings;
 using MultiPlug.Ext.RasPi.Config.Properties;
 using MultiPlug.Ext.RasPi.Config.Controllers.Assets;
+using MultiPlug.Extension.Core.Http;
 
 namespace MultiPlug.Ext.RasPi.Config
 {
     public class RasPiConfig : MultiPlugExtension
     {
-        private ViewBase[] m_Apps = new ViewBase[]
+        private HttpEndpoint[] m_Apps = new HttpEndpoint[]
         {
             new SettingsApp(),
             new AssetsEndpoint()
         };
 
-        public override ViewBase[] Apps
+        public override HttpEndpoint[] HttpEndpoints
         {
             get
             {
                 return m_Apps;
-            }
-        }
-
-        public override Event[] Events
-        {
-            get
-            {
-                throw new NotImplementedException();
             }
         }
 
@@ -41,50 +32,14 @@ namespace MultiPlug.Ext.RasPi.Config
                 {
                     new RazorTemplate("RaspPiConfig_Settings_Home", Resources.SettingsHome)
                 };
-            }
+           }
         }
 
-        public override Subscription[] Subscriptions
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public override event EventHandler<ViewBase[]> AppsUpdated;
+        #pragma warning disable 0067
+        public override event EventHandler<HttpEndpoint[]> HttpEndpointsUpdated;
         public override event EventHandler<Event[]> EventsUpdated;
         public override event EventHandler<RazorTemplate[]> NewRazorTemplates;
         public override event EventHandler<Subscription[]> SubscriptionsUpdated;
-
-        public override void Initialise()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Load(KeyValuesJson[] config)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void OnUnhandledException(UnhandledExceptionEventArgs args)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override object Save()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Start()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Stop()
-        {
-            throw new NotImplementedException();
-        }
+        #pragma warning restore 0067
     }
 }

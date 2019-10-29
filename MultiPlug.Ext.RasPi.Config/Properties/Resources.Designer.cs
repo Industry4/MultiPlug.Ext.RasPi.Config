@@ -73,7 +73,16 @@ namespace MultiPlug.Ext.RasPi.Config.Properties {
         /// <summary>
         ///   Looks up a localized string similar to @model MultiPlug.Ext.RasPi.Config.Models.Settings.Home
         ///
-        ///&lt;p&gt;Hello World&lt;/p&gt;.
+        ///&lt;form action=&quot;&quot; method=&quot;post&quot; accept-charset=&quot;utf-8&quot; enctype=&quot;application/x-www-form-urlencoded&quot;&gt;
+        ///    &lt;section class=&quot;row-fluid&quot;&gt;
+        ///
+        ///        &lt;div class=&quot;row-fluid&quot;&gt;
+        ///            &lt;div class=&quot;box&quot;&gt;
+        ///                &lt;div class=&quot;span3&quot;&gt;
+        ///                    &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;assets/raspi-config/images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
+        ///                &lt;/div&gt;
+        ///                &lt;div class=&quot;span6&quot;&gt;
+        ///               [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SettingsHome {
             get {
