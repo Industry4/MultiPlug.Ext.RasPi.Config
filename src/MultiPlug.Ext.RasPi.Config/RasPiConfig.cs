@@ -1,6 +1,4 @@
-﻿using System;
-using MultiPlug.Extension.Core;
-using MultiPlug.Base.Exchange;
+﻿using MultiPlug.Extension.Core;
 using MultiPlug.Ext.RasPi.Config.Controllers.Settings;
 using MultiPlug.Ext.RasPi.Config.Properties;
 using MultiPlug.Ext.RasPi.Config.Controllers.Assets;
@@ -34,12 +32,5 @@ namespace MultiPlug.Ext.RasPi.Config
                 };
            }
         }
-
-        #pragma warning disable 0067
-        public override event EventHandler<HttpEndpoint[]> HttpEndpointsUpdated;
-        public override event EventHandler<Event[]> EventsUpdated;
-        public override event EventHandler<RazorTemplate[]> NewRazorTemplates;
-        public override event EventHandler<Subscription[]> SubscriptionsUpdated;
-        #pragma warning restore 0067
     }
 }

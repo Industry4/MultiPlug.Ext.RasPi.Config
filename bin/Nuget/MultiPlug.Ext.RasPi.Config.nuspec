@@ -2,15 +2,16 @@
 <package >
   <metadata>
     <id>MultiPlug.Ext.RasPi.Config</id>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <title>MultiPlug Raspberry Pi Configuration Extension</title>
     <authors>4IR.UK</authors>
     <owners>4IR.UK</owners>
     <projectUrl>https://github.com/Industry4/MultiPlug.Ext.RasPi.Config</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/British-Systems/MultiPlug/master/multiplug.ico</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/Industry4/MultiPlug.Ext.RasPi.Config/master/media/multiplug.ico</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Configure the Raspberry Pi with this MultiPlug Extension</description>
     <releaseNotes>Run this extension only on a Raspberry Pi using the .Net Mono runtime.
+1.0.6 Applied new Base classes
 1.0.3 Bug: Unix file format
 1.0.2 Bug: Changed encoder value to UTF-8
 1.0.1 Enhancement: Raspberry Pi IP Address Configuration
@@ -18,7 +19,7 @@
     <copyright>4IR.UK British Systems 2019</copyright>
     <tags>MultiPlug Fog_Computing Raspberry Pi Raspberry_Pi</tags>
     <dependencies>
-      <dependency id="MultiPlug.Core" version="2.2.55" />
+      <dependency id="MultiPlug.Core" version="2.2.56" />
     </dependencies>
   </metadata>
 </package>

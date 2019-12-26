@@ -36,7 +36,7 @@ The Extension can be installed using the in-built MultiPlug installer located at
 ## Runtime
 ### Screenshot
 
-![Image of MultiPlug.Ext.RasPi.Config](https://raw.githubusercontent.com/Industry4/MultiPlug.Ext.RasPi.Config/master/Html/screen-shot1.png)
+![Image of MultiPlug.Ext.RasPi.Config](https://raw.githubusercontent.com/Industry4/MultiPlug.Ext.RasPi.Config/master/media/screen-shot1.png)
 
 ### Application
 
