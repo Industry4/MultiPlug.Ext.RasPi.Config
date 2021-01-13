@@ -19,7 +19,7 @@
 1.0.1 Enhancement: Raspberry Pi IP Address Configuration
 1.0.0 Nuget name reserve.</releaseNotes>
     <copyright>4IR.UK British Systems 2021</copyright>
-    <tags>MultiPlug Fog_Computing Raspberry Pi Raspberry_Pi</tags>
+    <tags>MultiPlug Edge_Computing Raspberry Pi Raspberry_Pi IoT</tags>
     <dependencies>
       <group targetFramework=".NETFramework4.7.2">
         <dependency id="MultiPlug.Base" version="1.0.50" />
