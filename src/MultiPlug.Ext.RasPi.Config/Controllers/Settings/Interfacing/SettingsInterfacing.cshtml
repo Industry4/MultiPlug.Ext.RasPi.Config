@@ -1,0 +1,71 @@
+﻿@model MultiPlug.Base.Http.EdgeApp
+
+
+
+<section class="row-fluid">
+
+    <div class="row-fluid">
+        <div class="box">
+            <div class="span3">
+                <a style="line-height: 52px;" href="#"><img alt="Raspberry Pi Logo" src="@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png"></a>
+            </div>
+            <div class="span6">
+                <p style="font-size:26px; line-height: 54px; text-align: center; margin: 0px;">Raspberry Pi Configuration</p>
+            </div>
+            <div class="span3" style="text-align: right;">
+                <button id="btn-save" form="formsave" type="submit" value="submit" style="height:54px; width:65px" class="item btn btn-green"><i class="icon-save icon-large"></i><p>Save</p></button>
+            </div>
+        </div>
+    </div>
+
+    @Include("MultiPlug.Ext.RasPi.Config.RaspPiConfig_Settings_Navigation")
+
+    <form id="formsave" action="" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded">
+        <div class="row-fluid">
+            <div class="span12">
+                <h3 class="box-header">Interfacing</h3>
+                <div class="box">
+                    <div class="row-fluid">
+                        <div class="span6"></div>
+                        <div class="span6">Enabled</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>Camera</b></div>
+                        <div class="span6"><input type="checkbox" name="Camera" value="true" @Raw(Model.Extension.Model.Camera ? "checked=checked" : "")></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>SSH</b></div>
+                        <div class="span6"><input type="checkbox" name="SSH" value="true" @Raw(Model.Extension.Model.SSH ? "checked=checked" : "")></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>VNC</b></div>
+                        <div class="span6"><input type="checkbox" name="VNC" value="true" @Raw(Model.Extension.Model.VNC ? "checked=checked" : "")></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>SPI</b></div>
+                        <div class="span6"><input type="checkbox" name="SPI" value="true" @Raw(Model.Extension.Model.SPI ? "checked=checked" : "")></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>I2C</b></div>
+                        <div class="span6"><input type="checkbox" name="I2C" value="true" @Raw(Model.Extension.Model.I2C ? "checked=checked" : "")></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>Serial</b></div>
+                        <div class="span6"><input type="checkbox" name="Serial" value="true" @Raw(Model.Extension.Model.Serial ? "checked=checked" : "")></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>1-Wire</b></div>
+                        <div class="span6"><input type="checkbox" name="OneWire" value="true" @Raw(Model.Extension.Model.OneWire ? "checked=checked" : "")></div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>Remote GPIO</b></div>
+                        <div class="span6">
+                            <input type="checkbox" name="RemoteGPIO" value="true" @Raw(Model.Extension.Model.RemoteGPIO ? "checked=checked" : "")>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>

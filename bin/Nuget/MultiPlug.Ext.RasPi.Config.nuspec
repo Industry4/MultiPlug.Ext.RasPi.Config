@@ -2,24 +2,34 @@
 <package >
   <metadata>
     <id>MultiPlug.Ext.RasPi.Config</id>
-    <version>1.0.6</version>
-    <title>MultiPlug Raspberry Pi Configuration Extension</title>
+    <version>1.0.7</version>
+    <title>Raspberry Pi Configuration Extension for MultiPlug</title>
     <authors>4IR.UK</authors>
     <owners>4IR.UK</owners>
     <projectUrl>https://github.com/Industry4/MultiPlug.Ext.RasPi.Config</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/Industry4/MultiPlug.Ext.RasPi.Config/master/media/multiplug.ico</iconUrl>
+    <icon>images\multiplugraspberrypiico.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Configure the Raspberry Pi with this MultiPlug Extension</description>
+    <description>Configure the Raspberry Pi with this MultiPlug Extension (https://multiplug.app)</description>
+	<license type="expression">MIT</license>
     <releaseNotes>Run this extension only on a Raspberry Pi using the .Net Mono runtime.
+1.0.7 Able to View or Set non-visual configurations of a Raspberry Pi including Network, Localisation, Interfacing, Boot and Memory. Many options found in the command line tool raspi-config.
 1.0.6 Applied new Base classes
 1.0.3 Bug: Unix file format
 1.0.2 Bug: Changed encoder value to UTF-8
 1.0.1 Enhancement: Raspberry Pi IP Address Configuration
 1.0.0 Nuget name reserve.</releaseNotes>
-    <copyright>4IR.UK British Systems 2019</copyright>
+    <copyright>4IR.UK British Systems 2021</copyright>
     <tags>MultiPlug Fog_Computing Raspberry Pi Raspberry_Pi</tags>
     <dependencies>
-      <dependency id="MultiPlug.Core" version="2.2.56" />
+      <group targetFramework=".NETFramework4.7.2">
+        <dependency id="MultiPlug.Base" version="1.0.50" />
+        <dependency id="MultiPlug.Extension.Core" version="1.0.59" />
+        <dependency id="MultiPlug.Core" version="2.2.68" />
+      </group>
     </dependencies>
   </metadata>
+  <files>
+    <file src="images\multiplugraspberrypiico.png" target="images\" />
+    <file src="..\..\src\MultiPlug.Ext.RasPi.Config\bin\Release\MultiPlug.Ext.RasPi.Config.dll" target="lib\net472" />
+  </files>
 </package>

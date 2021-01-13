@@ -31,17 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MultiPlug.Base, Version=1.0.38.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MultiPlug.Base.1.0.38\lib\net472\MultiPlug.Base.dll</HintPath>
+    <Reference Include="MultiPlug.Base, Version=1.0.50.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MultiPlug.Base.1.0.50\lib\net472\MultiPlug.Base.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MultiPlug.Extension.Core, Version=1.0.52.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MultiPlug.Extension.Core.1.0.52\lib\net472\MultiPlug.Extension.Core.dll</HintPath>
+    <Reference Include="MultiPlug.Extension.Core, Version=1.0.59.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MultiPlug.Extension.Core.1.0.59\lib\net472\MultiPlug.Extension.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,15 +51,53 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\ConfigFiles\DHCPCD.cs" />
+    <Compile Include="Components\About\AboutComponent.cs" />
+    <Compile Include="Components\Actions\ActionsComponent.cs" />
+    <Compile Include="Components\Boot\BootComponent.cs" />
+    <Compile Include="Components\Hat\HatComponent.cs" />
+    <Compile Include="Components\Home\HomeComponent.cs" />
+    <Compile Include="Components\Interfacing\InterfacingComponent.cs" />
+    <Compile Include="Components\Localisation\LocalisationComponent.cs" />
+    <Compile Include="Components\Memory\MemoryComponent.cs" />
+    <Compile Include="Components\Network\DHCPCD.cs" />
+    <Compile Include="Components\Network\IFCONFIG.cs" />
+    <Compile Include="Components\Network\NetworkComponent.cs" />
     <Compile Include="Controllers\Assets\AssetsEndpoint.cs" />
+    <Compile Include="Controllers\Assets\CssController.cs" />
     <Compile Include="Controllers\Assets\ImageController.cs" />
+    <Compile Include="Controllers\Assets\JavaScriptsController.cs" />
+    <Compile Include="Controllers\Settings\About\AboutController.cs" />
+    <Compile Include="Controllers\Settings\Actions\ActionsController.cs" />
+    <Compile Include="Controllers\Settings\Boot\BootController.cs" />
+    <Compile Include="Controllers\Settings\Hat\HatController.cs" />
     <Compile Include="Controllers\Settings\Home\HomeController.cs" />
+    <Compile Include="Controllers\Settings\Interfacing\InterfacingController.cs" />
+    <Compile Include="Controllers\Settings\Localisation\LocalisationController.cs" />
+    <Compile Include="Controllers\Settings\Memory\MemoryController.cs" />
+    <Compile Include="Controllers\Settings\Network\NetworkController.cs" />
     <Compile Include="Controllers\Settings\SettingsApp.cs" />
-    <Compile Include="Models\ConfigFiles\DHCPCD\DHCPcdConfLine.cs" />
-    <Compile Include="Models\ConfigFiles\DHCPCD\NICProperties.cs" />
-    <Compile Include="Models\ConfigFiles\DHCPCD\ReadResult.cs" />
-    <Compile Include="Models\Settings\Home.cs" />
+    <Compile Include="Diagnostics\EventLogDefinitions.cs" />
+    <Compile Include="Diagnostics\EventLogEntryCodes.cs" />
+    <Compile Include="Diagnostics\LoggingActions.cs" />
+    <Compile Include="Models\Components\About\AboutProperties.cs" />
+    <Compile Include="Models\Components\Boot\BootProperties.cs" />
+    <Compile Include="Models\Components\IRunningRaspberryPiProperty.cs" />
+    <Compile Include="Models\Components\Memory\MemoryProperties.cs" />
+    <Compile Include="Models\Components\SharedProperties.cs" />
+    <Compile Include="Utils\Hardware.cs" />
+    <Compile Include="Utils\Swan\Definitions.cs" />
+    <Compile Include="Utils\Swan\ProcessResult.cs" />
+    <Compile Include="Utils\Swan\ProcessRunner.cs" />
+    <Compile Include="Core.cs" />
+    <Compile Include="Models\Components\Network\DHCPcdConfLine.cs" />
+    <Compile Include="Models\Components\Network\NICProperties.cs" />
+    <Compile Include="Models\Components\Network\ReadResult.cs" />
+    <Compile Include="Models\Components\Network\NICInterface.cs" />
+    <Compile Include="Models\Components\Hat\HatProperties.cs" />
+    <Compile Include="Models\Components\Home\HomeProperties.cs" />
+    <Compile Include="Models\Components\Interfacing\InterfacingProperties.cs" />
+    <Compile Include="Models\Components\Localisation\LocalisationProperties.cs" />
+    <Compile Include="Models\Components\Network\NetworkProperties.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -68,11 +107,25 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Controllers\Settings\Boot\SettingsBoot.cshtml" />
+    <None Include="Controllers\Settings\Hat\SettingsHat.cshtml" />
     <None Include="Controllers\Settings\Home\SettingsHome.cshtml" />
+    <None Include="Controllers\Settings\Interfacing\SettingsInterfacing.cshtml" />
+    <None Include="Controllers\Settings\Localisation\SettingsLocalisation.cshtml" />
+    <None Include="Controllers\Settings\Memory\SettingsMemory.cshtml" />
+    <None Include="Controllers\Settings\Network\SettingsNetwork.cshtml" />
+    <None Include="Controllers\Settings\SharedRazor\SettingsNavigation.cshtml" />
+    <None Include="Controllers\Settings\SharedRazor\SettingsNotRaspberryPi.cshtml" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Controllers\Assets\bootstrap-datepicker\bootstrap-datepicker.js" />
+    <Content Include="Controllers\Assets\bootstrap-datepicker\datepicker.css" />
+    <Content Include="Controllers\Assets\bootstrap-timepicker\bootstrap-timepicker.js" />
+    <Content Include="Controllers\Assets\bootstrap-timepicker\bootstrap-timepicker.min.css" />
     <Content Include="Controllers\Assets\raspberry-pi.png" />
+    <None Include="Controllers\Settings\About\SettingsAbout.cshtml" />
+    <Content Include="Controllers\Settings\Localisation\SettingsLocalisationHead.html" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -80,6 +133,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

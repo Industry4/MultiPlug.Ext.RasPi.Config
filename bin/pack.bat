@@ -1,0 +1,1 @@
+nuget.exe pack Nuget/MultiPlug.Ext.RasPi.Config.nuspec

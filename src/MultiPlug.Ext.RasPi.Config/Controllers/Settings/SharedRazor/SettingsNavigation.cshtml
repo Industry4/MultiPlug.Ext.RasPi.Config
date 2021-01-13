@@ -1,0 +1,85 @@
+﻿@model MultiPlug.Base.Http.EdgeApp
+@functions {
+    public string NavLocationIsHome()
+    {
+        return Model.Context.Paths.Current == Model.Context.Paths.Home ? "active" : string.Empty;
+    }
+
+    public string NavLocationIsNetwork()
+    {
+        return Model.Context.Paths.Current == Model.Context.Paths.Home + "network/" ? "active" : string.Empty;
+    }
+
+    public string NavLocationIsHAT()
+    {
+        return Model.Context.Paths.Current == Model.Context.Paths.Home + "hat/" ? "active" : string.Empty;
+    }
+
+    public string NavLocationIsLocalisation()
+    {
+        return Model.Context.Paths.Current == Model.Context.Paths.Home + "localisation/" ? "active" : string.Empty;
+    }
+
+    public string NavLocationIsInterfacing()
+    {
+        return Model.Context.Paths.Current == Model.Context.Paths.Home + "interfacing/" ? "active" : string.Empty;
+    }
+
+    public string NavLocationIsBoot()
+    {
+        return Model.Context.Paths.Current == Model.Context.Paths.Home + "boot/" ? "active" : string.Empty;
+    }
+
+    public string NavLocationIsMemory()
+    {
+        return Model.Context.Paths.Current == Model.Context.Paths.Home + "memory/" ? "active" : string.Empty;
+    }
+
+    public string NavLocationIsAbout()
+    {
+        return Model.Context.Paths.Current == Model.Context.Paths.Home + "about/" ? "active" : string.Empty;
+    }
+}
+<div class="row-fluid">
+    <ul class="nav nav-tabs">
+        <li class="@NavLocationIsHome()"><a href="@Raw(Model.Context.Paths.Home)">Home</a></li>
+@if (Model.Extension.Model.RunningRaspberryPi)
+{
+        <li class="@NavLocationIsNetwork()"><a href="@Raw(Model.Context.Paths.Home)network/">Network</a></li>
+        <li class="@NavLocationIsLocalisation()"><a href="@Raw(Model.Context.Paths.Home)localisation/">Localisation</a></li>
+        <li class="@NavLocationIsInterfacing()"><a href="@Raw(Model.Context.Paths.Home)interfacing/">Interfacing</a></li>
+        <li class="@NavLocationIsBoot()"><a href="@Raw(Model.Context.Paths.Home)boot/">Boot</a></li>
+        <li class="@NavLocationIsMemory()"><a href="@Raw(Model.Context.Paths.Home)memory/">Memory</a></li>
+        <li class="@NavLocationIsHAT()"><a href="@Raw(Model.Context.Paths.Home)hat/">HAT</a></li>
+}
+        <li class="@NavLocationIsAbout()"><a href="@Raw(Model.Context.Paths.Home)about/">About</a></li>
+    </ul>
+
+    <style>
+        button.restart {
+            float: right;
+            position: relative;
+            right: -21px;
+            line-height: 11px;
+        }
+    </style>
+
+    @if (Model.Extension.Model.RebootUserPrompt)
+    {
+        <form id="formrestart" action="@Raw(Model.Context.Paths.Home)actions/" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded">
+            <div class="alert alert-error">
+                <button form="formrestart" type="submit" name="action" value="restart" class="restart btn btn-red">Restart Now</button>
+                <strong>Reboot Required</strong> Changes have been made that require a system reboot to be applied.
+            </div>
+        </form>
+    }
+
+    @if ( ! Model.Extension.Model.RunningRaspberryPi)
+    {
+        <div class="alert">
+            <a href="#" class="close" data-dismiss="alert">×</a>
+            <strong>Extension Disabled</strong> It looks like you aren't running MultiPlug on a Raspberry Pi Computer.
+        </div>
+    }
+
+</div>

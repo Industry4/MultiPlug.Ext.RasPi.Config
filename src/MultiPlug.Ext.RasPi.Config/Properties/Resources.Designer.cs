@@ -61,6 +61,103 @@ namespace MultiPlug.Ext.RasPi.Config.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /* =========================================================
+        /// * bootstrap-datepicker.js 
+        /// * http://www.eyecon.ro/bootstrap-datepicker
+        /// * =========================================================
+        /// * Copyright 2012 Stefan Petre
+        /// *
+        /// * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+        /// * you may not use this file except in compliance with the License.
+        /// * You may obtain a copy of the License at
+        /// *
+        /// * http://www.apache.org/licenses/LICENSE-2.0
+        /// *
+        /// * Unless required by applicable law or agreed to in  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string bootstrap_datepicker_js {
+            get {
+                return ResourceManager.GetString("bootstrap_datepicker_js", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /*!
+        /// * Timepicker Component for Twitter Bootstrap
+        /// *
+        /// * Copyright 2013 Joris de Wit and bootstrap-timepicker contributors
+        /// *
+        /// * Contributors https://github.com/jdewit/bootstrap-timepicker/graphs/contributors
+        /// *
+        /// * For the full copyright and license information, please view the LICENSE
+        /// * file that was distributed with this source code.
+        /// */
+        ///(function ($, window, document) {
+        ///    &apos;use strict&apos;;
+        ///
+        ///    // TIMEPICKER PUBLIC CLASS DEFINITION
+        ///    var Timepicker = function (element, options) {
+        ///        t [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string bootstrap_timepicker_js {
+            get {
+                return ResourceManager.GetString("bootstrap_timepicker_js", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  * Timepicker Component for Twitter Bootstrap
+        /// *
+        /// * Copyright 2013 Joris de Wit
+        /// *
+        /// * Contributors https://github.com/jdewit/bootstrap-timepicker/graphs/contributors
+        /// *
+        /// * For the full copyright and license information, please view the LICENSE
+        /// * file that was distributed with this source code.
+        /// */.bootstrap-timepicker{position:relative}.bootstrap-timepicker.pull-right .bootstrap-timepicker-widget.dropdown-menu{left:auto;right:0}.bootstrap-timepicker.pull-right .bootstrap-timepicker-widget.dropdown- [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string bootstrap_timepicker_min_css {
+            get {
+                return ResourceManager.GetString("bootstrap_timepicker_min_css", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to /*!
+        /// * Datepicker for Bootstrap
+        /// *
+        /// * Copyright 2012 Stefan Petre
+        /// * Licensed under the Apache License v2.0
+        /// * http://www.apache.org/licenses/LICENSE-2.0
+        /// *
+        /// */
+        ///.datepicker {
+        ///  top: 0;
+        ///  left: 0;
+        ///  padding: 4px;
+        ///  margin-top: 1px;
+        ///  -webkit-border-radius: 4px;
+        ///  -moz-border-radius: 4px;
+        ///  border-radius: 4px;
+        ///  /*.dow {
+        ///    border-top: 1px solid #ddd !important;
+        ///  }*/
+        ///
+        ///}
+        ///.datepicker:before {
+        ///  content: &apos;&apos;;
+        ///  display: inline-block;
+        ///  border-left: 7px solid transparent;
+        ///  border-right: 7px solid transparent;
+        ///  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string datepicker_css {
+            get {
+                return ResourceManager.GetString("datepicker_css", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap raspberry_pi {
@@ -71,22 +168,227 @@ namespace MultiPlug.Ext.RasPi.Config.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to @model MultiPlug.Ext.RasPi.Config.Models.Settings.Home
+        ///   Looks up a localized string similar to @model MultiPlug.Base.Http.EdgeApp
         ///
-        ///&lt;form action=&quot;&quot; method=&quot;post&quot; accept-charset=&quot;utf-8&quot; enctype=&quot;application/x-www-form-urlencoded&quot;&gt;
+        ///&lt;section class=&quot;row-fluid&quot;&gt;
+        ///
+        ///    &lt;div class=&quot;row-fluid&quot;&gt;
+        ///        &lt;div class=&quot;box&quot;&gt;
+        ///            &lt;div class=&quot;span3&quot;&gt;
+        ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
+        ///            &lt;/div&gt;
+        ///            &lt;div class=&quot;span6&quot;&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///            &lt;/div&gt;
+        ///    [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SettingsAbout {
+            get {
+                return ResourceManager.GetString("SettingsAbout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @model MultiPlug.Base.Http.EdgeApp
+        ///
+        ///&lt;section class=&quot;row-fluid&quot;&gt;
+        ///
+        ///    &lt;div class=&quot;row-fluid&quot;&gt;
+        ///        &lt;div class=&quot;box&quot;&gt;
+        ///            &lt;div class=&quot;span3&quot;&gt;
+        ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
+        ///            &lt;/div&gt;
+        ///            &lt;div class=&quot;span6&quot;&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///            &lt;/div&gt;
+        ///    [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SettingsBoot {
+            get {
+                return ResourceManager.GetString("SettingsBoot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @model MultiPlug.Base.Http.EdgeApp
+        ///
+        ///
         ///    &lt;section class=&quot;row-fluid&quot;&gt;
         ///
         ///        &lt;div class=&quot;row-fluid&quot;&gt;
         ///            &lt;div class=&quot;box&quot;&gt;
         ///                &lt;div class=&quot;span3&quot;&gt;
-        ///                    &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;assets/raspi-config/images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
+        ///                    &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
         ///                &lt;/div&gt;
         ///                &lt;div class=&quot;span6&quot;&gt;
-        ///               [rest of string was truncated]&quot;;.
+        ///                    &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configur [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SettingsHat {
+            get {
+                return ResourceManager.GetString("SettingsHat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @model MultiPlug.Base.Http.EdgeApp
+        ///
+        ///&lt;section class=&quot;row-fluid&quot;&gt;
+        ///
+        ///    &lt;div class=&quot;row-fluid&quot;&gt;
+        ///        &lt;div class=&quot;box&quot;&gt;
+        ///            &lt;div class=&quot;span3&quot;&gt;
+        ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
+        ///            &lt;/div&gt;
+        ///            &lt;div class=&quot;span6&quot;&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///            &lt;/div&gt;
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SettingsHome {
             get {
                 return ResourceManager.GetString("SettingsHome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @model MultiPlug.Base.Http.EdgeApp
+        ///
+        ///
+        ///
+        ///&lt;section class=&quot;row-fluid&quot;&gt;
+        ///
+        ///    &lt;div class=&quot;row-fluid&quot;&gt;
+        ///        &lt;div class=&quot;box&quot;&gt;
+        ///            &lt;div class=&quot;span3&quot;&gt;
+        ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
+        ///            &lt;/div&gt;
+        ///            &lt;div class=&quot;span6&quot;&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///            &lt;/div&gt;        /// [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SettingsInterfacing {
+            get {
+                return ResourceManager.GetString("SettingsInterfacing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @model MultiPlug.Base.Http.EdgeApp
+        ///
+        ///
+        ///&lt;section class=&quot;row-fluid&quot;&gt;
+        ///
+        ///    &lt;div class=&quot;row-fluid&quot;&gt;
+        ///        &lt;div class=&quot;box&quot;&gt;
+        ///            &lt;div class=&quot;span3&quot;&gt;
+        ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
+        ///            &lt;/div&gt;
+        ///            &lt;div class=&quot;span6&quot;&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///            &lt;/div&gt;
+        ///  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SettingsLocalisation {
+            get {
+                return ResourceManager.GetString("SettingsLocalisation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;assets/multiplug.ext.raspi.config/css/bootstrap-timepicker.min.css&quot; /&gt;
+        ///&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;assets/multiplug.ext.raspi.config/css/datepicker.css&quot; /&gt;
+        ///&lt;script type=&quot;text/javascript&quot; src=&quot;assets/multiplug.ext.raspi.config/js/bootstrap-timepicker.js&quot;&gt;&lt;/script&gt;
+        ///&lt;script type=&quot;text/javascript&quot; src=&quot;assets/multiplug.ext.raspi.config/js/bootstrap-datepicker.js&quot;&gt;&lt;/script&gt;.
+        /// </summary>
+        internal static string SettingsLocalisationHead {
+            get {
+                return ResourceManager.GetString("SettingsLocalisationHead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @model MultiPlug.Base.Http.EdgeApp
+        ///
+        ///&lt;section class=&quot;row-fluid&quot;&gt;
+        ///
+        ///    &lt;div class=&quot;row-fluid&quot;&gt;
+        ///        &lt;div class=&quot;box&quot;&gt;
+        ///            &lt;div class=&quot;span3&quot;&gt;
+        ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
+        ///            &lt;/div&gt;
+        ///            &lt;div class=&quot;span6&quot;&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///            &lt;/div&gt;
+        ///    [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SettingsMemory {
+            get {
+                return ResourceManager.GetString("SettingsMemory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @model MultiPlug.Base.Http.EdgeApp
+        ///@functions {
+        ///    public string NavLocationIsHome()
+        ///    {
+        ///        return Model.Context.Paths.Current == Model.Context.Paths.Home ? &quot;active&quot; : string.Empty;
+        ///    }
+        ///
+        ///    public string NavLocationIsNetwork()
+        ///    {
+        ///        return Model.Context.Paths.Current == Model.Context.Paths.Home + &quot;network/&quot; ? &quot;active&quot; : string.Empty;
+        ///    }
+        ///
+        ///    public string NavLocationIsHAT()
+        ///    {
+        ///        return Model.Context.Paths.Current == Model.Context.Paths.Home + &quot;hat/&quot; ? &quot;active&quot; :  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SettingsNavigation {
+            get {
+                return ResourceManager.GetString("SettingsNavigation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @model MultiPlug.Base.Http.EdgeApp
+        ///
+        ///&lt;section class=&quot;row-fluid&quot;&gt;
+        ///
+        ///    &lt;div class=&quot;row-fluid&quot;&gt;
+        ///        &lt;div class=&quot;box&quot;&gt;
+        ///            &lt;div class=&quot;span3&quot;&gt;
+        ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
+        ///            &lt;/div&gt;
+        ///            &lt;div class=&quot;span6&quot;&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///            &lt;/div&gt;
+        ///    [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SettingsNetwork {
+            get {
+                return ResourceManager.GetString("SettingsNetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @model MultiPlug.Base.Http.EdgeApp
+        ///
+        ///&lt;section class=&quot;row-fluid&quot;&gt;
+        ///
+        ///    &lt;div class=&quot;row-fluid&quot;&gt;
+        ///        &lt;div class=&quot;box&quot;&gt;
+        ///            &lt;div class=&quot;span3&quot;&gt;
+        ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
+        ///            &lt;/div&gt;
+        ///            &lt;div class=&quot;span6&quot;&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///            &lt;/div&gt;
+        ///    [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SettingsNotRaspberryPi {
+            get {
+                return ResourceManager.GetString("SettingsNotRaspberryPi", resourceCulture);
             }
         }
     }

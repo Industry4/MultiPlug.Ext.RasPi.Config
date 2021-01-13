@@ -6,7 +6,7 @@ using MultiPlug.Ext.RasPi.Config.Properties;
 namespace MultiPlug.Ext.RasPi.Config.Controllers.Assets
 {
     [Route("images/*")]
-    class ImageController : Controller
+    public class ImageController : AssetsEndpoint
     {
         public Response Get(string theName)
         {

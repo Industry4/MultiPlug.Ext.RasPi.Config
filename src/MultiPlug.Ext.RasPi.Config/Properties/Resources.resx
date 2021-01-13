@@ -124,4 +124,46 @@
   <data name="SettingsHome" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Controllers\Settings\Home\SettingsHome.cshtml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="SettingsNetwork" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Settings\Network\SettingsNetwork.cshtml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="SettingsHat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Settings\Hat\SettingsHat.cshtml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="SettingsLocalisation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Settings\Localisation\SettingsLocalisation.cshtml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="SettingsInterfacing" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Settings\Interfacing\SettingsInterfacing.cshtml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="SettingsBoot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Settings\Boot\SettingsBoot.cshtml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="SettingsMemory" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Settings\Memory\SettingsMemory.cshtml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="bootstrap_timepicker_js" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Assets\bootstrap-timepicker\bootstrap-timepicker.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="bootstrap_timepicker_min_css" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Assets\bootstrap-timepicker\bootstrap-timepicker.min.css;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="SettingsLocalisationHead" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Settings\Localisation\SettingsLocalisationHead.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="bootstrap_datepicker_js" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Assets\bootstrap-datepicker\bootstrap-datepicker.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="datepicker_css" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Assets\bootstrap-datepicker\datepicker.css;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
+  <data name="SettingsNavigation" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Settings\SharedRazor\SettingsNavigation.cshtml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="SettingsAbout" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Settings\About\SettingsAbout.cshtml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="SettingsNotRaspberryPi" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Controllers\Settings\SharedRazor\SettingsNotRaspberryPi.cshtml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>
