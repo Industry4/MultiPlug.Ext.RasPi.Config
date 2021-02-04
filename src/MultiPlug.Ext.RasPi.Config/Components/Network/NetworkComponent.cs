@@ -135,14 +135,14 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             if ( AskToRestart)
             {
                 var eth0 = new NICProperties(c_Eth0);
-                eth0.IPAddress = (theModel.Eth0IPAddress != string.Empty) ? theModel.Eth0IPAddress : null;
-                eth0.IP6Address = (theModel.Eth0IP6Address != string.Empty) ? theModel.Eth0IP6Address : null;
+                eth0.IPAddress = theModel.Eth0IPAddress;
+                eth0.IP6Address = theModel.Eth0IP6Address;
                 eth0.Routers = theModel.Eth0Routers;
                 eth0.DomainNameServers = theModel.Eth0DomainNameServers;
 
                 var wlan0 = new NICProperties(c_Wlan0);
-                wlan0.IPAddress = (theModel.Wlan0IPAddress != string.Empty) ? theModel.Wlan0IPAddress : null;
-                wlan0.IP6Address = (theModel.Wlan0IP6Address != string.Empty) ? theModel.Wlan0IP6Address : null;
+                wlan0.IPAddress = theModel.Wlan0IPAddress;
+                wlan0.IP6Address = theModel.Wlan0IP6Address;
                 wlan0.Routers = theModel.Wlan0Routers;
                 wlan0.DomainNameServers = theModel.Wlan0DomainNameServers;
 

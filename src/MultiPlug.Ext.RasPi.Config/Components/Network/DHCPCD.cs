@@ -200,11 +200,14 @@ namespace MultiPlug.Ext.RasPi.Config.Network.ConfigFiles
 
             foreach(NICProperties Properties in theProperties)
             {
+                Properties.Routers = Properties.Routers.Where(Router => !string.IsNullOrEmpty(Router)).ToArray();
+                Properties.DomainNameServers = Properties.DomainNameServers.Where(DomainNameServer => !string.IsNullOrEmpty(DomainNameServer)).ToArray();
+
                 var NICSearch = ReadResult.Properties.FirstOrDefault(nic => nic.Id == Properties.Id);
 
                 if (NICSearch != null)
                 {
-                    if (NullValues(Properties))
+                    if (AllNullValues(Properties))
                     {
                         ToWrite = DeleteLines(ToWrite, NICSearch);
                     }
@@ -213,7 +216,7 @@ namespace MultiPlug.Ext.RasPi.Config.Network.ConfigFiles
                         ToWrite = UpdateLines(ToWrite, NICSearch, Properties);
                     }
                 }
-                else if (!NullValues(Properties))
+                else if (!AllNullValues(Properties))
                 {
                     ToWrite = AddLines(ToWrite, Properties);
                 }
@@ -222,12 +225,12 @@ namespace MultiPlug.Ext.RasPi.Config.Network.ConfigFiles
             Write(ToWrite);
         }
 
-        private static bool NullValues(NICProperties theProperties)
+        private static bool AllNullValues(NICProperties theProperties)
         {
-            return theProperties.IPAddress == null &&
-                    theProperties.IP6Address == null &&
-                    theProperties.DomainNameServers == null &&
-                    theProperties.Routers == null;
+            return string.IsNullOrEmpty( theProperties.IPAddress) &&
+                    string.IsNullOrEmpty( theProperties.IP6Address ) &&
+                    ( theProperties.DomainNameServers == null || theProperties.DomainNameServers.Length == 0) &&
+                    ( theProperties.Routers == null || theProperties.Routers.Length == 0);
         }
 
         private static DHCPcdConfLine[] DeleteLines(DHCPcdConfLine[] theConfigLines, NICProperties theExistingProperties)
@@ -245,22 +248,22 @@ namespace MultiPlug.Ext.RasPi.Config.Network.ConfigFiles
 
             ConfigLinesList.Add(new DHCPcdConfLine { Id = true, NICProperties = NewProperties });
 
-            if (NewProperties.IPAddress != null)
+            if ( ! string.IsNullOrEmpty(NewProperties.IPAddress))
             {
                 ConfigLinesList.Add(new DHCPcdConfLine { IPAddress = true, NICProperties = NewProperties });
             }
 
-            if (NewProperties.IP6Address != null)
+            if (!string.IsNullOrEmpty(NewProperties.IP6Address))
             {
                 ConfigLinesList.Add(new DHCPcdConfLine { IP6Address = true, NICProperties = NewProperties });
             }
 
-            if (NewProperties.Routers != null)
+            if (NewProperties.Routers != null && NewProperties.Routers.Length > 0)
             {
                 ConfigLinesList.Add(new DHCPcdConfLine { Routers = true, NICProperties = NewProperties });
             }
 
-            if (NewProperties.DomainNameServers != null)
+            if (NewProperties.DomainNameServers != null && NewProperties.DomainNameServers.Length > 0)
             {
                 ConfigLinesList.Add(new DHCPcdConfLine { DomainNameServers = true, NICProperties = NewProperties });
             }
@@ -274,7 +277,7 @@ namespace MultiPlug.Ext.RasPi.Config.Network.ConfigFiles
             var HeaderSearch = ConfigLinesList.FirstOrDefault(Line => Line?.NICProperties?.Id == theNewProperties.Id);
             var HeaderIndex = ConfigLinesList.IndexOf(HeaderSearch);
 
-            if (theNewProperties.IPAddress != null)
+            if ( ! string.IsNullOrEmpty(theNewProperties.IPAddress))
             {
                 // The New Properties has the IP Address value
 
@@ -297,7 +300,7 @@ namespace MultiPlug.Ext.RasPi.Config.Network.ConfigFiles
                 ConfigLinesList.RemoveAll(Line => Line?.NICProperties?.Id == theExistingProperties.Id && Line.IPAddress);
             }
 
-            if (theNewProperties.IP6Address != null)
+            if (!string.IsNullOrEmpty(theNewProperties.IP6Address))
             {
                 if (theExistingProperties.IP6Address == null)
                 {
@@ -315,7 +318,7 @@ namespace MultiPlug.Ext.RasPi.Config.Network.ConfigFiles
                 ConfigLinesList.RemoveAll(Line => Line?.NICProperties?.Id == theExistingProperties.Id && Line.IP6Address);
             }
 
-            if (theNewProperties.Routers != null)
+            if (theNewProperties.Routers != null && theNewProperties.Routers.Length > 0)
             {
                 if (theExistingProperties.Routers == null)
                 {
@@ -333,7 +336,7 @@ namespace MultiPlug.Ext.RasPi.Config.Network.ConfigFiles
                 ConfigLinesList.RemoveAll(Line => Line?.NICProperties?.Id == theExistingProperties.Id && Line.Routers);
             }
 
-            if (theNewProperties.DomainNameServers != null)
+            if (theNewProperties.DomainNameServers != null && theNewProperties.DomainNameServers.Length > 0)
             {
                 if (theExistingProperties.DomainNameServers == null)
                 {

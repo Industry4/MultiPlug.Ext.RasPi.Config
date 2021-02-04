@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>MultiPlug.Ext.RasPi.Config</id>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <title>Raspberry Pi Configuration Extension for MultiPlug</title>
     <authors>4IR.UK</authors>
     <owners>4IR.UK</owners>
@@ -12,6 +12,7 @@
     <description>Configure the Raspberry Pi with this MultiPlug Extension (https://multiplug.app)</description>
 	<license type="expression">MIT</license>
     <releaseNotes>Run this extension only on a Raspberry Pi using the .Net Mono runtime.
+1.0.8 Bug: Blank values being writing to dhcpcd.conf after setting changed to dynamic IPs
 1.0.7 Able to View or Set non-visual configurations of a Raspberry Pi including Network, Localisation, Interfacing, Boot and Memory. Many options found in the command line tool raspi-config.
 1.0.6 Applied new Base classes
 1.0.3 Bug: Unix file format
