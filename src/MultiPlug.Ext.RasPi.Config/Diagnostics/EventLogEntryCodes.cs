@@ -13,6 +13,7 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
         SourceLocalisation = 7,
         SourceMemory = 8,
         SourceNetwork = 9,
+        SourceDebug = 10,
 
         RunningRaspberryPiFalse = 26,
         SystemShutdown = 27,
@@ -193,5 +194,10 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
         TimeSyncdEnabledSettingGetError = 171,
         FakeHWClockEnabledSettingGetError = 172,
         RAMFreeSettingGetError = 173,
+
+        RTCSyncing = 174,
+        RTCSyncError = 175,
+        RTCSynced = 176,
+        DebugWriteLine = 177
     }
 }

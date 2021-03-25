@@ -178,9 +178,9 @@ namespace MultiPlug.Ext.RasPi.Config.Properties {
         ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
         ///            &lt;/div&gt;
         ///            &lt;div class=&quot;span6&quot;&gt;
-        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspberry Pi Configuration&lt;/p&gt;
         ///            &lt;/div&gt;
-        ///    [rest of string was truncated]&quot;;.
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SettingsAbout {
             get {
@@ -199,9 +199,9 @@ namespace MultiPlug.Ext.RasPi.Config.Properties {
         ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
         ///            &lt;/div&gt;
         ///            &lt;div class=&quot;span6&quot;&gt;
-        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspberry Pi Configuration&lt;/p&gt;
         ///            &lt;/div&gt;
-        ///    [rest of string was truncated]&quot;;.
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SettingsBoot {
             get {
@@ -221,7 +221,7 @@ namespace MultiPlug.Ext.RasPi.Config.Properties {
         ///                    &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
         ///                &lt;/div&gt;
         ///                &lt;div class=&quot;span6&quot;&gt;
-        ///                    &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configur [rest of string was truncated]&quot;;.
+        ///                    &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspberry Pi Configu [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SettingsHat {
             get {
@@ -240,9 +240,9 @@ namespace MultiPlug.Ext.RasPi.Config.Properties {
         ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
         ///            &lt;/div&gt;
         ///            &lt;div class=&quot;span6&quot;&gt;
-        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspberry Pi Configuration&lt;/p&gt;
         ///            &lt;/div&gt;
-        ///    [rest of string was truncated]&quot;;.
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SettingsHome {
             get {
@@ -263,8 +263,8 @@ namespace MultiPlug.Ext.RasPi.Config.Properties {
         ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
         ///            &lt;/div&gt;
         ///            &lt;div class=&quot;span6&quot;&gt;
-        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
-        ///            &lt;/div&gt;        /// [rest of string was truncated]&quot;;.
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspberry Pi Configuration&lt;/p&gt;
+        ///            &lt;/div&gt; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SettingsInterfacing {
             get {
@@ -284,9 +284,9 @@ namespace MultiPlug.Ext.RasPi.Config.Properties {
         ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
         ///            &lt;/div&gt;
         ///            &lt;div class=&quot;span6&quot;&gt;
-        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspberry Pi Configuration&lt;/p&gt;
         ///            &lt;/div&gt;
-        ///  [rest of string was truncated]&quot;;.
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SettingsLocalisation {
             get {
@@ -317,9 +317,9 @@ namespace MultiPlug.Ext.RasPi.Config.Properties {
         ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
         ///            &lt;/div&gt;
         ///            &lt;div class=&quot;span6&quot;&gt;
-        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspberry Pi Configuration&lt;/p&gt;
         ///            &lt;/div&gt;
-        ///    [rest of string was truncated]&quot;;.
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SettingsMemory {
             get {
@@ -361,9 +361,9 @@ namespace MultiPlug.Ext.RasPi.Config.Properties {
         ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
         ///            &lt;/div&gt;
         ///            &lt;div class=&quot;span6&quot;&gt;
-        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspberry Pi Configuration&lt;/p&gt;
         ///            &lt;/div&gt;
-        ///    [rest of string was truncated]&quot;;.
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SettingsNetwork {
             get {
@@ -382,13 +382,32 @@ namespace MultiPlug.Ext.RasPi.Config.Properties {
         ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
         ///            &lt;/div&gt;
         ///            &lt;div class=&quot;span6&quot;&gt;
-        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspbery Pi Configuration&lt;/p&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspberry Pi Configuration&lt;/p&gt;
         ///            &lt;/div&gt;
-        ///    [rest of string was truncated]&quot;;.
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SettingsNotRaspberryPi {
             get {
                 return ResourceManager.GetString("SettingsNotRaspberryPi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///
+        ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+        ///&lt;head&gt;
+        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///    &lt;title&gt;&lt;/title&gt;
+        ///&lt;/head&gt;
+        ///&lt;body&gt;
+        ///
+        ///&lt;/body&gt;
+        ///&lt;/html&gt;.
+        /// </summary>
+        internal static string SettingsUsers {
+            get {
+                return ResourceManager.GetString("SettingsUsers", resourceCulture);
             }
         }
     }

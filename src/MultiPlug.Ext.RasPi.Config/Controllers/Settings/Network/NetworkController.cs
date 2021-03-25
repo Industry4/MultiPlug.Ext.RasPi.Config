@@ -2,6 +2,7 @@
 using MultiPlug.Base.Attribute;
 using MultiPlug.Base.Http;
 using MultiPlug.Ext.RasPi.Config.Models.Components.Network;
+using MultiPlug.Ext.RasPi.Config.Controllers.Settings.SharedRazor;
 
 namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Home
 {
@@ -12,12 +13,12 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Home
         {
             NetworkProperties Properties = Core.Instance.Network.RepopulateAndGetProperties();
 
-            if (Properties.RunningRaspberryPi)
+            if (Utils.Hardware.isRunningRaspberryPi)
             {
                 return new Response
                 {
                     Model = Properties,
-                    Template = "RaspPiConfig_Settings_Network"
+                    Template = Templates.Network
                 };
             }
             else

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using MultiPlug.Base.Attribute;
 using MultiPlug.Base.Http;
+using MultiPlug.Ext.RasPi.Config.Controllers.Settings.SharedRazor;
 
 namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.About
 {
@@ -13,7 +14,7 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.About
 
             return new Response
             {
-                Template = "RaspPiConfig_Settings_About",
+                Template = Templates.About,
                 Model = Core.Instance.About.RepopulateAndGetProperties()
             };
         }

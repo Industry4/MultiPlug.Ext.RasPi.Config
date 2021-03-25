@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MultiPlug.Ext.RasPi.Config.Models.Components.Home;
 using MultiPlug.Ext.RasPi.Config.Utils.Swan;
 using MultiPlug.Ext.RasPi.Config.Diagnostics;
+using MultiPlug.Ext.RasPi.Config.Models.Components.Home;
 
 namespace MultiPlug.Ext.RasPi.Config.Components.Home
 {
@@ -12,17 +12,17 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Home
 
         internal HomeProperties RepopulateAndGetProperties()
         {
-            if( ! RunningRaspberryPi ) { return this; }
+            if( ! Utils.Hardware.isRunningRaspberryPi ) { return this; }
 
             Task<ProcessResult>[] Tasks = new Task<ProcessResult>[7];
 
-            Tasks[0] = ProcessRunner.GetProcessResultAsync("cat", "/proc/device-tree/model");
-            Tasks[1] = ProcessRunner.GetProcessResultAsync("cat", "/etc/debian_version");
-            Tasks[2] = ProcessRunner.GetProcessResultAsync("cat", "/etc/hostname");
-            Tasks[3] = ProcessRunner.GetProcessResultAsync("date");
-            Tasks[4] = ProcessRunner.GetProcessResultAsync("vcgencmd", "measure_temp");
-            Tasks[5] = ProcessRunner.GetProcessResultAsync("cat", "/sys/class/thermal/thermal_zone0/temp");
-            Tasks[6] = ProcessRunner.GetProcessResultAsync("df", "-h");
+            Tasks[0] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/proc/device-tree/model");
+            Tasks[1] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/etc/debian_version");
+            Tasks[2] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/etc/hostname");
+            Tasks[3] = ProcessRunner.GetProcessResultAsync(c_DateCommand);
+            Tasks[4] = GetGPUTemperature();
+            Tasks[5] = GetCPUTemperature();
+            Tasks[6] = GetDiskSpacePercentage();
 
             Task.WaitAll(Tasks);
 
@@ -30,25 +30,9 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Home
             OSVersion           = Tasks[1].Result.Okay() ? Tasks[1].Result.GetOutput().TrimEnd() : string.Empty;
             HostName            = Tasks[2].Result.Okay() ? Tasks[2].Result.GetOutput().TrimEnd() : string.Empty;
             Date                = Tasks[3].Result.Okay() ? Tasks[3].Result.GetOutput().TrimEnd() : string.Empty;
-            GPUTemperature      = Tasks[4].Result.Okay() ? Tasks[4].Result.GetOutput().TrimEnd().Replace("temp=", "") : string.Empty;
-            CPUTemperature      = "?";
-            FreeDiskPercentage  = string.Empty;
-
-            if (Tasks[5].Result.Okay())
-            {
-                int CPUTemp = 0;
-
-                if (int.TryParse(Tasks[5].Result.GetOutput(), out CPUTemp))
-                {
-                    CPUTemperature = (CPUTemp / 1000).ToString();
-                }
-            }
-
-            if ( Tasks[6].Result.Okay() )
-            {
-                FreeDiskPercentage = Tasks[6].Result.GetOutput().Split(new string[] { "\n", "\r\n" }, 2, StringSplitOptions.RemoveEmptyEntries)[1]
-                                                                .Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries)[4].TrimEnd('%');
-            }
+            GPUTemperature      = ProcessGPUTemperature(Tasks[4]);
+            CPUTemperature      = ProcessCPUTemperature(Tasks[5]);
+            FreeDiskPercentage = ProcessDiskSpacePercentage(Tasks[6]);
 
             // Log only if errors have occured
             LoggingActions.LogTaskResult(Log, Tasks[0], EventLogEntryCodes.RaspberryPiModelSettingGetError);
@@ -60,6 +44,52 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Home
             LoggingActions.LogTaskResult(Log, Tasks[6], EventLogEntryCodes.DiskFreeSettingGetError);
 
             return this;
+        }
+
+        internal static Task<ProcessResult> GetGPUTemperature()
+        {
+            return ProcessRunner.GetProcessResultAsync(c_VCGenCommand, "measure_temp");
+        }
+
+        internal static Task<ProcessResult> GetCPUTemperature()
+        {
+            return ProcessRunner.GetProcessResultAsync(c_CatCommand, "/sys/class/thermal/thermal_zone0/temp");
+        }
+
+        internal static Task<ProcessResult> GetDiskSpacePercentage()
+        {
+            return ProcessRunner.GetProcessResultAsync(c_DFCommand, "-h");
+        }
+
+        internal static string ProcessGPUTemperature(Task<ProcessResult> theTask)
+        {
+            return theTask.Result.Okay() ? theTask.Result.GetOutput().TrimEnd().Replace("temp=", "") : string.Empty;
+        }
+
+        internal static string ProcessCPUTemperature(Task<ProcessResult> theTask)
+        {
+            if (theTask.Result.Okay())
+            {
+                int CPUTemp = 0;
+
+                if (int.TryParse(theTask.Result.GetOutput(), out CPUTemp))
+                {
+                    return (CPUTemp / 1000).ToString();
+                }
+            }
+
+            return "?";
+        }
+
+        internal static string ProcessDiskSpacePercentage(Task<ProcessResult> theTask)
+        {
+            if (theTask.Result.Okay())
+            {
+                return theTask.Result.GetOutput().Split(new string[] { "\n", "\r\n" }, 2, StringSplitOptions.RemoveEmptyEntries)[1]
+                                                                .Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries)[4].TrimEnd('%');
+            }
+
+            return string.Empty;
         }
     }
 }

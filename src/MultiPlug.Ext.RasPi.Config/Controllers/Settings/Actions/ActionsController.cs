@@ -9,8 +9,6 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Actions
     {
         public Response Post(string action)
         {
-            Console.WriteLine("POST");
-
             if (action == "restart")
             {
                 Console.WriteLine("restart");
@@ -21,6 +19,15 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Actions
             {
                 StatusCode = System.Net.HttpStatusCode.Moved,
                 Location = new Uri(Context.Referrer.AbsoluteUri)
+            };
+        }
+
+        public Response Get()
+        {
+            return new Response
+            {
+                StatusCode = System.Net.HttpStatusCode.Moved,
+                Location = new Uri(Context.Request.AbsoluteUri.Replace("actions/", ""))
             };
         }
     }

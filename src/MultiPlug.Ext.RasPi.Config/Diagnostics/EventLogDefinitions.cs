@@ -17,6 +17,7 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.SourceLocalisation,       Source = (uint) EventLogEntryCodes.Reserved, StringFormat = "Localisation", Type = EventLogEntryType.Information  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.SourceMemory,             Source = (uint) EventLogEntryCodes.Reserved, StringFormat = "Memory", Type = EventLogEntryType.Information  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.SourceNetwork,            Source = (uint) EventLogEntryCodes.Reserved, StringFormat = "Network", Type = EventLogEntryType.Information  },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.SourceDebug,              Source = (uint) EventLogEntryCodes.Reserved, StringFormat = "Debug", Type = EventLogEntryType.Information  },
 
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.SystemShutdown,           Source = (uint) EventLogEntryCodes.SourceUser, StringFormat = "System restart triggered",                               Type = EventLogEntryType.Information  },
 
@@ -178,6 +179,11 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
 
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.DiskFreeSettingGetError,      Source = (uint) EventLogEntryCodes.SourceMemory,        StringFormat = "Error while getting the current Disk usage. Message: {0}", Type = EventLogEntryType.Error  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.RAMFreeSettingGetError,       Source = (uint) EventLogEntryCodes.SourceMemory,        StringFormat = "Error while getting the current RAM usage. Message: {0}", Type = EventLogEntryType.Error  },
+
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.RTCSyncing,                   Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "Attempting to sync the Hardware Clock", Type = EventLogEntryType.Information  },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.RTCSyncError,                 Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "RTC Sync Error. Message: {0}", Type = EventLogEntryType.Error  },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.RTCSynced,                    Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "RTC Synced successfully", Type = EventLogEntryType.Information  },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.DebugWriteLine,               Source = (uint) EventLogEntryCodes.SourceDebug, StringFormat = "{0}", Type = EventLogEntryType.Information  }
         };
     }
 }

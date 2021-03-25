@@ -10,5 +10,6 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Components.About
         public string Product { get; internal set; }
         public string Title { get; internal set; }
         public string Trademark { get; internal set; }
+        public string Log { get; internal set; }
     }
 }

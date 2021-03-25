@@ -13,17 +13,17 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Hat
 
         internal HatProperties RepopulateAndGetProperties()
         {
-            if (!RunningRaspberryPi) { return this; }
+            if (!Utils.Hardware.isRunningRaspberryPi) { return this; }
 
             if (Directory.Exists("/proc/device-tree/hat/"))
             {
                 Task<ProcessResult>[] Tasks = new Task<ProcessResult>[5];
 
-                Tasks[0] = ProcessRunner.GetProcessResultAsync("cat", "/proc/device-tree/hat/product");
-                Tasks[1] = ProcessRunner.GetProcessResultAsync("cat", "/proc/device-tree/hat/product_id");
-                Tasks[2] = ProcessRunner.GetProcessResultAsync("cat", "/proc/device-tree/hat/product_ver");
-                Tasks[3] = ProcessRunner.GetProcessResultAsync("cat", "/proc/device-tree/hat/uuid");
-                Tasks[4] = ProcessRunner.GetProcessResultAsync("cat", "/proc/device-tree/hat/vendor");
+                Tasks[0] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/proc/device-tree/hat/product");
+                Tasks[1] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/proc/device-tree/hat/product_id");
+                Tasks[2] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/proc/device-tree/hat/product_ver");
+                Tasks[3] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/proc/device-tree/hat/uuid");
+                Tasks[4] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/proc/device-tree/hat/vendor");
 
                 Task.WaitAll(Tasks);
 

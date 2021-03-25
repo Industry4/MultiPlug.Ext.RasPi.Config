@@ -1,6 +1,7 @@
 ﻿using MultiPlug.Base.Attribute;
 using MultiPlug.Base.Http;
 using MultiPlug.Ext.RasPi.Config.Models.Components;
+using MultiPlug.Ext.RasPi.Config.Controllers.Settings.SharedRazor;
 
 namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Home
 {
@@ -11,12 +12,12 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Home
         {
             var Model = Core.Instance.Overview.RepopulateAndGetProperties();
 
-            if( ! Model.RunningRaspberryPi )
+            if( !Utils.Hardware.isRunningRaspberryPi)
             {
                 return new Response
                 {
                     Model = new SharedProperties(),
-                    Template = "RaspPiConfig_Settings_NotRaspberryPi"
+                    Template = Templates.NotRaspberryPi
                 };
             }
             else
@@ -24,7 +25,7 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Home
                 return new Response
                 {
                     Model = Core.Instance.Overview.RepopulateAndGetProperties(),
-                    Template = "RaspPiConfig_Settings_Home"
+                    Template = Templates.Home
                 };
             }
         }

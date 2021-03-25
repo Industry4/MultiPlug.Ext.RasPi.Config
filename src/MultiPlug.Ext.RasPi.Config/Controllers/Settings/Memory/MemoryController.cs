@@ -2,6 +2,7 @@
 using MultiPlug.Base.Attribute;
 using MultiPlug.Base.Http;
 using MultiPlug.Ext.RasPi.Config.Models.Components.Memory;
+using MultiPlug.Ext.RasPi.Config.Controllers.Settings.SharedRazor;
 
 namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Memory
 {
@@ -12,12 +13,12 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Memory
         {
             MemoryProperties Properties = Core.Instance.Memory.RepopulateAndGetProperties();
 
-            if (Properties.RunningRaspberryPi)
+            if (Utils.Hardware.isRunningRaspberryPi)
             {
                 return new Response
                 {
                     Model = Properties,
-                    Template = "RaspPiConfig_Settings_Memory"
+                    Template = Templates.Memory
                 };
             }
             else

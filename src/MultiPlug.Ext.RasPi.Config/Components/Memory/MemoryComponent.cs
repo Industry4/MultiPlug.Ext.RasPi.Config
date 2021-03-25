@@ -14,12 +14,12 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Memory
 
         internal MemoryProperties RepopulateAndGetProperties()
         {
-            if (!RunningRaspberryPi) { return this; }
+            if (!Utils.Hardware.isRunningRaspberryPi) { return this; }
 
             Task<ProcessResult>[] Tasks = new Task<ProcessResult>[2];
 
-            Tasks[0] = ProcessRunner.GetProcessResultAsync("df", "-h");
-            Tasks[1] = ProcessRunner.GetProcessResultAsync("free", "-h -t");
+            Tasks[0] = ProcessRunner.GetProcessResultAsync(c_DFCommand, "-h");
+            Tasks[1] = ProcessRunner.GetProcessResultAsync(c_FreeCommand, "-h -t");
 
             Task.WaitAll(Tasks);
 

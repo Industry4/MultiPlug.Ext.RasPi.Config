@@ -2,6 +2,7 @@
 using MultiPlug.Base.Attribute;
 using MultiPlug.Base.Http;
 using MultiPlug.Ext.RasPi.Config.Models.Components.Interfacing;
+using MultiPlug.Ext.RasPi.Config.Controllers.Settings.SharedRazor;
 
 namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Interfacing
 {
@@ -12,12 +13,12 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Interfacing
         {
             InterfacingProperties Properties = Core.Instance.Interfacing.RepopulateAndGetProperties();
 
-            if (Properties.RunningRaspberryPi)
+            if (Utils.Hardware.isRunningRaspberryPi)
             {
                 return new Response
                 {
                     Model = Properties,
-                    Template = "RaspPiConfig_Settings_Interfacing"
+                    Template = Templates.Interfacing
                 };
             }
             else

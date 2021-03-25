@@ -15,11 +15,13 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Components.Network
         public string[] Wlan0DomainNameServers { get; set; }
         [DataMember]
         public string HostName { get; set; }
+        public bool WiFiCountrySet { get; set; }
         [DataMember]
         public string WiFiCountry { get; set; }
         [DataMember]
-        public string SSID { get; set; }
-        public string Passphrase { get; set; }
+        public string[] SSIDs { get; set; }
+        public string NewSSID { get; set; }
+        public string NewPassphrase { get; set; }
         public NICInterface[] Interfaces { get; set; }
     }
 }

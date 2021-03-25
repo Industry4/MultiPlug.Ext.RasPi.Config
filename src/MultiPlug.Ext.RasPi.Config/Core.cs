@@ -25,8 +25,6 @@ namespace MultiPlug.Ext.RasPi.Config
         private ILoggingService m_LoggingService;
         private IMultiPlugActions m_MultiPlugActions;
 
-        private SharedProperties[] m_AllComponents;
-
         public static Core Instance
         {
             get
@@ -40,15 +38,15 @@ namespace MultiPlug.Ext.RasPi.Config
         }
         internal void Init(IMultiPlugActions theMultiPlugActions, IMultiPlugServices theMultiPlugServices)
         {
-            m_AllComponents = new SharedProperties[] { Overview, Network, Hat, Interfacing, Localisation, Boot, Memory, Actions, About };
-
-            Hardware.CheckRunningRaspberryPi(m_AllComponents);
-
             m_MultiPlugActions = theMultiPlugActions;
 
             theMultiPlugServices.Logging.RegisterDefinitions(EventLogDefinitions.DefinitionsId, EventLogDefinitions.Definitions, true);
 
             m_LoggingService = theMultiPlugServices.Logging.New("RasPiConfig", Diagnostics.EventLogDefinitions.DefinitionsId);
+
+            About = new AboutComponent(m_LoggingService);
+
+            Hardware.CheckRunningRaspberryPi();
 
             Overview.Log += OnLogWriteEntry;
             Network.Log += OnLogWriteEntry;
@@ -59,13 +57,10 @@ namespace MultiPlug.Ext.RasPi.Config
             Memory.Log += OnLogWriteEntry;
             Actions.Log += OnLogWriteEntry;
 
-            //Overview.RestartDue += OnRestartDue;
             Network.RestartDue += OnRestartDue;
-            //Hat.RestartDue += OnRestartDue;
             Interfacing.RestartDue += OnRestartDue;
             Localisation.RestartDue += OnRestartDue;
             Boot.RestartDue += OnRestartDue;
-            //Memory.RestartDue += OnRestartDue;
 
             Actions.DoSystemRestart += OnDoSystemRestart;
         }
@@ -77,7 +72,7 @@ namespace MultiPlug.Ext.RasPi.Config
 
         private void OnRestartDue()
         {
-            Array.ForEach(m_AllComponents, x => x.RebootUserPrompt = true);
+            Hardware.SetRebootUserPrompt();
         }
 
         private void OnLogWriteEntry(EventLogEntryCodes theLogCode, string[] theArg)
@@ -100,6 +95,6 @@ namespace MultiPlug.Ext.RasPi.Config
         [DataMember]
         public MemoryComponent Memory { get; private set; } = new MemoryComponent();
         internal ActionsComponent Actions { get; private set; } = new ActionsComponent();
-        internal AboutComponent About { get; private set; } = new AboutComponent();
+        internal AboutComponent About { get; private set; }
     }
 }

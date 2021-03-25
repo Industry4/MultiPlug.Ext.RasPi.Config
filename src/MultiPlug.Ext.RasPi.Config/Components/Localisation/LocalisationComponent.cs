@@ -20,23 +20,21 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
         internal event Action<EventLogEntryCodes, string[]> Log;
         internal event Action RestartDue;
 
-        private const string c_LinuxSystemControlCommand = "systemctl";
-        private const string c_LinuxRaspconfigCommand = "raspi-config";
-
         internal LocalisationProperties RepopulateAndGetProperties()
         {
-            if (!RunningRaspberryPi) { return this; }
+            if (!Utils.Hardware.isRunningRaspberryPi) { return this; }
 
-            Task<ProcessResult>[] Tasks = new Task<ProcessResult>[8];
+            Task<ProcessResult>[] Tasks = new Task<ProcessResult>[9];
 
-            Tasks[0] = ProcessRunner.GetProcessResultAsync("cat", "/usr/share/zoneinfo/iso3166.tab");
-            Tasks[1] = ProcessRunner.GetProcessResultAsync("wpa_cli", "-i wlan0 get country");
-            Tasks[2] = ProcessRunner.GetProcessResultAsync("timedatectl", "list-timezones");
-            Tasks[3] = ProcessRunner.GetProcessResultAsync("cat", "/etc/timezone");
-            Tasks[4] = ProcessRunner.GetProcessResultAsync("date", "+%d/%m/%Y");
-            Tasks[5] = ProcessRunner.GetProcessResultAsync("date", "+%T");
-            Tasks[6] = ProcessRunner.GetProcessResultAsync("systemctl", "is-active systemd-timesyncd");
-            Tasks[7] = ProcessRunner.GetProcessResultAsync("systemctl", "is-active fake-hwclock");
+            Tasks[0] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/usr/share/zoneinfo/iso3166.tab");
+            Tasks[1] = ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i wlan0 get country");
+            Tasks[2] = ProcessRunner.GetProcessResultAsync(c_TimeDateControlCommand, "list-timezones");
+            Tasks[3] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/etc/timezone");
+            Tasks[4] = ProcessRunner.GetProcessResultAsync(c_DateCommand, "+%d/%m/%Y");
+            Tasks[5] = ProcessRunner.GetProcessResultAsync(c_DateCommand, "+%T");
+            Tasks[6] = ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "is-active systemd-timesyncd");
+            Tasks[7] = ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "is-active fake-hwclock");
+            Tasks[8] = ProcessRunner.GetProcessResultAsync(c_HardwareClockCommand, "-r");
 
             Task.WaitAll(Tasks);
 
@@ -46,8 +44,9 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             TimeZones           = Tasks[2].Result.Okay() ? Tasks[2].Result.GetOutput().Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Skip(25).Select(line => new string[] { line, line.StartsWith(TimeZone) ? "selected=\"selected\"" : "" }).ToArray() : new string[0][];
             Date                = Tasks[4].Result.Okay() ? Tasks[4].Result.GetOutput().TrimEnd() : string.Empty;
             Time                = Tasks[5].Result.Okay() ? Tasks[5].Result.GetOutput().TrimEnd() : string.Empty;
-            TimeSyncdEnabled    = Tasks[6].Result.Okay() ? Tasks[6].Result.GetOutput().TrimEnd().Equals("active") : false;
-            FakeHWClockEnabled  = Tasks[7].Result.Okay() ? Tasks[7].Result.GetOutput().TrimEnd().Equals("active") : false;
+            TimeSyncdEnabled    = Tasks[6].Result.Okay() ? Tasks[6].Result.GetOutput().TrimEnd().Equals(c_Active) : false;
+            FakeHWClockEnabled  = Tasks[7].Result.Okay() ? Tasks[7].Result.GetOutput().TrimEnd().Equals(c_Active) : false;
+            HWClockPresent      = Tasks[8].Result.Okay();
 
             // Log only if errors have occured
             LoggingActions.LogTaskResult(Log, Tasks[0], EventLogEntryCodes.WiFiCountriesSettingGetError);
@@ -153,10 +152,20 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
 
             if (WifiCountry != theModel.WifiCountry)
             {
-                AskToRestart = true;
-                Log?.Invoke( EventLogEntryCodes.WifiCountrySetting, new string[] { theModel.WifiCountry });
-                SetWifiCountry = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_wifi_country " + theModel.WifiCountry);
-                Tasks.Add(SetWifiCountry);
+                if (theModel.WifiCountry == string.Empty)
+                {
+                    AskToRestart = true;
+                    Log?.Invoke(EventLogEntryCodes.WifiCountrySetting, new string[] { "None" });
+                    SetWifiCountry = UnsetWiFiSequence();
+                    Tasks.Add(SetWifiCountry);
+                }
+                else
+                {
+                    AskToRestart = true;
+                    Log?.Invoke( EventLogEntryCodes.WifiCountrySetting, new string[] { theModel.WifiCountry });
+                    SetWifiCountry = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_wifi_country " + theModel.WifiCountry);
+                    Tasks.Add(SetWifiCountry);
+                }
             }
 
             Task<ProcessResult> SetDate = null;
@@ -166,7 +175,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
                 DateTime DateConvert = DateTime.ParseExact(theModel.Date.Replace("/", ""), "ddMMyyyy", CultureInfo.InvariantCulture);
                 string DateCommand = "+%Y%m%d -s \"" + DateConvert.ToString("yyyyMMdd") + "\"";
                 Log?.Invoke( EventLogEntryCodes.DateSetting, new string[]{ "date " + DateCommand});
-                SetDate = ProcessRunner.GetProcessResultAsync("date", DateCommand);
+                SetDate = ProcessRunner.GetProcessResultAsync(c_DateCommand, DateCommand);
                 Tasks.Add(SetDate);
             }
 
@@ -176,13 +185,22 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             {
                 string TimeCommand = "+%T -s \"" + theModel.Time + "\"";
                 Log?.Invoke( EventLogEntryCodes.TimeSetting, new string[] { "date " + TimeCommand });
-                SetTime = ProcessRunner.GetProcessResultAsync("date", TimeCommand);
+                SetTime = ProcessRunner.GetProcessResultAsync(c_DateCommand, TimeCommand);
                 Tasks.Add(SetTime);
             }
 
             if (AskToRestart) { RestartDue?.Invoke(); }
 
             Task.WaitAll(Tasks.ToArray());
+
+            Task<ProcessResult> SyncRTC = null;
+
+            if (HWClockPresent && ( theModel.SetTime || theModel.SetDate || (theModel.TimeSyncdEnabled && ! TimeSyncdEnabled ) ) && theModel.HWClockPresent )
+            {
+                Log?.Invoke(EventLogEntryCodes.RTCSyncing, null);
+                SyncRTC = ProcessRunner.GetProcessResultAsync(c_HardwareClockCommand, "-w");
+                SyncRTC.Wait();
+            } 
 
             // Check if Tasks have completed Okay and Log result
             LoggingActions.LogTaskResult(Log, StartTimesyncd, EventLogEntryCodes.TimesyncdStarted, EventLogEntryCodes.TimesyncdStartingError);
@@ -193,6 +211,22 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             LoggingActions.LogTaskResult(Log, SetWifiCountry, EventLogEntryCodes.WifiCountrySet, EventLogEntryCodes.WifiCountrySettingError);
             LoggingActions.LogTaskResult(Log, SetDate, EventLogEntryCodes.DateSet, EventLogEntryCodes.DateSettingError);
             LoggingActions.LogTaskResult(Log, SetTime, EventLogEntryCodes.TimeSet, EventLogEntryCodes.TimeSettingError);
+            LoggingActions.LogTaskResult(Log, SyncRTC, EventLogEntryCodes.RTCSynced, EventLogEntryCodes.RTCSyncError);
+        }
+
+        private Task<ProcessResult> UnsetWiFiSequence()
+        {
+            return Task.Run(async () =>
+            {
+                ProcessResult Result = await ProcessRunner.GetProcessResultAsync(c_SedCommand, "-i '/country=/d' /etc/wpa_supplicant/wpa_supplicant.conf");
+
+                if( Result.Okay())
+                {
+                    Result = await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i wlan0 reconfigure");
+                }
+
+                return Result;
+            });
         }
     }
 }

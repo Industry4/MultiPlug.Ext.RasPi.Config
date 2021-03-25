@@ -20,29 +20,29 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
 
         internal InterfacingProperties RepopulateAndGetProperties()
         {
-            if (!RunningRaspberryPi) { return this; }
+            if (!Utils.Hardware.isRunningRaspberryPi) { return this; }
 
             Task<ProcessResult>[] Tasks = new Task<ProcessResult>[8];
 
-            Tasks[0] = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint get_camera");
-            Tasks[1] = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint get_ssh");
-            Tasks[2] = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint get_vnc");
-            Tasks[3] = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint get_spi");
-            Tasks[4] = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint get_i2c");
-            Tasks[5] = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint get_serial");
-            Tasks[6] = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint get_onewire");
-            Tasks[7] = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint get_rgpio");
+            Tasks[0] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_camera");
+            Tasks[1] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_ssh");
+            Tasks[2] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_vnc");
+            Tasks[3] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_spi");
+            Tasks[4] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_i2c");
+            Tasks[5] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_serial");
+            Tasks[6] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_onewire");
+            Tasks[7] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_rgpio");
 
             Task.WaitAll(Tasks);
 
-            this.Camera     = Tasks[0].Result.Okay() ? Tasks[0].Result.GetOutput().TrimEnd().Equals("0") : false;
-            this.SSH        = Tasks[1].Result.Okay() ? Tasks[1].Result.GetOutput().TrimEnd().Equals("0") : false;
-            this.VNC        = Tasks[2].Result.Okay() ? Tasks[2].Result.GetOutput().TrimEnd().Equals("0") : false;
-            this.SPI        = Tasks[3].Result.Okay() ? Tasks[3].Result.GetOutput().TrimEnd().Equals("0") : false;
-            this.I2C        = Tasks[4].Result.Okay() ? Tasks[4].Result.GetOutput().TrimEnd().Equals("0") : false;
-            this.Serial     = Tasks[5].Result.Okay() ? Tasks[5].Result.GetOutput().TrimEnd().Equals("0") : false;
-            this.OneWire    = Tasks[6].Result.Okay() ? Tasks[6].Result.GetOutput().TrimEnd().Equals("0") : false;
-            this.RemoteGPIO = Tasks[7].Result.Okay() ? Tasks[7].Result.GetOutput().TrimEnd().Equals("0") : false;
+            this.Camera     = Tasks[0].Result.Okay() ? Tasks[0].Result.GetOutput().TrimEnd().Equals(c_Enabled) : false;
+            this.SSH        = Tasks[1].Result.Okay() ? Tasks[1].Result.GetOutput().TrimEnd().Equals(c_Enabled) : false;
+            this.VNC        = Tasks[2].Result.Okay() ? Tasks[2].Result.GetOutput().TrimEnd().Equals(c_Enabled) : false;
+            this.SPI        = Tasks[3].Result.Okay() ? Tasks[3].Result.GetOutput().TrimEnd().Equals(c_Enabled) : false;
+            this.I2C        = Tasks[4].Result.Okay() ? Tasks[4].Result.GetOutput().TrimEnd().Equals(c_Enabled) : false;
+            this.Serial     = Tasks[5].Result.Okay() ? Tasks[5].Result.GetOutput().TrimEnd().Equals(c_Enabled) : false;
+            this.OneWire    = Tasks[6].Result.Okay() ? Tasks[6].Result.GetOutput().TrimEnd().Equals(c_Enabled) : false;
+            this.RemoteGPIO = Tasks[7].Result.Okay() ? Tasks[7].Result.GetOutput().TrimEnd().Equals(c_Enabled) : false;
 
             // Log only if errors have occured
             LoggingActions.LogTaskResult(Log, Tasks[0], EventLogEntryCodes.CameraSettingGetError);
@@ -71,7 +71,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             {
                 AskToRestart = true;
                 LoggingActions.LogTaskAction(Log, theModel.Camera, EventLogEntryCodes.CameraSettingEnabling, EventLogEntryCodes.CameraSettingDisabling);
-                SetCamera = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_camera " + (theModel.Camera ? "0" : "1"));
+                SetCamera = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_camera " + (theModel.Camera ? c_Enabled : c_Disabled));
                 Tasks.Add(SetCamera);
             }
 
@@ -80,7 +80,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             if ( SSH != theModel.SSH)
             {
                 LoggingActions.LogTaskAction(Log, theModel.SSH, EventLogEntryCodes.SSHSettingEnabling, EventLogEntryCodes.SSHSettingDisabling);
-                SetSSH = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_ssh " + (theModel.SSH ? "0" : "1"));
+                SetSSH = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_ssh " + (theModel.SSH ? c_Enabled : c_Disabled));
                 Tasks.Add(SetSSH);
             }
 
@@ -89,7 +89,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             if ( VNC != theModel.VNC)
             {
                 LoggingActions.LogTaskAction(Log, theModel.VNC, EventLogEntryCodes.VNCSettingEnabling, EventLogEntryCodes.VNCSettingDisabling);
-                SetVNC = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_vnc " + (theModel.VNC ? "0" : "1"));
+                SetVNC = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_vnc " + (theModel.VNC ? c_Enabled : c_Disabled));
                 Tasks.Add(SetVNC);
             }
 
@@ -98,7 +98,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             if ( SPI != theModel.SPI)
             {
                 LoggingActions.LogTaskAction(Log, theModel.SPI, EventLogEntryCodes.SPISettingEnabling, EventLogEntryCodes.SPISettingDisabling);
-                SetSPI = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_spi " + (theModel.SPI ? "0" : "1"));
+                SetSPI = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_spi " + (theModel.SPI ? c_Enabled : c_Disabled));
                 Tasks.Add(SetSPI);
             }
 
@@ -107,7 +107,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             if ( I2C != theModel.I2C)
             {
                 LoggingActions.LogTaskAction(Log, theModel.I2C, EventLogEntryCodes.I2CSettingEnabling, EventLogEntryCodes.I2CSettingDisabling);
-                SetI2C = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_i2c " + (theModel.I2C ? "0" : "1"));
+                SetI2C = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_i2c " + (theModel.I2C ? c_Enabled : c_Disabled));
                 Tasks.Add(SetI2C);
             }
 
@@ -117,7 +117,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             {
                 AskToRestart = true;
                 LoggingActions.LogTaskAction(Log, theModel.Serial, EventLogEntryCodes.SerialSettingEnabling, EventLogEntryCodes.SerialSettingDisabling);
-                SetSerial = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_serial " + (theModel.Serial ? "0" : "1"));
+                SetSerial = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_serial " + (theModel.Serial ? c_Enabled : c_Disabled));
                 Tasks.Add(SetSerial);
             }
 
@@ -127,7 +127,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             {
                 AskToRestart = true;
                 LoggingActions.LogTaskAction(Log, theModel.OneWire, EventLogEntryCodes.OneWireSettingEnabling, EventLogEntryCodes.OneWireSettingDisabling);
-                SetOneWire = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_onewire " + (theModel.OneWire ? "0" : "1"));
+                SetOneWire = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_onewire " + (theModel.OneWire ? c_Enabled : c_Disabled));
                 Tasks.Add(SetOneWire);
             }
 
@@ -136,7 +136,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             if ( RemoteGPIO != theModel.RemoteGPIO)
             {
                 LoggingActions.LogTaskAction(Log, theModel.RemoteGPIO, EventLogEntryCodes.RemoteGPIOSettingEnabling, EventLogEntryCodes.RemoteGPIOSettingDisabling);
-                SetRemoteGPIO = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_rgpio " + (theModel.RemoteGPIO ? "0" : "1"));
+                SetRemoteGPIO = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_rgpio " + (theModel.RemoteGPIO ? c_Enabled : c_Disabled));
                 Tasks.Add(SetRemoteGPIO);
             }
 

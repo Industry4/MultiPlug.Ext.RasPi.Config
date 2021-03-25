@@ -1,11 +1,19 @@
 ﻿using System.Reflection;
 using MultiPlug.Ext.RasPi.Config.Models.Components.About;
+using MultiPlug.Base.Exchange.API;
 
 namespace MultiPlug.Ext.RasPi.Config.Components.About
 {
     internal class AboutComponent : AboutProperties
     {
-        internal AboutComponent RepopulateAndGetProperties()
+        private ILoggingService m_LoggingService;
+        internal AboutComponent(ILoggingService theLoggingService)
+        {
+            m_LoggingService = theLoggingService;
+        }
+
+
+        internal AboutProperties RepopulateAndGetProperties()
         {
             var ExecutingAssembly = Assembly.GetExecutingAssembly();
 
@@ -16,6 +24,8 @@ namespace MultiPlug.Ext.RasPi.Config.Components.About
             Copyright = ExecutingAssembly.GetCustomAttribute<AssemblyCopyrightAttribute>().Copyright;
             Trademark = ExecutingAssembly.GetCustomAttribute<AssemblyTrademarkAttribute>().Trademark;
             Version = ExecutingAssembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+
+            Log = string.Join("\r", m_LoggingService.Read());
 
             return this;
         }

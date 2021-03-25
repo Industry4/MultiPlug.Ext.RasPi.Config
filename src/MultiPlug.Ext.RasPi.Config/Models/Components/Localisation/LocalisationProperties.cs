@@ -20,5 +20,7 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Components.Localisation
         public string[][] TimeZones { get; set; }
         public bool SetTime { get; set; } = false;
         public bool SetDate { get; set; } = false;
+
+        public bool HWClockPresent { get; set; } = false;
     }
 }

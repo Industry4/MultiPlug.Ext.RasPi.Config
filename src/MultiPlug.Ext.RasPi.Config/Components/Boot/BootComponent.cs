@@ -20,12 +20,12 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Boot
 
         internal BootProperties RepopulateAndGetProperties()
         {
-            if (!RunningRaspberryPi) { return this; }
+            if (!Utils.Hardware.isRunningRaspberryPi) { return this; }
 
             Task<ProcessResult>[] Tasks = new Task<ProcessResult>[2];
 
-            Tasks[0] = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint get_boot_wait");
-            Tasks[1] = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint get_boot_splash");
+            Tasks[0] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_boot_wait");
+            Tasks[1] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_boot_splash");
 
             Task.WaitAll(Tasks);
 
@@ -57,7 +57,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Boot
                     EventLogEntryCodes.BootBehaviourSettingConsoleAutologin,
                     EventLogEntryCodes.BootBehaviourSettingDesktop,
                     EventLogEntryCodes.BootBehaviourSettingDesktopAutologin });
-                SetBootBehaviour = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_boot_behaviour B" + theModel.BootBehaviour);
+                SetBootBehaviour = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_boot_behaviour B" + theModel.BootBehaviour);
                 Tasks.Add(SetBootBehaviour);
             }
 
@@ -66,7 +66,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Boot
             if (NetworkWait != theModel.NetworkWait)
             {
                 LoggingActions.LogTaskAction(Log, theModel.NetworkWait, EventLogEntryCodes.NetworkWaitSettingTrue, EventLogEntryCodes.NetworkWaitSettingFalse);
-                SetNetworkWait = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_boot_wait " + (theModel.NetworkWait ? "0" : "1"));
+                SetNetworkWait = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_boot_wait " + (theModel.NetworkWait ? "0" : "1"));
                 Tasks.Add(SetNetworkWait);
             }
 
@@ -75,7 +75,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Boot
             if (SplashScreen != theModel.SplashScreen)
             {
                 LoggingActions.LogTaskAction(Log, theModel.SplashScreen, EventLogEntryCodes.SplashScreenSettingTrue, EventLogEntryCodes.SplashScreenSettingFalse);
-                SetSplashScreen = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_boot_splash " + (theModel.SplashScreen ? "0" : "1"));
+                SetSplashScreen = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_boot_splash " + (theModel.SplashScreen ? "0" : "1"));
                 Tasks.Add(SetSplashScreen);
             }
 
@@ -86,7 +86,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Boot
                 LoggingActions.LogTaskAction(Log, (theModel.BootOrder - 1), new EventLogEntryCodes[] {
                     EventLogEntryCodes.BootOrderSettingUSB,
                     EventLogEntryCodes.BootOrderSettingNetwork });
-                SetBootOrder = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_boot_order B" + theModel.BootOrder);
+                SetBootOrder = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_boot_order B" + theModel.BootOrder);
                 Tasks.Add(SetBootOrder);
             }
 
@@ -98,7 +98,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Boot
                 LoggingActions.LogTaskAction(Log, (theModel.BootROM - 1), new EventLogEntryCodes[] {
                     EventLogEntryCodes.BootROMSettingLatest,
                     EventLogEntryCodes.BootROMSettingDefault });
-                SetBootROM = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_boot_rom E" + theModel.BootROM);
+                SetBootROM = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_boot_rom E" + theModel.BootROM);
                 Tasks.Add(SetBootROM);
             }
 

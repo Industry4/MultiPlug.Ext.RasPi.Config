@@ -10,7 +10,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Actions
 
         internal void RestartSystem()
         {
-            if( RebootUserPrompt )
+            if( Utils.Hardware.RebootUserPrompt )
             {
                 Log?.Invoke(Diagnostics.EventLogEntryCodes.SystemShutdown, null);
                 DoSystemRestart?.Invoke();

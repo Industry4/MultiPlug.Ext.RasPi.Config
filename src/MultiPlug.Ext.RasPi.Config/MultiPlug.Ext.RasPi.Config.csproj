@@ -62,6 +62,10 @@
     <Compile Include="Components\Network\DHCPCD.cs" />
     <Compile Include="Components\Network\IFCONFIG.cs" />
     <Compile Include="Components\Network\NetworkComponent.cs" />
+    <Compile Include="Controllers\API\APIEndpoint.cs" />
+    <Compile Include="Controllers\API\Environment\TemperatureController.cs" />
+    <Compile Include="Controllers\API\Memory\DiskSpacePercentageController.cs" />
+    <Compile Include="Controllers\API\Network\ScanWiFiController.cs" />
     <Compile Include="Controllers\Assets\AssetsEndpoint.cs" />
     <Compile Include="Controllers\Assets\CssController.cs" />
     <Compile Include="Controllers\Assets\ImageController.cs" />
@@ -74,17 +78,23 @@
     <Compile Include="Controllers\Settings\Interfacing\InterfacingController.cs" />
     <Compile Include="Controllers\Settings\Localisation\LocalisationController.cs" />
     <Compile Include="Controllers\Settings\Memory\MemoryController.cs" />
+    <Compile Include="Controllers\Settings\Network\DeleteWiFiController.cs" />
     <Compile Include="Controllers\Settings\Network\NetworkController.cs" />
     <Compile Include="Controllers\Settings\SettingsApp.cs" />
+    <Compile Include="Controllers\Settings\SharedRazor\Templates.cs" />
+    <Compile Include="Controllers\Settings\Users\UsersController.cs" />
     <Compile Include="Diagnostics\EventLogDefinitions.cs" />
     <Compile Include="Diagnostics\EventLogEntryCodes.cs" />
     <Compile Include="Diagnostics\LoggingActions.cs" />
     <Compile Include="Models\Components\About\AboutProperties.cs" />
     <Compile Include="Models\Components\Boot\BootProperties.cs" />
-    <Compile Include="Models\Components\IRunningRaspberryPiProperty.cs" />
+    <Compile Include="Models\Components\Home\API\DiskSpace.cs" />
+    <Compile Include="Models\Components\Home\API\Temperatures.cs" />
     <Compile Include="Models\Components\Memory\MemoryProperties.cs" />
     <Compile Include="Models\Components\SharedProperties.cs" />
+    <Compile Include="Models\Components\Users\UsersProperties.cs" />
     <Compile Include="Utils\Hardware.cs" />
+    <Compile Include="Utils\Linux.cs" />
     <Compile Include="Utils\Swan\Definitions.cs" />
     <Compile Include="Utils\Swan\ProcessResult.cs" />
     <Compile Include="Utils\Swan\ProcessRunner.cs" />
@@ -116,6 +126,7 @@
     <None Include="Controllers\Settings\Network\SettingsNetwork.cshtml" />
     <None Include="Controllers\Settings\SharedRazor\SettingsNavigation.cshtml" />
     <None Include="Controllers\Settings\SharedRazor\SettingsNotRaspberryPi.cshtml" />
+    <None Include="Controllers\Settings\Users\SettingsUsers.cshtml" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -29,7 +29,15 @@
                     </div>
                     <div class="row-fluid">
                         <div class="span6"><b>WiFi Country</b></div>
-                        <div class="span6">@Raw(Model.Extension.Model.WiFiCountry)</div>
+                        <div class="span6">@if(Model.Extension.Model.WiFiCountrySet)
+                        {
+                            @Model.Extension.Model.WiFiCountry
+                        }
+                        else
+                        {
+                            <a href="@Raw(Model.Context.Paths.Home)localisation/">Set WiFi Country</a>
+                        }
+                        </div>
                     </div>
                 </div>
             </div>
@@ -208,20 +216,75 @@
             <div class="span12">
                 <h3 class="box-header">Wireless LAN</h3>
                 <div class="box">
-                    <div class="row-fluid">
-                        <div class="span6"><b>SSID</b></div>
-                        <div class="span6"><input name="SSID" class="input-block-level" type="text" value="@Raw(Model.Extension.Model.SSID)"></div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span6"><b>Passphrase</b></div>
-                        <div class="span6"><input name="Passphrase" class="input-block-level" type="text" value="@Raw(Model.Extension.Model.Passphrase)"></div>
-                    </div>
+
+                    @if (!Model.Extension.Model.WiFiCountrySet)
+                    {
+                        <a href="@Raw(Model.Context.Paths.Home)localisation/">Set WiFi Country</a>
+                    }
+                    else
+                    {
+                        <h3 class="box-header">Saved Networks</h3>
+                        <div class="box non-collapsible">
+                            <table id="devicesTable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="span10">SSID</th>
+                                        @*<th class="span5">Passphrase</th>*@
+                                        <th class="span2"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int Index = 0; Index < Model.Extension.Model.SSIDs.Length; Index++)
+                                    {
+                                        <tr>
+                                            <td class="span10">@Raw(Model.Extension.Model.SSIDs[Index])</td>
+                                            @*<td class="span5">@Raw(Model.Extension.Model.Passphrases[Index])</td>*@
+                                            <td class="span2"><a class="btn btn-red btn-deletewifi" href="@Raw(Model.Context.Paths.Home)network/deletewifi/?id=@Model.Extension.Model.SSIDs[Index]"><i class="icon-trash"></i></a></td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3 class="box-header">Available or New Networks</h3>
+                        <div class="box non-collapsible">
+                            <table id="devicesTable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="span2"></th>
+                                        <th class="span5">SSID</th>
+                                        <th class="span5">Passphrase</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="span2"><a class="btn btn-blue btn-scanwifi" href="#">Scan</a></td>
+                                        <td class="span5">
+                                            <div class="input-prepend span12">
+                                                <div class="btn-group">
+                                                    <button class="btn dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+                                                        <span class="caret">
+                                                        </span>
+                                                    </button>
+                                                    <ul id="availableNetworks" class="dropdown-menu">
+                                                        <li><a class="btn-scanwifi" href="#">Click Scan to search for available WiFi networks</a></li>
+                                                    </ul>
+                                                    <input id="newSSID" name="NewSSID" class="span11" type="text" placeholder="New SSID" value="">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="span5"><input type="text" name="NewPassphrase" placeholder="New Passphrase" value=""></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </form>
 </section>
-
 
 <script>
 
@@ -284,4 +347,38 @@ return '<tr>\
     });
 
     ApplyOnClickDeleteColumn();
+
+    $(".btn-deletewifi").click(function (event) {
+        event.preventDefault();
+
+        var theRow = $(this).closest("tr");
+
+        $.post($(this).attr('href'), function (data) {
+
+        })
+        .done(function () {
+            theRow.remove();
+        });
+    });
+
+    $(".btn-scanwifi").click(function (event) {
+        event.preventDefault();
+
+        $.ajax({
+            type: "GET",
+            url: "@Raw(Model.Context.Paths.APIs)network/scan/",
+            success: function (data) {
+                var unorderedList = '';
+                for (var i = 0; i < data.length; i++) {
+                    unorderedList += '<li><a class="availableSSID" href="#">' + data[i] + '</a></li>'
+                }
+                $("#availableNetworks").html(unorderedList);
+
+                $('.availableSSID').click(function (event) {
+                    event.preventDefault();
+                    $("#newSSID").val($(this).text());
+                });
+            }
+        });
+    });
 </script>

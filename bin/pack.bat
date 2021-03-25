@@ -1,1 +1,1 @@
-nuget.exe pack Nuget/MultiPlug.Ext.RasPi.Config.nuspec
+"..\..\nuget.exe" pack Nuget/MultiPlug.Ext.RasPi.Config.nuspec

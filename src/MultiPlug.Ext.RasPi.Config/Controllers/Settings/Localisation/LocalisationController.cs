@@ -2,6 +2,7 @@
 using MultiPlug.Base.Attribute;
 using MultiPlug.Base.Http;
 using MultiPlug.Ext.RasPi.Config.Models.Components.Localisation;
+using MultiPlug.Ext.RasPi.Config.Controllers.Settings.SharedRazor;
 
 namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Localisation
 {
@@ -12,12 +13,12 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Localisation
         {
             LocalisationProperties Properties = Core.Instance.Localisation.RepopulateAndGetProperties();
 
-            if (Properties.RunningRaspberryPi)
+            if (Utils.Hardware.isRunningRaspberryPi)
             {
                 return new Response
                 {
                     Model = Properties,
-                    Template = "RaspPiConfig_Settings_Localisation"
+                    Template = Templates.Localisation
                 };
             }
             else
