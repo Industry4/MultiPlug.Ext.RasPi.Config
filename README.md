@@ -12,7 +12,9 @@ The functionality mirrors most of the functionality found in the command line to
 * Interfacing - Camera, SSH, VNC, SPI, I2C, Serial, 1-Wire, Remote GPIO
 * Boot - Desktop or CLI, Boot Order, Boot BOM Version
 * Memory - Current Disk and RAM usage
+* Users - Set user passwords
 * Hardware Attached On Top (HAT) Details
+* REST Json API for Temperature and Disk Space
 
 ## Getting Started
 
