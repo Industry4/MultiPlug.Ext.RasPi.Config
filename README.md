@@ -1,6 +1,6 @@
 # MultiPlug.Ext.RasPi.Config
 
-Raspberry Pi Configuration Extension for the MultiPlug .Net Edge Computing Platform
+Raspberry Pi Configuration Extension for the [MultiPlug .Net Edge Computing Platform](https://www.multiplug.app).
 
 ### Functionality
 
@@ -10,6 +10,7 @@ The functionality mirrors most of the functionality found in the command line to
 * Network - Hostname, static values for IP Address, IP 6 Address, Routers and Domain Name Servers for Eth0 and Wlan0, Wireless SSID and Passphrase.
 * Localisation - Wifi Country, Time, Time Zone, Date
 * Interfacing - Camera, SSH, VNC, SPI, I2C, Serial, 1-Wire, Remote GPIO
+* Performance - Temperature control via Fan
 * Boot - Desktop or CLI, Boot Order, Boot BOM Version
 * Memory - Current Disk and RAM usage
 * Users - Set user passwords

@@ -31,12 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MultiPlug.Base, Version=1.0.50.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MultiPlug.Base.1.0.50\lib\net472\MultiPlug.Base.dll</HintPath>
+    <Reference Include="MultiPlug.Base, Version=1.0.64.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MultiPlug.Base.1.0.64\lib\net472\MultiPlug.Base.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MultiPlug.Extension.Core, Version=1.0.59.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MultiPlug.Extension.Core.1.0.59\lib\net472\MultiPlug.Extension.Core.dll</HintPath>
+    <Reference Include="MultiPlug.Extension.Core, Version=1.0.63.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MultiPlug.Extension.Core.1.0.63\lib\net472\MultiPlug.Extension.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -61,7 +61,9 @@
     <Compile Include="Components\Memory\MemoryComponent.cs" />
     <Compile Include="Components\Network\DHCPCD.cs" />
     <Compile Include="Components\Network\IFCONFIG.cs" />
+    <Compile Include="Components\Network\InterfacesD.cs" />
     <Compile Include="Components\Network\NetworkComponent.cs" />
+    <Compile Include="Components\Performance\PerformanceComponent.cs" />
     <Compile Include="Controllers\API\APIEndpoint.cs" />
     <Compile Include="Controllers\API\Environment\TemperatureController.cs" />
     <Compile Include="Controllers\API\Memory\DiskSpacePercentageController.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Controllers\Settings\Memory\MemoryController.cs" />
     <Compile Include="Controllers\Settings\Network\DeleteWiFiController.cs" />
     <Compile Include="Controllers\Settings\Network\NetworkController.cs" />
+    <Compile Include="Controllers\Settings\Performance\PerformanceController.cs" />
     <Compile Include="Controllers\Settings\SettingsApp.cs" />
     <Compile Include="Controllers\Settings\SharedRazor\Templates.cs" />
     <Compile Include="Controllers\Settings\Users\UsersController.cs" />
@@ -91,6 +94,7 @@
     <Compile Include="Models\Components\Home\API\DiskSpace.cs" />
     <Compile Include="Models\Components\Home\API\Temperatures.cs" />
     <Compile Include="Models\Components\Memory\MemoryProperties.cs" />
+    <Compile Include="Models\Components\Performance\PerformanceProperties.cs" />
     <Compile Include="Models\Components\SharedProperties.cs" />
     <Compile Include="Models\Components\Users\UsersProperties.cs" />
     <Compile Include="Utils\Hardware.cs" />
@@ -124,6 +128,7 @@
     <None Include="Controllers\Settings\Localisation\SettingsLocalisation.cshtml" />
     <None Include="Controllers\Settings\Memory\SettingsMemory.cshtml" />
     <None Include="Controllers\Settings\Network\SettingsNetwork.cshtml" />
+    <None Include="Controllers\Settings\Performance\SettingsPerformance.cshtml" />
     <None Include="Controllers\Settings\SharedRazor\SettingsNavigation.cshtml" />
     <None Include="Controllers\Settings\SharedRazor\SettingsNotRaspberryPi.cshtml" />
     <None Include="Controllers\Settings\Users\SettingsUsers.cshtml" />

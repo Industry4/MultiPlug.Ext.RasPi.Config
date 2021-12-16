@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>MultiPlug.Ext.RasPi.Config</id>
-    <version>1.0.10</version>
+    <version>1.0.11</version>
     <title>Raspberry Pi Configuration Extension for MultiPlug</title>
     <authors>4IR.UK</authors>
     <owners>4IR.UK</owners>
@@ -12,6 +12,11 @@
     <description>Configure the Raspberry Pi with this MultiPlug Extension (https://multiplug.app)</description>
 	<license type="expression">MIT</license>
     <releaseNotes>Run this extension only on a Raspberry Pi using the .Net Mono runtime.
+1.0.11 Bug: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/5
+Bug: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/4
+Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/3
+Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/2
+Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/1
 1.0.10 Enhancement: Set User passwords ie change the default pi password
 1.0.9 Enhancement: Wifi Scan, Json REST APIs, RTC Sync on save option
 1.0.8 Bug: Blank values being writing to dhcpcd.conf after setting changed to dynamic IPs
@@ -25,9 +30,9 @@
     <tags>MultiPlug Edge_Computing Raspberry Pi Raspberry_Pi IoT</tags>
     <dependencies>
       <group targetFramework=".NETFramework4.7.2">
-        <dependency id="MultiPlug.Base" version="1.0.50" />
-        <dependency id="MultiPlug.Extension.Core" version="1.0.59" />
-        <dependency id="MultiPlug.Core" version="2.2.72" />
+        <dependency id="MultiPlug.Base" version="1.0.64" />
+        <dependency id="MultiPlug.Extension.Core" version="1.0.63" />
+        <dependency id="MultiPlug.Core" version="2.2.76" />
       </group>
     </dependencies>
   </metadata>
