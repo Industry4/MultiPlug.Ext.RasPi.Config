@@ -42,6 +42,8 @@ The Extension can be installed using the in-built MultiPlug installer located at
 
 ![Image of MultiPlug.Ext.RasPi.Config](https://raw.githubusercontent.com/Industry4/MultiPlug.Ext.RasPi.Config/master/media/screen-shot1.png)
 
+More Screenshots can be viewed on [the Wiki](https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/wiki)
+
 ### Application
 
 The Extension can be accessed from: [http://multiplug.local/extensions/multiplug.ext.raspi.config//](http://multiplug.local/extensions/multiplug.ext.raspi.config/)
