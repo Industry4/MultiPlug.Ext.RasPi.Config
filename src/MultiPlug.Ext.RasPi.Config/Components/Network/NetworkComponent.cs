@@ -200,13 +200,17 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
 
                 if( SSIDS.Any())
                 {
-                    Task<Task<ProcessResult>> RemoveWiFi = ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i wlan0 remove_network " + SSIDS[0])
-                        .ContinueWith(async RemoveNetworkTask => await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i wlan0 save_config"))
-                        .ContinueWith(async SaveConfigTask => await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i wlan0 reconfigure"));
+                    var Task = ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i wlan0 remove_network " + SSIDS[0]);           
+                    Task.Wait();
+                    if( ! Task.Result.Okay() ){ return false; }
 
-                    RemoveWiFi.Wait();
+                    Task = ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i wlan0 save_config");
+                    Task.Wait();
+                    if( ! Task.Result.Okay() ) { return false; }
 
-                    Result = RemoveWiFi.Result.Result.Okay();
+                    Task = ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i wlan0 reconfigure");
+                    Task.Wait();
+                    Result = Task.Result.Okay();
                 }
                 else
                 {
@@ -219,7 +223,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
 
         internal static Task<ProcessResult> GetSSIDs()
         {
-            return ProcessRunner.GetProcessResultAsync("iwgetid", "--raw");
+           return ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i wlan0 list_networks");
         }
 
 
@@ -228,8 +232,9 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             if (theTask.Result.Okay())
             {
                 return theTask.Result.GetOutput().Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
-                                                                .Select(line => line.TrimEnd())
-                                                                .ToArray();
+                    .Skip(1) // Skip the Heading
+                    .Select( d => d.Split(new char[] { '\t' })[1] )
+                    .ToArray();
             }
 
             return new string[0];
@@ -275,10 +280,12 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
                 await ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "stop dhcpcd.service");
                 if (isEth0Changes)
                 {
+                    InterfacesD.Write(theEth0);
                     await ProcessRunner.GetProcessResultAsync(c_IPCommand, "addr flush dev eth0");
                 }
                 if (isWlan0Changes)
                 {
+                    InterfacesD.Write(theWlan0);
                     await ProcessRunner.GetProcessResultAsync(c_IPCommand, "addr flush dev wlan0");
                 }
                 await ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "start dhcpcd.service");
@@ -288,6 +295,9 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
                 {
                     await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i wlan0 reconfigure");
                 }
+
+                await ProcessRunner.GetProcessResultAsync(c_IFUp, c_Eth0);
+                await ProcessRunner.GetProcessResultAsync(c_IFUp, c_Wlan0);
 
                 return new ProcessResult(0, string.Empty, string.Empty);
             });
