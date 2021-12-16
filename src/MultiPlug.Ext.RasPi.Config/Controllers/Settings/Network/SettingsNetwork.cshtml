@@ -95,7 +95,7 @@
                     <div class="box non-collapsible">
 
                         <div class="row-fluid"><div class="span12"><b>IP Address</b></div></div>
-                        <div class="row-fluid"><div class="span12"><input name="Eth0IPAddress" class="input-block-level" type="text" value="@Model.Extension.Model.Eth0IPAddress"></div></div>
+                        <div class="row-fluid"><div class="span12"><input id="Eth0IPAddress" name="Eth0IPAddress" class="input-block-level" type="text" value="@Model.Extension.Model.Eth0IPAddress"></div></div>
 
                         <div class="row-fluid"><div class="span12"><b>IP 6 Address</b></div></div>
                         <div class="row-fluid"><div class="span12"><input name="Eth0IP6Address" class="input-block-level" type="text" value="@Model.Extension.Model.Eth0IP6Address"></div></div>
@@ -154,7 +154,7 @@
                     <div class="box non-collapsible">
 
                         <div class="row-fluid"><div class="span12"><b>IP Address</b></div></div>
-                        <div class="row-fluid"><div class="span12"><input name="Wlan0IPAddress" class="input-block-level" type="text" value="@Model.Extension.Model.Wlan0IPAddress"></div></div>
+                        <div class="row-fluid"><div class="span12"><input id="Wlan0IPAddress" name="Wlan0IPAddress" class="input-block-level" type="text" value="@Model.Extension.Model.Wlan0IPAddress"></div></div>
 
                         <div class="row-fluid"><div class="span12"><b>IP 6 Address</b></div></div>
                         <div class="row-fluid"><div class="span12"><input name="Wlan0IP6Address" class="input-block-level" type="text" value="@Model.Extension.Model.Wlan0IP6Address"></div></div>
@@ -289,8 +289,8 @@
 <script>
 
     function NewRow(theName) {
-return '<tr>\
-<td class="span10"><input name="' + theName +'" class="input-block-level" type="text" value=""></td>\
+        return '<tr>\
+<td class="span10"><input name="' + theName + '" class="input-block-level" type="text" value=""></td>\
 <td class="span2"><button type="button" class="btn btn-red btn-deletecolumn"><i class="icon-trash"></i></button></td>\
 </tr>'
     }
@@ -298,12 +298,10 @@ return '<tr>\
     var SaveWarningTimer;
 
     function SaveWarning() {
-        if ($("#btn-save").hasClass("btn-green"))
-        {
+        if ($("#btn-save").hasClass("btn-green")) {
             $("#btn-save").removeClass("btn-green")
         }
-        else
-        {
+        else {
             $("#btn-save").addClass("btn-green")
         }
     }
@@ -381,4 +379,68 @@ return '<tr>\
             }
         });
     });
+
+    var PreviousStaticEth0IPAddress = "@Model.Extension.Model.Eth0IPAddress";
+    var PreviousStaticWlan0IPAddress = "@Model.Extension.Model.Wlan0IPAddress";
+
+    @foreach (var Interface in @Model.Extension.Model.Interfaces)
+{
+    if(Interface.Name == "eth0")
+    {
+        <text>var Eth0IPAddress = "</text>@Raw(Interface.Inet)<text>";</text>
+    }
+    else if (Interface.Name == "wlan0")
+    {
+        <text>var Wlan0IPAddress = "</text>@Raw(Interface.Inet)<text>";</text>
+    }
+}
+
+    $("#btn-save").click(function (event) {
+        var NewStaticEth0IPAddress = document.getElementById("Eth0IPAddress").value;
+        var NewStaticWlan0IPAddress = document.getElementById("Wlan0IPAddress").value;
+
+        var NewIPAddress = "";
+
+        if (PreviousStaticEth0IPAddress != NewStaticEth0IPAddress && window.location.hostname == Eth0IPAddress) {
+            NewIPAddress = NewStaticEth0IPAddress.split("/")[0];
+        }
+        else if (PreviousStaticWlan0IPAddress != NewStaticWlan0IPAddress && window.location.hostname == Wlan0IPAddress) {
+            NewIPAddress = NewStaticWlan0IPAddress.split("/")[0];
+        }
+        else {
+            return;
+        }
+
+        if (NewIPAddress == "") {
+            if (confirm('Setting the IP Address to DHCP means you will now loose the connection with MultiPlug. Continue?')) {
+                return;
+            } else {
+                event.preventDefault();
+                return;
+            }
+        }
+
+        event.preventDefault();
+
+        var form = $('#formsave')[0];
+        var data = new FormData(form);
+
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 800000,
+            success: function (data) {
+            },
+            error: function (e) {
+            }
+        });
+
+        location.href = window.location.href.replace(window.location.hostname, NewIPAddress);
+    });
+
 </script>
