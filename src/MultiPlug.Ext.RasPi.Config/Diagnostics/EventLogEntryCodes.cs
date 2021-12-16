@@ -14,6 +14,7 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
         SourceMemory = 8,
         SourceNetwork = 9,
         SourceDebug = 10,
+        SourcePerformance = 11,
 
         RunningRaspberryPiFalse = 26,
         SystemShutdown = 27,
@@ -198,6 +199,14 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
         RTCSyncing = 174,
         RTCSyncError = 175,
         RTCSynced = 176,
-        DebugWriteLine = 177
+        DebugWriteLine = 177,
+
+
+        PerformanceFanEnabled = 180,
+        PerformanceFanEnabledError = 181,
+        PerformanceFanDisabled = 182,
+        PerformanceFanDisabledError = 183,
+        PerformanceFanGPIOOrTempChanged = 184,
+        PerformanceFanGPIOOrTempChangedError = 185,
     }
 }

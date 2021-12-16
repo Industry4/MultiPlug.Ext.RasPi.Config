@@ -15,6 +15,7 @@ using MultiPlug.Ext.RasPi.Config.Models.Components;
 using System;
 using MultiPlug.Ext.RasPi.Config.Utils;
 using MultiPlug.Ext.RasPi.Config.Components.About;
+using MultiPlug.Ext.RasPi.Config.Components.Performance;
 
 namespace MultiPlug.Ext.RasPi.Config
 {
@@ -53,6 +54,7 @@ namespace MultiPlug.Ext.RasPi.Config
             Hat.Log += OnLogWriteEntry;
             Interfacing.Log += OnLogWriteEntry;
             Localisation.Log += OnLogWriteEntry;
+            Performance.Log += OnLogWriteEntry;
             Boot.Log += OnLogWriteEntry;
             Memory.Log += OnLogWriteEntry;
             Actions.Log += OnLogWriteEntry;
@@ -88,6 +90,7 @@ namespace MultiPlug.Ext.RasPi.Config
         public HatComponent Hat { get; private set; } = new HatComponent();
         [DataMember]
         public InterfacingComponent Interfacing { get; private set; } = new InterfacingComponent();
+        internal PerformanceComponent Performance { get; private set; } = new PerformanceComponent();
         [DataMember]
         public LocalisationComponent Localisation { get; private set; } = new LocalisationComponent();
         [DataMember] 

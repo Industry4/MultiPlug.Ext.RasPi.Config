@@ -25,6 +25,7 @@ namespace MultiPlug.Ext.RasPi.Config
                     new RazorTemplate(Templates.Hat, Resources.SettingsHat),
                     new RazorTemplate(Templates.Localisation, Resources.SettingsLocalisation),
                     new RazorTemplate(Templates.Interfacing, Resources.SettingsInterfacing),
+                    new RazorTemplate(Templates.Performance, Resources.SettingsPerformance),
                     new RazorTemplate(Templates.Boot, Resources.SettingsBoot),
                     new RazorTemplate(Templates.Memory, Resources.SettingsMemory),
                     new RazorTemplate(Templates.Users, Resources.SettingsUsers),

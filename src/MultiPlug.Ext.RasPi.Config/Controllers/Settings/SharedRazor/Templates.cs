@@ -10,6 +10,7 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.SharedRazor
         internal const string Hat = "RaspPiConfig_Settings_Hat";
         internal const string Localisation = "RaspPiConfig_Settings_Localisation";
         internal const string Interfacing = "RaspPiConfig_Settings_Interfacing";
+        internal const string Performance = "RaspPiConfig_Settings_Performance";
         internal const string Boot = "RaspPiConfig_Settings_Boot";
         internal const string Memory = "RaspPiConfig_Settings_Memory";
         internal const string Users = "RaspPiConfig_Settings_Users";

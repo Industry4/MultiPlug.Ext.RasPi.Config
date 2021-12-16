@@ -393,17 +393,45 @@ namespace MultiPlug.Ext.RasPi.Config.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///   Looks up a localized string similar to @model MultiPlug.Base.Http.EdgeApp
         ///
-        ///&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
-        ///&lt;head&gt;
-        ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///    &lt;title&gt;&lt;/title&gt;
-        ///&lt;/head&gt;
-        ///&lt;body&gt;
         ///
-        ///&lt;/body&gt;
-        ///&lt;/html&gt;.
+        ///
+        ///&lt;section class=&quot;row-fluid&quot;&gt;
+        ///
+        ///    &lt;div class=&quot;row-fluid&quot;&gt;
+        ///        &lt;div class=&quot;box&quot;&gt;
+        ///            &lt;div class=&quot;span3&quot;&gt;
+        ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
+        ///            &lt;/div&gt;
+        ///            &lt;div class=&quot;span6&quot;&gt;
+        ///                &lt;p style=&quot;font-size:26px; line-height: 54px; text-align: center; margin: 0px;&quot;&gt;Raspberry Pi Configuration&lt;/p&gt;
+        ///            &lt;/div&gt; [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SettingsPerformance {
+            get {
+                return ResourceManager.GetString("SettingsPerformance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to @model MultiPlug.Base.Http.EdgeApp
+        ///@functions {
+        ///    public string isErrorMessage()
+        ///    {
+        ///        return Model.Extension.Model.Error ? &quot;alert-error&quot; : &quot;alert-success&quot;;
+        ///    }
+        ///}
+        ///
+        ///&lt;section class=&quot;row-fluid&quot;&gt;
+        ///
+        ///    &lt;div class=&quot;row-fluid&quot;&gt;
+        ///        &lt;div class=&quot;box&quot;&gt;
+        ///            &lt;div class=&quot;span3&quot;&gt;
+        ///                &lt;a style=&quot;line-height: 52px;&quot; href=&quot;#&quot;&gt;&lt;img alt=&quot;Raspberry Pi Logo&quot; src=&quot;@Raw(Model.Context.Paths.Assets)images/raspberry-pi.png&quot;&gt;&lt;/a&gt;
+        ///            &lt;/div&gt;
+        ///            &lt;div class=&quot;span6&quot;&gt;
+        ///    [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SettingsUsers {
             get {

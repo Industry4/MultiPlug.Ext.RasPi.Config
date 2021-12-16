@@ -19,11 +19,14 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Components
         internal const string c_IFConfigCommand = "ifconfig";
         internal const string c_CatCommand = "cat";
         internal const string c_DateCommand = "date";
+        internal const string c_GrepCommand = "grep";
         internal const string c_TimeDateControlCommand = "timedatectl";
         internal const string c_HardwareClockCommand = "hwclock";
         internal const string c_SedCommand = "sed";
         internal const string c_VCGenCommand = "vcgencmd";
         internal const string c_DFCommand = "df";
         internal const string c_FreeCommand = "free";
+        internal const string c_IFDown = "ifdown";
+        internal const string c_IFUp = "ifup";
     }
 }

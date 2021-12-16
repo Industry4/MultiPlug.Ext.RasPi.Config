@@ -18,6 +18,7 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.SourceMemory,             Source = (uint) EventLogEntryCodes.Reserved, StringFormat = "Memory", Type = EventLogEntryType.Information  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.SourceNetwork,            Source = (uint) EventLogEntryCodes.Reserved, StringFormat = "Network", Type = EventLogEntryType.Information  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.SourceDebug,              Source = (uint) EventLogEntryCodes.Reserved, StringFormat = "Debug", Type = EventLogEntryType.Information  },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.SourcePerformance,        Source = (uint) EventLogEntryCodes.Reserved, StringFormat = "Performance", Type = EventLogEntryType.Information  },
 
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.SystemShutdown,           Source = (uint) EventLogEntryCodes.SourceUser, StringFormat = "System restart triggered",                               Type = EventLogEntryType.Information  },
 
@@ -183,7 +184,14 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.RTCSyncing,                   Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "Attempting to sync the Hardware Clock", Type = EventLogEntryType.Information  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.RTCSyncError,                 Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "RTC Sync Error. Message: {0}", Type = EventLogEntryType.Error  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.RTCSynced,                    Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "RTC Synced successfully", Type = EventLogEntryType.Information  },
-            new EventLogDefinition { Code = (uint) EventLogEntryCodes.DebugWriteLine,               Source = (uint) EventLogEntryCodes.SourceDebug, StringFormat = "{0}", Type = EventLogEntryType.Information  }
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.DebugWriteLine,               Source = (uint) EventLogEntryCodes.SourceDebug, StringFormat = "{0}", Type = EventLogEntryType.Information  },
+
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.PerformanceFanEnabled,        Source = (uint) EventLogEntryCodes.SourcePerformance, StringFormat = "Fan Enabled", Type = EventLogEntryType.Information  },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.PerformanceFanEnabledError,   Source = (uint) EventLogEntryCodes.SourcePerformance, StringFormat = "Error while enabling the Fan. Message: {0}", Type = EventLogEntryType.Error   },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.PerformanceFanDisabled,       Source = (uint) EventLogEntryCodes.SourcePerformance, StringFormat = "Fan Disabled", Type = EventLogEntryType.Information  },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.PerformanceFanDisabledError,  Source = (uint) EventLogEntryCodes.SourcePerformance, StringFormat = "Error while disabling the Fan. Message: {0}", Type = EventLogEntryType.Error   },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.PerformanceFanGPIOOrTempChanged, Source = (uint) EventLogEntryCodes.SourcePerformance, StringFormat = "Fan GPIO or Temp set", Type = EventLogEntryType.Information  },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.PerformanceFanGPIOOrTempChangedError, Source = (uint) EventLogEntryCodes.SourcePerformance, StringFormat = "Error while setting Fan GPIO or Temp. Message: {0}", Type = EventLogEntryType.Error   },
         };
     }
 }
