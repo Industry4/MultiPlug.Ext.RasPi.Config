@@ -2,16 +2,19 @@
 <package >
   <metadata>
     <id>MultiPlug.Ext.RasPi.Config</id>
-    <version>1.0.11</version>
+    <version>1.0.12</version>
     <title>Raspberry Pi Configuration Extension for MultiPlug</title>
     <authors>4IR.UK</authors>
     <owners>4IR.UK</owners>
     <projectUrl>https://github.com/Industry4/MultiPlug.Ext.RasPi.Config</projectUrl>
     <icon>images\multiplugraspberrypiico.png</icon>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Configure the Raspberry Pi with this MultiPlug Extension (https://multiplug.app)</description>
+    <description>Configure the Raspberry Pi with this MultiPlug Extension (https://www.multiplug.app)</description>
 	<license type="expression">MIT</license>
     <releaseNotes>Run this extension only on a Raspberry Pi using the .Net Mono runtime.
+1.0.12 Bug: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/8
+Bug: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/7
+Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/6
 1.0.11 Bug: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/5
 Bug: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/4
 Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/3
@@ -26,13 +29,13 @@ Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/1
 1.0.2 Bug: Changed encoder value to UTF-8
 1.0.1 Enhancement: Raspberry Pi IP Address Configuration
 1.0.0 Nuget name reserve.</releaseNotes>
-    <copyright>4IR.UK British Systems 2021</copyright>
+    <copyright>4IR.UK British Systems 2022</copyright>
     <tags>MultiPlug Edge_Computing Raspberry Pi Raspberry_Pi IoT</tags>
     <dependencies>
       <group targetFramework=".NETFramework4.7.2">
-        <dependency id="MultiPlug.Base" version="1.0.64" />
+        <dependency id="MultiPlug.Base" version="1.0.65" />
         <dependency id="MultiPlug.Extension.Core" version="1.0.63" />
-        <dependency id="MultiPlug.Core" version="2.2.76" />
+        <dependency id="MultiPlug.Core" version="2.2.77" />
       </group>
     </dependencies>
   </metadata>

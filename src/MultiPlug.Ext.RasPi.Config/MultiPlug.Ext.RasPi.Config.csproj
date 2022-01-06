@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MultiPlug.Base, Version=1.0.64.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MultiPlug.Base.1.0.64\lib\net472\MultiPlug.Base.dll</HintPath>
+    <Reference Include="MultiPlug.Base, Version=1.0.65.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MultiPlug.Base.1.0.65\lib\net472\MultiPlug.Base.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MultiPlug.Extension.Core, Version=1.0.63.0, Culture=neutral, processorArchitecture=MSIL">
@@ -58,6 +58,7 @@
     <Compile Include="Components\Home\HomeComponent.cs" />
     <Compile Include="Components\Interfacing\InterfacingComponent.cs" />
     <Compile Include="Components\Localisation\LocalisationComponent.cs" />
+    <Compile Include="Components\Localisation\SyncWifiCountryService.cs" />
     <Compile Include="Components\Memory\MemoryComponent.cs" />
     <Compile Include="Components\Network\DHCPCD.cs" />
     <Compile Include="Components\Network\IFCONFIG.cs" />
@@ -97,6 +98,8 @@
     <Compile Include="Models\Components\Performance\PerformanceProperties.cs" />
     <Compile Include="Models\Components\SharedProperties.cs" />
     <Compile Include="Models\Components\Users\UsersProperties.cs" />
+    <Compile Include="Models\Load\LocalisationLoad.cs" />
+    <Compile Include="Models\Load\Root.cs" />
     <Compile Include="Utils\Hardware.cs" />
     <Compile Include="Utils\Linux.cs" />
     <Compile Include="Utils\Swan\Definitions.cs" />

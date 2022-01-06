@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using MultiPlug.Ext.RasPi.Config.Models.Components.Localisation;
 using MultiPlug.Ext.RasPi.Config.Utils.Swan;
 using MultiPlug.Ext.RasPi.Config.Diagnostics;
+using MultiPlug.Base.Exchange;
+using MultiPlug.Ext.RasPi.Config.Models.Load;
 
 namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
 {
@@ -19,6 +21,27 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
     {
         internal event Action<EventLogEntryCodes, string[]> Log;
         internal event Action RestartDue;
+
+        private SyncWifiCountryService m_SyncService;
+
+        internal LocalisationComponent(IMultiPlugAPI theMultiPlugAPI)
+        {
+            m_SyncService = new SyncWifiCountryService(theMultiPlugAPI);
+            m_SyncService.Synced += OnWifiSynced;
+            m_SyncService.Log += OnSyncServiceLog;
+
+            WiFiCountrySyncEnabled = true;  // Temp On by default
+        }
+
+        private void OnSyncServiceLog(EventLogEntryCodes theCode, string[] theData)
+        {
+            Log?.Invoke(theCode, theData);
+        }
+
+        private void OnWifiSynced()
+        {
+            RestartDue?.Invoke();
+        }
 
         internal LocalisationProperties RepopulateAndGetProperties()
         {
@@ -39,13 +62,13 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             Task.WaitAll(Tasks);
 
             WifiCountry         = Tasks[1].Result.Okay() ? Tasks[1].Result.GetOutput() : string.Empty;
-            WifiCountries       = Tasks[0].Result.Okay() ? Tasks[0].Result.GetOutput().Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Skip(25).Select(line => new string[] { line, line.StartsWith(WifiCountry) ? "selected=\"selected\"" : "" }).ToArray() : new string[0][];
+            WifiCountries       = Tasks[0].Result.Okay() ? Tasks[0].Result.GetOutput().Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Skip(25).Select(line => new string[] { line.Split('\t')[0], line.Split('\t')[1], line.StartsWith(WifiCountry) ? "selected=\"selected\"" : "" }).ToArray() : new string[0][];
             TimeZone            = Tasks[3].Result.Okay() ? Tasks[3].Result.GetOutput().TrimEnd() : string.Empty;
             TimeZones           = Tasks[2].Result.Okay() ? Tasks[2].Result.GetOutput().Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Skip(25).Select(line => new string[] { line, line.StartsWith(TimeZone) ? "selected=\"selected\"" : "" }).ToArray() : new string[0][];
             Date                = Tasks[4].Result.Okay() ? Tasks[4].Result.GetOutput().TrimEnd() : string.Empty;
             Time                = Tasks[5].Result.Okay() ? Tasks[5].Result.GetOutput().TrimEnd() : string.Empty;
-            TimeSyncdEnabled    = Tasks[6].Result.Okay() ? Tasks[6].Result.GetOutput().TrimEnd().Equals(c_Active) : false;
-            FakeHWClockEnabled  = Tasks[7].Result.Okay() ? Tasks[7].Result.GetOutput().TrimEnd().Equals(c_Active) : false;
+            TimeSyncdEnabled    = Tasks[6].Result.Okay(); // Will Error if inactive
+            FakeHWClockEnabled  = Tasks[7].Result.Okay(); // Will Error if inactive
             HWClockPresent      = Tasks[8].Result.Okay();
 
             // Log only if errors have occured
@@ -55,10 +78,26 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             LoggingActions.LogTaskResult(Log, Tasks[3], EventLogEntryCodes.TimeZoneSettingGetError);
             LoggingActions.LogTaskResult(Log, Tasks[4], EventLogEntryCodes.DateSettingGetError);
             LoggingActions.LogTaskResult(Log, Tasks[5], EventLogEntryCodes.TimeSettingGetError);
-            LoggingActions.LogTaskResult(Log, Tasks[6], EventLogEntryCodes.TimeSyncdEnabledSettingGetError);
-            LoggingActions.LogTaskResult(Log, Tasks[7], EventLogEntryCodes.FakeHWClockEnabledSettingGetError);
 
             return this;
+        }
+
+        internal void StartServices()
+        {
+            if(WiFiCountrySyncEnabled)
+            {
+                m_SyncService.Begin();
+            }
+        }
+
+        internal void UpdateProperties(LocalisationLoad theModel)
+        {
+            WiFiCountrySyncEnabled = theModel.WiFiCountrySyncEnabled;
+
+            if(WiFiCountrySyncEnabled == false)
+            {
+                m_SyncService.Reset();
+            }
         }
 
         internal void UpdateProperties(LocalisationProperties theModel)
@@ -152,12 +191,15 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
 
             if (WifiCountry != theModel.WifiCountry)
             {
-                if (theModel.WifiCountry == string.Empty)
+                if (theModel.WifiCountry == string.Empty )
                 {
-                    AskToRestart = true;
-                    Log?.Invoke(EventLogEntryCodes.WifiCountrySetting, new string[] { "None" });
-                    SetWifiCountry = UnsetWiFiSequence();
-                    Tasks.Add(SetWifiCountry);
+                    if ( ! WifiCountry.StartsWith("FAIL"))
+                    {
+                        AskToRestart = true;
+                        Log?.Invoke(EventLogEntryCodes.WifiCountrySetting, new string[] { "None" });
+                        SetWifiCountry = UnsetWiFiSequence();
+                        Tasks.Add(SetWifiCountry);
+                    }
                 }
                 else
                 {
@@ -187,6 +229,17 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
                 Log?.Invoke( EventLogEntryCodes.TimeSetting, new string[] { "date " + TimeCommand });
                 SetTime = ProcessRunner.GetProcessResultAsync(c_DateCommand, TimeCommand);
                 Tasks.Add(SetTime);
+            }
+
+            if( theModel.WiFiCountrySyncEnabled && WiFiCountrySyncEnabled == false)
+            {
+                m_SyncService.Begin();
+                WiFiCountrySyncEnabled = true;
+            }
+            else if( theModel.WiFiCountrySyncEnabled == false)
+            {
+                WiFiCountrySyncEnabled = false;
+                m_SyncService.Reset();
             }
 
             if (AskToRestart) { RestartDue?.Invoke(); }

@@ -9,7 +9,6 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Components
         internal const string c_Enabled = "0";
         internal const string c_Disabled = "1";
         internal const string c_WiFiCountryNotSet = "FAIL";
-        internal const string c_Active = "active";
 
         internal const string c_LinuxRaspconfigCommand = "raspi-config";
         internal const string c_WPACliCommand = "wpa_cli";

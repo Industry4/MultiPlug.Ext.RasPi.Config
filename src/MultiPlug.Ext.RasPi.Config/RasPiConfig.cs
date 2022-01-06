@@ -2,6 +2,7 @@
 using MultiPlug.Extension.Core.Http;
 using MultiPlug.Ext.RasPi.Config.Properties;
 using MultiPlug.Ext.RasPi.Config.Controllers.Settings.SharedRazor;
+using MultiPlug.Ext.RasPi.Config.Models.Load;
 
 namespace MultiPlug.Ext.RasPi.Config
 {
@@ -9,7 +10,7 @@ namespace MultiPlug.Ext.RasPi.Config
     {
         public RasPiConfig()
         {
-                Core.Instance.Init(MultiPlugActions, MultiPlugServices);
+                Core.Instance.Init(MultiPlugActions, MultiPlugServices, MultiPlugAPI);
         }
 
         public override RazorTemplate[] RazorTemplates
@@ -37,6 +38,16 @@ namespace MultiPlug.Ext.RasPi.Config
         public override object Save()
         {
             return Core.Instance;
+        }
+
+        public void Load(Root config)
+        {
+            Core.Instance.Load(config);
+        }
+
+        public override void Start()
+        {
+            Core.Instance.Start();
         }
     }
 }

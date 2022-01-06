@@ -18,9 +18,10 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Components.Localisation
         [DataMember]
         public string TimeZone { get; set; }
         public string[][] TimeZones { get; set; }
-        public bool SetTime { get; set; } = false;
-        public bool SetDate { get; set; } = false;
-
-        public bool HWClockPresent { get; set; } = false;
+        public bool SetTime { get; set; }
+        public bool SetDate { get; set; }
+        public bool HWClockPresent { get; set; }
+        [DataMember]
+        public bool WiFiCountrySyncEnabled { get; set; }
     }
 }

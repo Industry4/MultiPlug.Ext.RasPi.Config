@@ -1,6 +1,10 @@
 ﻿using System.Runtime.Serialization;
+
 using MultiPlug.Base;
+using MultiPlug.Base.Exchange;
 using MultiPlug.Base.Exchange.API;
+using MultiPlug.Extension.Core;
+
 using MultiPlug.Ext.RasPi.Config.Components.Home;
 using MultiPlug.Ext.RasPi.Config.Components.Network;
 using MultiPlug.Ext.RasPi.Config.Components.Hat;
@@ -9,13 +13,12 @@ using MultiPlug.Ext.RasPi.Config.Components.Localisation;
 using MultiPlug.Ext.RasPi.Config.Components.Boot;
 using MultiPlug.Ext.RasPi.Config.Components.Memory;
 using MultiPlug.Ext.RasPi.Config.Components.Actions;
-using MultiPlug.Extension.Core;
-using MultiPlug.Ext.RasPi.Config.Diagnostics;
-using MultiPlug.Ext.RasPi.Config.Models.Components;
-using System;
-using MultiPlug.Ext.RasPi.Config.Utils;
-using MultiPlug.Ext.RasPi.Config.Components.About;
 using MultiPlug.Ext.RasPi.Config.Components.Performance;
+using MultiPlug.Ext.RasPi.Config.Components.About;
+
+using MultiPlug.Ext.RasPi.Config.Diagnostics;
+using MultiPlug.Ext.RasPi.Config.Utils;
+using MultiPlug.Ext.RasPi.Config.Models.Load;
 
 namespace MultiPlug.Ext.RasPi.Config
 {
@@ -25,6 +28,7 @@ namespace MultiPlug.Ext.RasPi.Config
 
         private ILoggingService m_LoggingService;
         private IMultiPlugActions m_MultiPlugActions;
+        internal IMultiPlugAPI MultiPlugAPI { get; private set; }
 
         public static Core Instance
         {
@@ -37,9 +41,12 @@ namespace MultiPlug.Ext.RasPi.Config
                 return m_Instance;
             }
         }
-        internal void Init(IMultiPlugActions theMultiPlugActions, IMultiPlugServices theMultiPlugServices)
+        internal void Init(IMultiPlugActions theMultiPlugActions, IMultiPlugServices theMultiPlugServices, IMultiPlugAPI theMultiPlugAPI)
         {
             m_MultiPlugActions = theMultiPlugActions;
+            MultiPlugAPI = theMultiPlugAPI;
+
+            Localisation  = new LocalisationComponent(theMultiPlugAPI);
 
             theMultiPlugServices.Logging.RegisterDefinitions(EventLogDefinitions.DefinitionsId, EventLogDefinitions.Definitions, true);
 
@@ -67,6 +74,19 @@ namespace MultiPlug.Ext.RasPi.Config
             Actions.DoSystemRestart += OnDoSystemRestart;
         }
 
+        internal void Start()
+        {
+            Localisation.StartServices();
+        }
+
+        internal void Load(Root config)
+        {
+            if(config.Localisation != null)
+            {
+                Localisation.UpdateProperties(config.Localisation);
+            }
+        }
+
         private void OnDoSystemRestart()
         {
             m_MultiPlugActions.System.Power.Restart();
@@ -92,7 +112,7 @@ namespace MultiPlug.Ext.RasPi.Config
         public InterfacingComponent Interfacing { get; private set; } = new InterfacingComponent();
         internal PerformanceComponent Performance { get; private set; } = new PerformanceComponent();
         [DataMember]
-        public LocalisationComponent Localisation { get; private set; } = new LocalisationComponent();
+        public LocalisationComponent Localisation { get; private set; }
         [DataMember] 
         public BootComponent Boot { get; private set; } = new BootComponent();
         [DataMember]
