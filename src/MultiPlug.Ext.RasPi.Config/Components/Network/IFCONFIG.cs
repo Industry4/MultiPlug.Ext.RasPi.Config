@@ -50,6 +50,18 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
                             }
                         }
                     }
+                    if (TrimmedLine.StartsWith("ether "))
+                    {
+                        string[] InterfaceProperties = TrimmedLine.Split(new string[] { "  " }, StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (string InterfaceProperty in InterfaceProperties)
+                        {
+                            if (InterfaceProperty.StartsWith("ether"))
+                            {
+                                CurrentNICInterface.MAC = InterfaceProperty.Split(' ').Last().ToUpper();
+                            }
+                        }
+                    }
                 }
             }
 
