@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("4IR.UK British Systems")]
 [assembly: AssemblyProduct("RasPi Config")]
-[assembly: AssemblyCopyright("4IR.UK British Systems 2022")]
+[assembly: AssemblyCopyright("4IR.UK British Systems 2023")]
 [assembly: AssemblyTrademark("Raspberry Pi is a trademark of the Raspberry Pi Foundation")]
 [assembly: AssemblyCulture("")]
 
