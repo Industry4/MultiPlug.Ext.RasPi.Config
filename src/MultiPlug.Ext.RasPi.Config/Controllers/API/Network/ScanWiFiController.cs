@@ -8,12 +8,12 @@ using MultiPlug.Ext.RasPi.Config.Utils.Swan;
 
 namespace MultiPlug.Ext.RasPi.Config.Controllers.API.Network
 {
-    [Route("network/scan/")]
+    [Route("network/scan/*")]
     public class ScanWiFiController : APIEndpoint
     {
-        public Response Get()
+        public Response Get(string WlanId)
         {
-            Task<ProcessResult> ScanTask = ProcessRunner.GetProcessResultAsync("iwlist", "wlan0 scan");
+            Task<ProcessResult> ScanTask = ProcessRunner.GetProcessResultAsync("iwlist", WlanId + " scan");
 
             ScanTask.Wait();
 
@@ -25,7 +25,7 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.API.Network
                 .ToArray()
                 : new string[0];
 
-            return new Response { MediaType = "application/json", Model = SSIDS };
+            return new Response { MediaType = "application/json", Model = SSIDS.Where(x => !string.IsNullOrEmpty(x)).ToArray() };
         }
     }
 }

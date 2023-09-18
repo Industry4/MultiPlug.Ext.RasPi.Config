@@ -357,7 +357,8 @@
                             <table id="devicesTable" class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th class="span10">SSID</th>
+                                        <th class="span5">NIC</th>
+                                        <th class="span5">SSID</th>
                                         <th class="span2"></th>
                                     </tr>
                                 </thead>
@@ -365,8 +366,9 @@
                                     @for (int Index = 0; Index < Model.Extension.Model.SSIDs.Length; Index++)
                                     {
                                         <tr>
-                                            <td class="span10">@Raw(Model.Extension.Model.SSIDs[Index])</td>
-                                            <td class="span2"><a class="btn btn-red btn-deletewifi" href="@Raw(Model.Context.Paths.Home)network/deletewifi/?id=@Model.Extension.Model.SSIDs[Index]"><i class="icon-trash"></i></a></td>
+                                            <td class="span5">@Raw(Model.Extension.Model.SSIDs[Index].Wlan)</td>
+                                            <td class="span5">@Raw(Model.Extension.Model.SSIDs[Index].SSID)</td>
+                                            <td class="span2"><a class="btn btn-red btn-deletewifi" href="@Raw(Model.Context.Paths.Home)network/deletewifi/?id=@Model.Extension.Model.SSIDs[Index].SSID&wlan=@Model.Extension.Model.SSIDs[Index].Wlan"><i class="icon-trash"></i></a></td>
                                         </tr>
                                     }
 
@@ -380,28 +382,37 @@
                                 <thead>
                                     <tr>
                                         <th class="span2"></th>
-                                        <th class="span5">SSID</th>
-                                        <th class="span5">Passphrase</th>
+                                        <th class="span2">NIC</th>
+                                        <th class="span4">SSID</th>
+                                        <th class="span4">Passphrase</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td class="span2"><a class="btn btn-blue btn-scanwifi" href="#">Scan</a></td>
-                                        <td class="span5">
-                                            <div class="input-prepend span12">
-                                                <div class="btn-group">
-                                                    <button class="btn dropdown-toggle" data-toggle="dropdown" tabindex="-1">
-                                                        <span class="caret">
-                                                        </span>
-                                                    </button>
-                                                    <ul id="availableNetworks" class="dropdown-menu">
-                                                        <li><a class="btn-scanwifi" href="#">Click Scan to search for available WiFi networks</a></li>
-                                                    </ul>
-                                                    <input id="newSSID" name="NewSSID" class="span11" type="text" placeholder="New SSID" value="">
-                                                </div>
-                                            </div>
+                                        <td class="span2">
+                                            <select id="ScanNIC" name="NewWiFiNIC" class="input-block-level">
+                                                @foreach (var Wlan in @Model.Extension.Model.Wlans)
+                                                {
+                                                    <option value="@Wlan.Id">@Wlan.Id</option>
+                                                }
+                                            </select>
                                         </td>
-                                        <td class="span5"><input type="text" name="NewPassphrase" placeholder="New Passphrase" value=""></td>
+                                            <td class="span4">
+                                                <div class="input-prepend span12">
+                                                    <div class="btn-group">
+                                                        <button class="btn dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+                                                            <span class="caret">
+                                                            </span>
+                                                        </button>
+                                                        <ul id="availableNetworks" class="dropdown-menu">
+                                                            <li><a class="btn-scanwifi" href="#">Click Scan to search for available WiFi networks</a></li>
+                                                        </ul>
+                                                        <input id="newSSID" name="NewSSID" class="span11" type="text" placeholder="New SSID" value="">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="span4"><input type="text" class="input-block-level" name="NewPassphrase" placeholder="New Passphrase" value=""></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -493,7 +504,7 @@
 
         $.ajax({
             type: "GET",
-            url: "@Raw(Model.Context.Paths.APIs)network/scan/",
+            url: "@Raw(Model.Context.Paths.APIs)network/scan/" + $('#ScanNIC').val() + "/",
             success: function (data) {
                 var unorderedList = '';
                 for (var i = 0; i < data.length; i++) {

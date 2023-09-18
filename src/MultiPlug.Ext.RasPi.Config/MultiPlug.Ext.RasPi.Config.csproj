@@ -64,6 +64,7 @@
     <Compile Include="Components\Network\IFCONFIG.cs" />
     <Compile Include="Components\Network\InterfacesD.cs" />
     <Compile Include="Components\Network\NetworkComponent.cs" />
+    <Compile Include="Components\Network\WPASupplicant.cs" />
     <Compile Include="Components\Performance\PerformanceComponent.cs" />
     <Compile Include="Controllers\API\APIEndpoint.cs" />
     <Compile Include="Controllers\API\Environment\TemperatureController.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Models\Components\Home\API\DiskSpace.cs" />
     <Compile Include="Models\Components\Home\API\Temperatures.cs" />
     <Compile Include="Models\Components\Memory\MemoryProperties.cs" />
+    <Compile Include="Models\Components\Network\ConnectedSSID.cs" />
     <Compile Include="Models\Components\Performance\PerformanceProperties.cs" />
     <Compile Include="Models\Components\SharedProperties.cs" />
     <Compile Include="Models\Components\Users\UsersProperties.cs" />

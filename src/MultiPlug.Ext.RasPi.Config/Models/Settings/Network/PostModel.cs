@@ -6,6 +6,7 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Settings.Network
         public string HostName { get; set; }
         public string NewSSID { get; set; }
         public string NewPassphrase { get; set; }
+        public string NewWiFiNIC { get; set; }
 
         public string[] NICId { get; set; }
         public string[] IPAddress { get; set; }

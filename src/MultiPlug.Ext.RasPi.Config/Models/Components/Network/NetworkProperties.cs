@@ -9,10 +9,10 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Components.Network
         public bool WiFiCountrySet { get; set; }
         [DataMember]
         public string WiFiCountry { get; set; }
-        [DataMember]
-        public string[] SSIDs { get; set; }
+        public ConnectedSSID[] SSIDs { get; set; }
         public string NewSSID { get; set; }
         public string NewPassphrase { get; set; }
+        public string NewWiFiNIC { get; set; }
         public NICInterface[] Interfaces { get; set; }
         public NICProperties[] Eths { get; set; }
         public NICProperties[] Wlans { get; set; }

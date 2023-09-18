@@ -115,6 +115,7 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Home
                 HostName = theModel.HostName,
                 NewSSID = theModel.NewSSID,
                 NewPassphrase = theModel.NewPassphrase,
+                NewWiFiNIC = theModel.NewWiFiNIC,
                 Eths = PopulateNICProperties(theModel.NICId, theModel.IPAddress, theModel.IPAddressCidr, theModel.IP6Address, theModel.IP6AddressCidr, theModel.RouterNICId, theModel.Router, theModel.DomainNameServerNICId, theModel.DomainNameServer),
                 Wlans = PopulateNICProperties(theModel.WlanNICId, theModel.WlanIPAddress, theModel.WlanIPAddressCidr, theModel.WlanIP6Address, theModel.WlanIP6AddressCidr, theModel.WlanRouterNICId, theModel.WlanRouter, theModel.WlanDomainNameServerNICId, theModel.WlanDomainNameServer)
             });
