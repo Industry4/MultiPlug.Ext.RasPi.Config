@@ -7,7 +7,7 @@ Raspberry Pi Configuration Extension for the [MultiPlug .Net Edge Computing Plat
 The functionality mirrors most of the functionality found in the command line tool [raspi-config](https://www.raspberrypi.org/documentation/configuration/raspi-config.md). Due to MultiPlug's browser based interface, visual setting haven't been included.
 
 * General overview - Raspberry Pi Model - OS Version, Hostname, Date and Time, Temperature and Disk Space.
-* Network - Hostname, static values for IP Address, IP 6 Address, Routers and Domain Name Servers for Eth0 and Wlan0, Wireless SSID and Passphrase.
+* Network - Hostname, static values for IP Address, IP 6 Address, Routers and Domain Name Servers for all Eth and Wlan, Wireless SSID and Passphrase.
 * Localisation - Wifi Country, Time, Time Zone, Date
 * Interfacing - Camera, SSH, VNC, SPI, I2C, Serial, 1-Wire, Remote GPIO
 * Performance - Temperature control via Fan
