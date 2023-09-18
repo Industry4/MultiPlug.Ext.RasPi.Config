@@ -1,10 +1,7 @@
 ﻿
-
-using MultiPlug.Base;
-
 namespace MultiPlug.Ext.RasPi.Config.Models.Components.Network
 {
-    public class NICInterface : MultiPlugBase
+    public class NICInterface
     {
         public string Broadcast { get; set; } = string.Empty;
         public string Inet { get; set; } = string.Empty;

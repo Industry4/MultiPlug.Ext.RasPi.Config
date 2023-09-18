@@ -11,10 +11,6 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
         {
             string FullPath = Path.Combine(FileLocation, theProperties.Id);
 
-            if( ! File.Exists(FullPath))
-            {
-                return;
-            }
 
             using (StreamWriter writer = File.CreateText(FullPath))
             {

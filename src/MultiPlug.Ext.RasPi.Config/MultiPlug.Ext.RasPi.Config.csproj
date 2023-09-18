@@ -100,6 +100,7 @@
     <Compile Include="Models\Components\Users\UsersProperties.cs" />
     <Compile Include="Models\Load\LocalisationLoad.cs" />
     <Compile Include="Models\Load\Root.cs" />
+    <Compile Include="Models\Settings\Network\PostModel.cs" />
     <Compile Include="Utils\Hardware.cs" />
     <Compile Include="Utils\Linux.cs" />
     <Compile Include="Utils\Swan\Definitions.cs" />

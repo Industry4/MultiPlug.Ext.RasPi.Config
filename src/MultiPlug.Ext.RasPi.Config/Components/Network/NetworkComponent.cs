@@ -33,19 +33,28 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
 
             ReadResult ReadResult = DHCPCD.Read();
 
-            var Eth0 = ReadResult.Properties.FirstOrDefault(nic => nic.Id == c_Eth0);
+            var wlans = ReadResult.Properties.Where(nic => nic.Id.StartsWith("wlan", StringComparison.OrdinalIgnoreCase)).ToArray();
 
-            Eth0IPAddress = (Eth0 == null || Eth0.IPAddress == null) ? string.Empty : Eth0.IPAddress;
-            Eth0IP6Address = (Eth0 == null || Eth0.IP6Address == null) ? string.Empty : Eth0.IP6Address;
-            Eth0Routers = (Eth0 == null || Eth0.Routers == null) ? new string[0] : Eth0.Routers;
-            Eth0DomainNameServers = (Eth0 == null || Eth0.DomainNameServers == null) ? new string[0] : Eth0.DomainNameServers;
+            foreach (var item in wlans)
+            {
+                if (item.IPAddress == null) { item.IPAddress = string.Empty; }
+                if (item.IP6Address == null) { item.IP6Address = string.Empty; }
+                if (item.Routers == null) { item.Routers = new string[0]; }
+                if (item.DomainNameServers == null) { item.DomainNameServers = new string[0]; }
+            }
 
-            var Wlan0 = ReadResult.Properties.FirstOrDefault(nic => nic.Id == c_Wlan0);
+            var eths = ReadResult.Properties.Where(nic => nic.Id.StartsWith("eth", StringComparison.OrdinalIgnoreCase)).ToArray();
 
-            Wlan0IPAddress = (Wlan0 == null || Wlan0.IPAddress == null) ? string.Empty : Wlan0.IPAddress;
-            Wlan0IP6Address = (Wlan0 == null || Wlan0.IP6Address == null) ? string.Empty : Wlan0.IP6Address;
-            Wlan0Routers = (Wlan0 == null || Wlan0.Routers == null) ? new string[0] : Wlan0.Routers;
-            Wlan0DomainNameServers = (Wlan0 == null || Wlan0.DomainNameServers == null) ? new string[0] : Wlan0.DomainNameServers;
+            foreach(var item in eths)
+            {
+                if (item.IPAddress == null) { item.IPAddress = string.Empty; }
+                if ( item.IP6Address == null){ item.IP6Address = string.Empty;}
+                if (item.Routers == null) { item.Routers = new string[0]; }
+                if (item.DomainNameServers == null) { item.DomainNameServers = new string[0]; }
+            }
+
+            Wlans = wlans;
+            Eths = eths;
 
             ReadResult = null;
 
@@ -59,6 +68,13 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             SSIDs = ProcessSSIDs(Tasks[2]);
             Interfaces = Tasks[3].Result.Okay() ? IFCONFIG.Parse(Tasks[3].Result.GetOutput()) : new NICInterface[0];
 
+            // Add any new NICs to the option to set their IPs static
+            var NICInterfaces = Interfaces.Where(i => i.Name.StartsWith("eth", StringComparison.OrdinalIgnoreCase)).ToArray();
+            Eths = CheckForNewNICs(Eths, NICInterfaces);
+
+            NICInterfaces = Interfaces.Where(i => i.Name.StartsWith("wlan", StringComparison.OrdinalIgnoreCase)).ToArray();
+            Wlans = CheckForNewNICs(Wlans, NICInterfaces);
+
             // Log only if errors have occured
             LoggingActions.LogTaskResult(Log, Tasks[0], EventLogEntryCodes.HostNameSettingsGetError);
             LoggingActions.LogTaskResult(Log, Tasks[1], EventLogEntryCodes.WiFiCountrySettingGetError);
@@ -67,89 +83,93 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             return this;
         }
 
+        private NICProperties[] CheckForNewNICs(NICProperties[] theCurrent, NICInterface[] theNICs)
+        {
+            var NICsProperties = theCurrent.ToList();
+            foreach (var NICInterface in theNICs)
+            {
+                if (NICsProperties.FirstOrDefault(NIC => NIC.Id.Equals(NICInterface.Name, StringComparison.OrdinalIgnoreCase)) == null)
+                {
+                    NICProperties NICProperties = new NICProperties(NICInterface.Name);
+                    NICProperties.IPAddress = string.Empty;
+                    NICProperties.IP6Address = string.Empty;
+                    NICProperties.Routers = new string[0];
+                    NICProperties.DomainNameServers = new string[0];
+                    NICsProperties.Add(NICProperties);
+                }
+            }
+            return NICsProperties.ToArray();
+        }
+
+
+        private bool HasSettingsChanged(NICProperties[] theCurrent, NICProperties[] theNew)
+        {
+            if (theCurrent.Length != theNew.Length)
+            {
+                return true;
+            }
+            else if (!ContainsEqualNICIds(theCurrent.OrderBy(e => e.Id).ToArray(), theNew.OrderBy(e => e.Id).ToArray()))
+            {
+                return true;
+            }
+            else
+            {
+                NICProperties[] CurrentSettingsSorted = theCurrent.OrderBy(e => e.Id).ToArray();
+                NICProperties[] NewSettingsSorted = theNew.OrderBy(e => e.Id).ToArray();
+
+                for (int i = 0; i < CurrentSettingsSorted.Length; i++)
+                {
+                    if (CurrentSettingsSorted[i].IPAddress != NewSettingsSorted[i].IPAddress)
+                    {
+                        if (string.IsNullOrEmpty(NewSettingsSorted[i].IPAddress)) { Log?.Invoke(EventLogEntryCodes.NICIP4DynamicChanging, new string[] { NewSettingsSorted[i].Id }); }
+                        else { Log?.Invoke(EventLogEntryCodes.NICIP4StaticChanging, new string[] { NewSettingsSorted[i].Id, NewSettingsSorted[i].IPAddress }); }
+                        return true;
+                    }
+                    else if (CurrentSettingsSorted[i].IP6Address != NewSettingsSorted[i].IP6Address)
+                    {
+                        if (string.IsNullOrEmpty(NewSettingsSorted[i].IP6Address)) { Log?.Invoke(EventLogEntryCodes.NICIP6DynamicChanging, new string[] { NewSettingsSorted[i].Id }); }
+                        else { Log?.Invoke(EventLogEntryCodes.NICIP6StaticChanging, new string[] { NewSettingsSorted[i].Id, NewSettingsSorted[i].IPAddress }); }
+                        return true;
+                    }
+                    if (!CurrentSettingsSorted[i].Routers.OrderBy(e => e).SequenceEqual(NewSettingsSorted[i].Routers.OrderBy(e => e)))
+                    {
+                        Log?.Invoke(EventLogEntryCodes.NICRoutersChanging, new string[] { NewSettingsSorted[i].Id, string.Join(" ", NewSettingsSorted[i].Routers) });
+                        return true;
+                    }
+
+                    if (!CurrentSettingsSorted[i].DomainNameServers.OrderBy(e => e).SequenceEqual(NewSettingsSorted[i].DomainNameServers.OrderBy(e => e)))
+                    {
+                        Log?.Invoke(EventLogEntryCodes.NICDNSChanging, new string[] { NewSettingsSorted[i].Id, string.Join(" ", NewSettingsSorted[i].DomainNameServers) });
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+
         internal void UpdateProperties(NetworkProperties theModel)
         {
             List<Task<ProcessResult>> Tasks = new List<Task<ProcessResult>>();
             bool AskToRestart = false;
 
-            bool Eth0Changes = false;
-            bool Wlan0Changes = false;
+            bool EthsChanges = false;
+            bool WlansChanges = false;
 
             NetworkProperties CurrentSettings = Core.Instance.Network.RepopulateAndGetProperties();
 
-            if (theModel.Eth0Routers == null) { theModel.Eth0Routers = new string[0]; }
-            if (theModel.Eth0DomainNameServers == null) { theModel.Eth0DomainNameServers = new string[0]; }
-            if (theModel.Wlan0Routers == null) { theModel.Wlan0Routers = new string[0]; }
-            if (theModel.Wlan0DomainNameServers == null) { theModel.Wlan0DomainNameServers = new string[0]; }
+            if (theModel.Eths == null) { theModel.Eths = new NICProperties[0]; }
+            if (theModel.Wlans == null) { theModel.Wlans = new NICProperties[0]; }
 
-            if (CurrentSettings.Eth0IPAddress != theModel.Eth0IPAddress)
-            {
-                Eth0Changes = true;
-                if (string.IsNullOrEmpty(theModel.Eth0IPAddress)) { Log?.Invoke(EventLogEntryCodes.NICIP4DynamicChanging, new string[] { c_Eth0 }); }
-                else { Log?.Invoke(EventLogEntryCodes.NICIP4StaticChanging, new string[] { c_Eth0, theModel.Eth0IPAddress }); }
-            }
-
-            if (CurrentSettings.Eth0IP6Address != theModel.Eth0IP6Address)
-            {
-                Eth0Changes = true;
-                if (string.IsNullOrEmpty(theModel.Eth0IP6Address)) { Log?.Invoke(EventLogEntryCodes.NICIP6DynamicChanging, new string[] { c_Eth0 }); }
-                else { Log?.Invoke(EventLogEntryCodes.NICIP6StaticChanging, new string[] { c_Eth0, theModel.Eth0IP6Address }); }
-            }
-
-            if (!CurrentSettings.Eth0Routers.OrderBy(e => e).SequenceEqual(theModel.Eth0Routers.OrderBy(e => e)))
-            {
-                Eth0Changes = true;
-                Log?.Invoke(EventLogEntryCodes.NICRoutersChanging, new string[] { c_Eth0, string.Join(" ", theModel.Eth0Routers) });
-            }
-
-            if (!CurrentSettings.Eth0DomainNameServers.OrderBy(e => e).SequenceEqual(theModel.Eth0DomainNameServers.OrderBy(e => e)))
-            {
-                Eth0Changes = true;
-                Log?.Invoke(EventLogEntryCodes.NICDNSChanging, new string[] { c_Eth0, string.Join(" ", theModel.Eth0DomainNameServers) });
-            }
-
-            if (CurrentSettings.Wlan0IPAddress != theModel.Wlan0IPAddress)
-            {
-                Wlan0Changes = true;
-                if (string.IsNullOrEmpty(theModel.Wlan0IPAddress)) { Log?.Invoke(EventLogEntryCodes.NICIP6DynamicChanging, new string[] { c_Wlan0 }); }
-                else { Log?.Invoke(EventLogEntryCodes.NICIP6StaticChanging, new string[] { c_Wlan0, theModel.Wlan0IPAddress }); }
-            }
-
-            if (CurrentSettings.Wlan0IP6Address != theModel.Wlan0IP6Address)
-            {
-                Wlan0Changes = true;
-                if (string.IsNullOrEmpty(theModel.Eth0IP6Address)) { Log?.Invoke(EventLogEntryCodes.NICIP6DynamicChanging, new string[] { c_Wlan0 }); }
-                else { Log?.Invoke(EventLogEntryCodes.NICIP6StaticChanging, new string[] { c_Wlan0, theModel.Wlan0IP6Address }); }
-            }
-
-            if (!CurrentSettings.Wlan0Routers.OrderBy(e => e).SequenceEqual(theModel.Wlan0Routers.OrderBy(e => e)))
-            {
-                Wlan0Changes = true;
-                Log?.Invoke(EventLogEntryCodes.NICDNSChanging, new string[] { c_Wlan0, string.Join(" ", theModel.Wlan0Routers) });
-            }
-
-            if (!CurrentSettings.Wlan0DomainNameServers.OrderBy(e => e).SequenceEqual(theModel.Wlan0DomainNameServers.OrderBy(e => e)))
-            {
-                Wlan0Changes = true;
-                Log?.Invoke(EventLogEntryCodes.NICDNSChanging, new string[] { c_Wlan0, string.Join(" ", theModel.Wlan0DomainNameServers) });
-            }
+            // TODO Lots of Duplicate Code
+            EthsChanges = HasSettingsChanged(CurrentSettings.Eths, theModel.Eths);
+            WlansChanges = HasSettingsChanged(CurrentSettings.Wlans, theModel.Wlans);
 
             Task<ProcessResult> IPAddressTask = null;
-            if (Eth0Changes || Wlan0Changes)
+            if (EthsChanges || WlansChanges)
             {
-                NICProperties eth0 = new NICProperties(c_Eth0);
-                eth0.IPAddress = theModel.Eth0IPAddress;
-                eth0.IP6Address = theModel.Eth0IP6Address;
-                eth0.Routers = theModel.Eth0Routers;
-                eth0.DomainNameServers = theModel.Eth0DomainNameServers;
-
-                NICProperties wlan0 = new NICProperties(c_Wlan0);
-                wlan0.IPAddress = theModel.Wlan0IPAddress;
-                wlan0.IP6Address = theModel.Wlan0IP6Address;
-                wlan0.Routers = theModel.Wlan0Routers;
-                wlan0.DomainNameServers = theModel.Wlan0DomainNameServers;
-
-                IPAddressTask = FlushNetworkSequence(Eth0Changes, Wlan0Changes, eth0, wlan0);
+                IPAddressTask = FlushNetworkSequence(EthsChanges, WlansChanges, theModel.Eths, theModel.Wlans);
                 Tasks.Add(IPAddressTask);
             }
 
@@ -179,6 +199,19 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             LoggingActions.LogTaskResult(Log, IPAddressTask, EventLogEntryCodes.NICIPChangesComplete, EventLogEntryCodes.NICIPChangesError);
             LoggingActions.LogTaskResult(Log, HostNameTask, EventLogEntryCodes.HostNameChanged, EventLogEntryCodes.HostNameChangeError);
             LoggingActions.LogTaskResult(Log, SetWiFiSSIDPassphrase, EventLogEntryCodes.SSIDChanged, EventLogEntryCodes.SSIDChangeError);
+        }
+
+        private bool ContainsEqualNICIds(NICProperties[] theNICProperties1, NICProperties[] theNICProperties2)
+        {
+            for(int i = 0; i < theNICProperties1.Length; i++)
+            {
+                if(theNICProperties1[i].Id != theNICProperties2[i].Id)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         internal bool DeleteWiFi(string id)
@@ -271,33 +304,57 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             });
         }
 
-        private Task<ProcessResult> FlushNetworkSequence( bool isEth0Changes, bool isWlan0Changes, NICProperties theEth0, NICProperties theWlan0)
+        private Task<ProcessResult> FlushNetworkSequence( bool isAnyEthChanges, bool isAnyWlanChanges, NICProperties[] theEth, NICProperties[] theWlan)
         {
             return Task.Run(async () =>
             {
-                await DHCPCD.UpdateResultAsync(new NICProperties[] { theEth0, theWlan0 });
+                await DHCPCD.UpdateResultAsync(theEth.Concat( theWlan ).ToArray());
                 await ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "daemon-reload");
                 await ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "stop dhcpcd.service");
-                if (isEth0Changes)
+                if (isAnyEthChanges)
                 {
-                    InterfacesD.Write(theEth0);
-                    await ProcessRunner.GetProcessResultAsync(c_IPCommand, "addr flush dev eth0");
+                    foreach(var Eth in theEth)
+                    {
+                        InterfacesD.Write(Eth);
+                    }
+
+                    foreach (var Eth in theEth)
+                    {
+                        await ProcessRunner.GetProcessResultAsync(c_IPCommand, "addr flush dev " + Eth.Id);
+                    }
                 }
-                if (isWlan0Changes)
+                if (isAnyWlanChanges)
                 {
-                    InterfacesD.Write(theWlan0);
-                    await ProcessRunner.GetProcessResultAsync(c_IPCommand, "addr flush dev wlan0");
+                    foreach (var Wlan in theWlan)
+                    {
+                        InterfacesD.Write(Wlan);
+                    }
+
+                    foreach (var Wlan in theWlan)
+                    {
+                        await ProcessRunner.GetProcessResultAsync(c_IPCommand, "addr flush dev " + Wlan.Id);
+                    }
                 }
                 await ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "start dhcpcd.service");
                 await ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "restart networking.service");
 
-                if (isWlan0Changes)
+                if (isAnyWlanChanges)
                 {
-                    await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i wlan0 reconfigure");
+                    foreach (var Wlan in theWlan)
+                    {
+                        await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + Wlan.Id + " reconfigure");
+                    }
                 }
 
-                await ProcessRunner.GetProcessResultAsync(c_IFUp, c_Eth0);
-                await ProcessRunner.GetProcessResultAsync(c_IFUp, c_Wlan0);
+                foreach (var Eth in theEth)
+                {
+                    await ProcessRunner.GetProcessResultAsync(c_IFUp, Eth.Id);
+                }
+
+                foreach (var Wlan in theWlan)
+                {
+                    await ProcessRunner.GetProcessResultAsync(c_IFUp, Wlan.Id);
+                }
 
                 return new ProcessResult(0, string.Empty, string.Empty);
             });
