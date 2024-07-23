@@ -208,5 +208,7 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
         PerformanceFanDisabledError = 183,
         PerformanceFanGPIOOrTempChanged = 184,
         PerformanceFanGPIOOrTempChangedError = 185,
+
+        BootOrderSettingSDCard = 186,
     }
 }

@@ -84,6 +84,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Boot
             if (theModel.BootOrder != 0)
             {
                 LoggingActions.LogTaskAction(Log, (theModel.BootOrder - 1), new EventLogEntryCodes[] {
+                    EventLogEntryCodes.BootOrderSettingSDCard,
                     EventLogEntryCodes.BootOrderSettingUSB,
                     EventLogEntryCodes.BootOrderSettingNetwork });
                 SetBootOrder = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_boot_order B" + theModel.BootOrder);
