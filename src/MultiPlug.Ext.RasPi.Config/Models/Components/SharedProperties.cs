@@ -27,5 +27,6 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Components
         internal const string c_FreeCommand = "free";
         internal const string c_IFDown = "ifdown";
         internal const string c_IFUp = "ifup";
+        internal const string c_JournalCommand = "journalctl";
     }
 }

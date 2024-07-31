@@ -68,6 +68,7 @@
     <Compile Include="Components\Performance\PerformanceComponent.cs" />
     <Compile Include="Controllers\API\APIEndpoint.cs" />
     <Compile Include="Controllers\API\Environment\TemperatureController.cs" />
+    <Compile Include="Controllers\API\Journal\JournalController.cs" />
     <Compile Include="Controllers\API\Memory\DiskSpacePercentageController.cs" />
     <Compile Include="Controllers\API\Network\ScanWiFiController.cs" />
     <Compile Include="Controllers\Assets\AssetsEndpoint.cs" />

@@ -46,6 +46,11 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Home
             return this;
         }
 
+        internal static Task<ProcessResult> GetJournalEntry(string theService, bool thisboot)
+        {
+            return ProcessRunner.GetProcessResultAsync(c_JournalCommand, (string.IsNullOrEmpty(theService) ? string.Empty : " -u " + theService ) + (thisboot ? " -b" : string.Empty ) );
+        }
+
         internal static Task<ProcessResult> GetGPUTemperature()
         {
             return ProcessRunner.GetProcessResultAsync(c_VCGenCommand, "measure_temp");
@@ -87,6 +92,16 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Home
             {
                 return theTask.Result.GetOutput().Split(new string[] { "\n", "\r\n" }, 2, StringSplitOptions.RemoveEmptyEntries)[1]
                                                                 .Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries)[4].TrimEnd('%');
+            }
+
+            return string.Empty;
+        }
+
+        internal static string ProcessJournal(Task<ProcessResult> theTask)
+        {
+            if (theTask.Result.Okay())
+            {
+                return theTask.Result.GetOutput();
             }
 
             return string.Empty;

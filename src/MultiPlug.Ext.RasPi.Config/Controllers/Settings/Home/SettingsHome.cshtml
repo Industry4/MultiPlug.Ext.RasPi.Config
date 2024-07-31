@@ -54,4 +54,51 @@
             </div>
         </div>
     </div>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <h3 class="box-header">Linux Journal (Logging)</h3>
+            <div class="box">
+                <div class="row-fluid">
+                    <div class="span6"><b>Limit to Service Named</b></div>
+                    <div class="span6"><input id="txt-servicename" class="input-block-level" type="text" value="multiplug"></div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span6"><b>Current Boot Only</b></div>
+                    <div class="span6"><input type="checkbox" id="cbx-thisboot" value="true"></div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span6"><button id="btn-getjournal" class="btn btn-blue" type="button">View Journal</button></div>
+                    <div class="span6"></div>
+                </div>
+                <div class="row-fluid">
+                    <textarea id="txt-journal" spellcheck="false" rows="3" class="input-block-level" wrap="off" style="margin: 0px; height: 450px; margin-top: 15px"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
+
+<script>
+    $(document).ready(function () {
+        $("#btn-getjournal").click(function (event) {
+            event.preventDefault();
+            $('#txt-journal').text('Loading...');
+            var thisboot = "false";
+            if ($('#cbx-thisboot').is(":checked")) {
+                thisboot = "true";
+            }
+            $.get("@Raw(Model.Context.Paths.APIs)linux/journal/?service=" + $('#txt-servicename').val() + "&thisboot=" + thisboot, function (data) {
+
+            })
+            .done(function (data) {
+                $('#txt-journal').text(data);
+                var textarea = document.getElementById('txt-journal');
+                textarea.scrollTop = textarea.scrollHeight;
+            })
+            .fail(function (xhr, status, error) {
+
+            });
+        });
+    });
+</script>
