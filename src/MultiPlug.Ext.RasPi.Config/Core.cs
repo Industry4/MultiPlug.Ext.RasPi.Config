@@ -70,6 +70,7 @@ namespace MultiPlug.Ext.RasPi.Config
             Interfacing.RestartDue += OnRestartDue;
             Localisation.RestartDue += OnRestartDue;
             Boot.RestartDue += OnRestartDue;
+            Memory.RestartDue += OnRestartDue;
 
             Actions.DoSystemRestart += OnDoSystemRestart;
         }

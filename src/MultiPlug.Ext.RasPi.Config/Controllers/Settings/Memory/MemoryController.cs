@@ -30,5 +30,23 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Memory
                 };
             }
         }
+
+        public Response Post()
+        {
+            if( Core.Instance.Memory.ExpandRootFs() )
+            {
+                return new Response
+                {
+                    StatusCode = System.Net.HttpStatusCode.OK
+                };
+            }
+            else
+            {
+                return new Response
+                {
+                    StatusCode = System.Net.HttpStatusCode.InternalServerError
+                };
+            }
+        }
     }
 }

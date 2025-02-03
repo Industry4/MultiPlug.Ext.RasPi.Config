@@ -11,6 +11,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Memory
     public class MemoryComponent : MemoryProperties
     {
         internal event Action<EventLogEntryCodes, string[]> Log;
+        internal event Action RestartDue;
 
         internal MemoryProperties RepopulateAndGetProperties()
         {
@@ -39,6 +40,24 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Memory
             LoggingActions.LogTaskResult(Log, Tasks[1], EventLogEntryCodes.RAMFreeSettingGetError);
 
             return this;
+        }
+
+        internal bool ExpandRootFs()
+        {
+            Task<ProcessResult>[] Tasks = new Task<ProcessResult>[1];
+
+            Tasks[0] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_expand_rootfs");
+
+            Task.WaitAll(Tasks);
+
+            LoggingActions.LogTaskResult(Log, Tasks[0], EventLogEntryCodes.ExpandRootFsSet, EventLogEntryCodes.ExpandRootFsError);
+
+            if(Tasks[0].Result.Okay())
+            {
+                RestartDue?.Invoke();
+            }
+
+            return Tasks[0].Result.Okay();
         }
     }
 }

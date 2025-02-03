@@ -181,6 +181,8 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
 
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.DiskFreeSettingGetError,      Source = (uint) EventLogEntryCodes.SourceMemory,        StringFormat = "Error while getting the current Disk usage. Message: {0}", Type = EventLogEntryType.Error  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.RAMFreeSettingGetError,       Source = (uint) EventLogEntryCodes.SourceMemory,        StringFormat = "Error while getting the current RAM usage. Message: {0}", Type = EventLogEntryType.Error  },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.ExpandRootFsSet,              Source = (uint) EventLogEntryCodes.SourceMemory,        StringFormat = "Root partition has been resized. The filesystem will be enlarged upon the next reboot", Type = EventLogEntryType.Information   },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.ExpandRootFsError,            Source = (uint) EventLogEntryCodes.SourceMemory,        StringFormat = "Error while resizing the Root partition. Message: {0}", Type = EventLogEntryType.Error   },
 
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.RTCSyncing,                   Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "Attempting to sync the Hardware Clock", Type = EventLogEntryType.Information  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.RTCSyncError,                 Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "RTC Sync Error. Message: {0}", Type = EventLogEntryType.Error  },
