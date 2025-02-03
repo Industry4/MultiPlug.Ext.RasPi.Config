@@ -11,6 +11,8 @@ namespace MultiPlug.Ext.RasPi.Config.Utils
 
         public static bool RebootUserPrompt { get; private set; } = false;
 
+        public static bool PermissionsErrorRestart { get; private set; } = false;
+
 
         internal static void CheckRunningRaspberryPi()
         {
@@ -32,6 +34,11 @@ namespace MultiPlug.Ext.RasPi.Config.Utils
         internal static void SetRebootUserPrompt()
         {
             RebootUserPrompt = true;
+        }
+
+        internal static void SetPermissionsErrorRestart()
+        {
+            PermissionsErrorRestart = true;
         }
     }
 }

@@ -76,14 +76,21 @@
         }
     </style>
 
-    @if (MultiPlug.Ext.RasPi.Config.Utils.Hardware.RebootUserPrompt)
+    @if (MultiPlug.Ext.RasPi.Config.Utils.Hardware.RebootUserPrompt && ( ! MultiPlug.Ext.RasPi.Config.Utils.Hardware.PermissionsErrorRestart ) )
     {
         <form id="formrestart" action="@Raw(Model.Context.Paths.Home)actions/" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded">
-            <div class="alert alert-error">
+            <div class="alert">
                 <button form="formrestart" type="submit" name="action" value="restart" class="restart btn btn-red">Restart Now</button>
                 <strong>Reboot Required</strong> Changes have been made that require a system reboot to be applied.
             </div>
         </form>
+    }
+
+    @if (MultiPlug.Ext.RasPi.Config.Utils.Hardware.PermissionsErrorRestart)
+    {
+        <div class="alert alert-error">
+            <strong>Error</strong> This Extension doesn't have permission to restart MultiPlug.
+        </div>
     }
 
     @if ( !MultiPlug.Ext.RasPi.Config.Utils.Hardware.isRunningRaspberryPi)

@@ -11,7 +11,6 @@ namespace MultiPlug.Ext.RasPi.Config.Controllers.Settings.Actions
         {
             if (action == "restart")
             {
-                Console.WriteLine("restart");
                 Core.Instance.Actions.RestartSystem();
             }
 

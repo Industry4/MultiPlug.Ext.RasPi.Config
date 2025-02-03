@@ -19,6 +19,7 @@ using MultiPlug.Ext.RasPi.Config.Components.About;
 using MultiPlug.Ext.RasPi.Config.Diagnostics;
 using MultiPlug.Ext.RasPi.Config.Utils;
 using MultiPlug.Ext.RasPi.Config.Models.Load;
+using System.Security;
 
 namespace MultiPlug.Ext.RasPi.Config
 {
@@ -90,7 +91,14 @@ namespace MultiPlug.Ext.RasPi.Config
 
         private void OnDoSystemRestart()
         {
-            m_MultiPlugActions.System.Power.Restart();
+            try
+            {
+                m_MultiPlugActions.System.Power.Restart();
+            }
+            catch (SecurityException)
+            {
+                Hardware.SetPermissionsErrorRestart();
+            }
         }
 
         private void OnRestartDue()
