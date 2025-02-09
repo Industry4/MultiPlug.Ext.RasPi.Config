@@ -24,5 +24,11 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Components.Localisation
         [DataMember]
         public bool WiFiCountrySyncEnabled { get; set; }
         public bool CanChangeWifiCountry { get; set; }
+        [DataMember]
+        public string NTPServer1 { get; set; }
+        [DataMember]
+        public string NTPServer2 { get; set; }
+        [DataMember]
+        public string NTPServer3 { get; set; }
     }
 }

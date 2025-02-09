@@ -211,6 +211,9 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
 
         BootOrderSettingSDCard = 186,
         ExpandRootFsSet = 187,
-        ExpandRootFsError = 188
+        ExpandRootFsError = 188,
+
+        TimesyncdRestarted = 189,
+        TimesyncdRestartError = 190
     }
 }

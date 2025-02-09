@@ -49,6 +49,8 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.TimesyncdDisabling,       Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "Disabling Timesyncd", Type = EventLogEntryType.Information  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.TimesyncdDisablingError,  Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "Error Disabling Timesyncd. Message: {0}", Type = EventLogEntryType.Error  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.TimesyncdDisabled,        Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "Timesyncd Disabled", Type = EventLogEntryType.Information  },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.TimesyncdRestarted,        Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "Timesyncd Restarted", Type = EventLogEntryType.Information  },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.TimesyncdRestartError,     Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "Error Restarting Timesyncd. Message: {0}", Type = EventLogEntryType.Error  },
 
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.FakeHwClockEnabling,      Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "Enabling Fake Hardware Clock", Type = EventLogEntryType.Information  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.FakeHwClockEnablingError, Source = (uint) EventLogEntryCodes.SourceLocalisation, StringFormat = "Error Enabling Fake Hardware Clock. Message: {0}", Type = EventLogEntryType.Error  },

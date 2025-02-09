@@ -49,7 +49,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
         {
             if (!Utils.Hardware.isRunningRaspberryPi) { return this; }
 
-            Task<ProcessResult>[] Tasks = new Task<ProcessResult>[10];
+            Task<ProcessResult>[] Tasks = new Task<ProcessResult>[11];
 
             Tasks[0] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/usr/share/zoneinfo/iso3166.tab");
             Tasks[1] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_wifi_country");
@@ -61,6 +61,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             Tasks[7] = ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "is-active fake-hwclock");
             Tasks[8] = ProcessRunner.GetProcessResultAsync(c_HardwareClockCommand, "-r");
             Tasks[9] = ProcessRunner.GetProcessResultAsync(c_IFConfigCommand);
+            Tasks[10] = ProcessRunner.GetProcessResultAsync(c_GrepCommand, "-P '(?=^((?!#).)*$)NTP=' /etc/systemd/timesyncd.conf"); //Ignore Commented out
 
             Task.WaitAll(Tasks);
 
@@ -101,6 +102,43 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
                     // Connection are already made on the WiFi so the Country can not be changed.
                     CanChangeWifiCountry = false;
                     break;
+                }
+            }
+
+            NTPServer1 = string.Empty;
+            NTPServer2 = string.Empty;
+            NTPServer3 = string.Empty;
+
+            // #NTP=0.debian.pool.ntp.org 1.debian.pool.ntp.org 2.debian.pool.ntp.org 3.debian.pool.ntp.org
+            if (Tasks[10].Result.Okay())
+            {
+                var SplitByEquals = Tasks[10].Result.GetOutput().Split(new char[] { '=' });
+
+                if(SplitByEquals.Length > 1)
+                {
+                    // 0.debian.pool.ntp.org 1.debian.pool.ntp.org 2.debian.pool.ntp.org 3.debian.pool.ntp.org
+                    var SplitBySpace = SplitByEquals[1].Split(new char[] { ' ' });
+
+                    for (int i = 0; i < SplitBySpace.Length; i++)
+                    {
+                        // 0.debian.pool.ntp.org
+                        // 1.debian.pool.ntp.org
+                        // 2.debian.pool.ntp.org
+                        // 3.debian.pool.ntp.org
+
+                        switch (i)
+                        {
+                            case 0:
+                                NTPServer1 = SplitBySpace[i];
+                                break;
+                            case 1:
+                                NTPServer2 = SplitBySpace[i];
+                                break;
+                            case 2:
+                                NTPServer3 = SplitBySpace[i];
+                                break;
+                        }
+                    }
                 }
             }
 
@@ -221,6 +259,59 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
                 Tasks.Add(SetTimeZone);
             }
 
+            Task<ProcessResult> RestartTimesyncd = null;
+
+            if (NTPServer1 != theModel.NTPServer1 || NTPServer2 != theModel.NTPServer2 || NTPServer3 != theModel.NTPServer3)
+            {
+                if(theModel.NTPServer1.Trim() == string.Empty && theModel.NTPServer2.Trim() == string.Empty && theModel.NTPServer3.Trim() == string.Empty)
+                {
+                    var CommentOut = ProcessRunner.GetProcessResultAsync(c_SedCommand, "/etc/systemd/timesyncd.conf -i -e \"s/^NTP=/#NTP=/\"");
+                    CommentOut.Wait();
+                }
+                else
+                {
+                    List<string> list = new List<string>(3);
+
+                    if(theModel.NTPServer1.Trim() != string.Empty)
+                    {
+                        list.Add(theModel.NTPServer1.Trim());
+                    }
+                    if (theModel.NTPServer2.Trim() != string.Empty)
+                    {
+                        list.Add(theModel.NTPServer2.Trim());
+                    }
+                    if (theModel.NTPServer3.Trim() != string.Empty)
+                    {
+                        list.Add(theModel.NTPServer3.Trim());
+                    }
+
+                    string TimeServers = "NTP=";
+
+                    string[] NTPServers = list.ToArray();
+
+                    for (int i = 0; i < NTPServers.Length; i++)
+                    {
+                        if(i != 0)
+                        {
+                            TimeServers += " ";
+                        }
+                        TimeServers += NTPServers[i];
+                    }
+
+                    var UnCommentOut = ProcessRunner.GetProcessResultAsync(c_SedCommand, "/etc/systemd/timesyncd.conf -i -e \"s/^#NTP=/NTP=/\"");
+                    UnCommentOut.Wait();
+
+                    var UpdateTimeServers = ProcessRunner.GetProcessResultAsync(c_SedCommand, "/etc/systemd/timesyncd.conf -i -e \"s/^NTP=.*/" + TimeServers + "/g\"");
+                    UpdateTimeServers.Wait();
+                }
+
+                if(TimeSyncdEnabled)
+                {
+                    RestartTimesyncd = ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "restart systemd-timesyncd");
+                    Tasks.Add(RestartTimesyncd);
+                }
+            }
+
             Task<ProcessResult> SetWifiCountry = null;
 
             if (CanChangeWifiCountry && WifiCountry != theModel.WifiCountry)
@@ -300,6 +391,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             // Check if Tasks have completed Okay and Log result
             LoggingActions.LogTaskResult(Log, StartTimesyncd, EventLogEntryCodes.TimesyncdStarted, EventLogEntryCodes.TimesyncdStartingError);
             LoggingActions.LogTaskResult(Log, DisableTimesyncd, EventLogEntryCodes.TimesyncdDisabled, EventLogEntryCodes.TimesyncdDisablingError);
+            LoggingActions.LogTaskResult(Log, RestartTimesyncd, EventLogEntryCodes.TimesyncdRestarted, EventLogEntryCodes.TimesyncdRestartError);
             LoggingActions.LogTaskResult(Log, StartFakeHWClock, EventLogEntryCodes.FakeHwClockStarted, EventLogEntryCodes.FakeHwClockStartingError);
             LoggingActions.LogTaskResult(Log, DisableFakeHWClock, EventLogEntryCodes.FakeHwClockDisabled, EventLogEntryCodes.FakeHwClockDisablingError);
             LoggingActions.LogTaskResult(Log, SetTimeZone, EventLogEntryCodes.TimeZoneSet, EventLogEntryCodes.TimeZoneSettingError);
