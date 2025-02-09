@@ -61,13 +61,13 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             {
                 m_LastSyncMultiPlugValue = m_MultiPlugAPI.Configuration.Localisation.Country;
 
-                Task<ProcessResult> CurrentWifiCode = ProcessRunner.GetProcessResultAsync("wpa_cli", "-i wlan0 get country");
+                Task<ProcessResult> CurrentWifiCode = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint get_wifi_country");
 
                 CurrentWifiCode.Wait();
 
-                string WifiCountry = CurrentWifiCode.Result.Okay() ? CurrentWifiCode.Result.GetOutput() : string.Empty;
+                string WifiCountry = CurrentWifiCode.Result.Okay() ? CurrentWifiCode.Result.GetOutput().Trim() : string.Empty;
 
-                if ( ! WifiCountry.Equals(m_LastSyncMultiPlugValue))
+                if ( WifiCountry != string.Empty && ! WifiCountry.Equals(m_LastSyncMultiPlugValue))
                 {
                     Log?.Invoke(EventLogEntryCodes.WifiCountrySetting, new string[] { m_LastSyncMultiPlugValue });
                     Task<ProcessResult> SetWifiCountry = ProcessRunner.GetProcessResultAsync("raspi-config", "nonint do_wifi_country " + m_LastSyncMultiPlugValue);

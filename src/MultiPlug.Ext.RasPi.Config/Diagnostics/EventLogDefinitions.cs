@@ -158,7 +158,7 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.HATSettingsGetVendorError,            Source = (uint) EventLogEntryCodes.SourceHAT,   StringFormat = "Error while getting the current value of the HAT Vendor. Message: {0}", Type = EventLogEntryType.Error  },
 
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.NetworkWaitSettingsGetError,  Source = (uint) EventLogEntryCodes.SourceBoot,          StringFormat = "Error while getting the current Network-Wait Setting. Message: {0}", Type = EventLogEntryType.Error  },
-            new EventLogDefinition { Code = (uint) EventLogEntryCodes.SplashScreenSettingsGetError, Source = (uint) EventLogEntryCodes.SourceBoot,          StringFormat = "Error while getting the current Splash Screen Setting. Message: {0}", Type = EventLogEntryType.Error  },
+            //new EventLogDefinition { Code = (uint) EventLogEntryCodes.SplashScreenSettingsGetError, Source = (uint) EventLogEntryCodes.SourceBoot,          StringFormat = "Error while getting the current Splash Screen Setting. Message: {0}", Type = EventLogEntryType.Error  },
 
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.HostNameSettingsGetError,     Source = (uint) EventLogEntryCodes.SourceNetwork,       StringFormat = "Error while getting the current HostName. Message: {0}", Type = EventLogEntryType.Error  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.SSIDSettingsGetError,         Source = (uint) EventLogEntryCodes.SourceNetwork,       StringFormat = "Error while getting the current SSID. Message: {0}", Type = EventLogEntryType.Error  },

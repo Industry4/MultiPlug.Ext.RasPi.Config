@@ -13,44 +13,47 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Performance
         {
             if (!Utils.Hardware.isRunningRaspberryPi) { return this; }
 
-            var Task = ProcessRunner.GetProcessResultAsync(c_GrepCommand, "^dtoverlay=gpio-fan /boot/config.txt");
-            Task.Wait();
-
-            FanEnabled = false;
-
-            if ( Task.Result.Okay())
+            if( Utils.Hardware.isRunningRaspberryPi5 == false)
             {
-                string Result = Task.Result.GetOutput();
+                var Task = ProcessRunner.GetProcessResultAsync(c_GrepCommand, "^dtoverlay=gpio-fan " + Utils.Hardware.ConfigPath);
+                Task.Wait();
 
-                if ( string.IsNullOrEmpty(Result) )
-                {
-                    SetFanDefaults();
-                }
-                else
-                {
-                    string[] Columns = Result.Split(',');
+                FanEnabled = false;
 
-                    if (Columns.Length == 3)
+                if ( Task.Result.Okay())
+                {
+                    string Result = Task.Result.GetOutput();
+
+                    if ( string.IsNullOrEmpty(Result) )
                     {
-                        FanEnabled = true;
-                        foreach (string Property in Columns)
+                        SetFanDefaults();
+                    }
+                    else
+                    {
+                        string[] Columns = Result.Split(',');
+
+                        if (Columns.Length == 3)
                         {
-                            if (Property.StartsWith("gpiopin="))
+                            FanEnabled = true;
+                            foreach (string Property in Columns)
                             {
-                                FanGPIO = Property.Split('=')[1].TrimEnd();
-                            }
-                            else if (Property.StartsWith("temp="))
-                            {
-                                var Temp = Property.Split('=')[1];
-                                FanTemperature = Temp.TrimEnd().Substring(0, Temp.Length - 4);
+                                if (Property.StartsWith("gpiopin="))
+                                {
+                                    FanGPIO = Property.Split('=')[1].TrimEnd();
+                                }
+                                else if (Property.StartsWith("temp="))
+                                {
+                                    var Temp = Property.Split('=')[1];
+                                    FanTemperature = Temp.TrimEnd().Substring(0, Temp.Length - 4);
+                                }
                             }
                         }
                     }
                 }
-            }
-            else
-            {
-                SetFanDefaults();
+                else
+                {
+                    SetFanDefaults();
+                }
             }
 
             return this;
@@ -67,28 +70,32 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Performance
         {
             var CurrentValue = RepopulateAndGetProperties();
 
-            // Disable
-            if( CurrentValue.FanEnabled && !theModel.FanEnabled)
+            if ( Utils.Hardware.isRunningRaspberryPi5 == false )
             {
-                var Task = ProcessRunner.GetProcessResultAsync(c_SedCommand, "/boot/config.txt -i -e \"/^.*dtoverlay=gpio-fan.*/d\"");
-                Task.Wait();
-                LoggingActions.LogTaskResult(Log, Task, theModel.FanEnabled, EventLogEntryCodes.PerformanceFanEnabled, EventLogEntryCodes.PerformanceFanDisabled, EventLogEntryCodes.PerformanceFanEnabledError);
-            }
-            else
-            {
-                // Enable
-                if( ! CurrentValue.FanEnabled && theModel.FanEnabled)
+
+                // Disable
+                if (CurrentValue.FanEnabled && !theModel.FanEnabled)
                 {
-                    var Task = ProcessRunner.GetProcessResultAsync(c_SedCommand, "/boot/config.txt -i -e \"\\$adtoverlay=gpio-fan,gpiopin=" + theModel.FanGPIO + ",temp=" + theModel.FanTemperature + "000\"");
+                    var Task = ProcessRunner.GetProcessResultAsync(c_SedCommand, Utils.Hardware.ConfigPath + " -i -e \"/^.*dtoverlay=gpio-fan.*/d\"");
                     Task.Wait();
-                    LoggingActions.LogTaskResult(Log, Task, theModel.FanEnabled, EventLogEntryCodes.PerformanceFanEnabled, EventLogEntryCodes.PerformanceFanDisabled, EventLogEntryCodes.PerformanceFanDisabledError);
+                    LoggingActions.LogTaskResult(Log, Task, theModel.FanEnabled, EventLogEntryCodes.PerformanceFanEnabled, EventLogEntryCodes.PerformanceFanDisabled, EventLogEntryCodes.PerformanceFanEnabledError);
                 }
-                // Replace
-                else if(CurrentValue.FanEnabled && (CurrentValue.FanGPIO != theModel.FanGPIO || CurrentValue.FanTemperature != theModel.FanTemperature))
+                else
                 {
-                    var Task = ProcessRunner.GetProcessResultAsync(c_SedCommand, "/boot/config.txt -i -e \"s/^.*dtoverlay=gpio-fan.*/dtoverlay=gpio-fan,gpiopin=" + theModel.FanGPIO + ",temp=" + theModel.FanTemperature + "000/\"");
-                    Task.Wait();
-                    LoggingActions.LogTaskResult(Log, Task, EventLogEntryCodes.PerformanceFanGPIOOrTempChanged, EventLogEntryCodes.PerformanceFanGPIOOrTempChangedError);
+                    // Enable
+                    if (!CurrentValue.FanEnabled && theModel.FanEnabled)
+                    {
+                        var Task = ProcessRunner.GetProcessResultAsync(c_SedCommand, Utils.Hardware.ConfigPath + " -i -e \"\\$adtoverlay=gpio-fan,gpiopin=" + theModel.FanGPIO + ",temp=" + theModel.FanTemperature + "000\"");
+                        Task.Wait();
+                        LoggingActions.LogTaskResult(Log, Task, theModel.FanEnabled, EventLogEntryCodes.PerformanceFanEnabled, EventLogEntryCodes.PerformanceFanDisabled, EventLogEntryCodes.PerformanceFanDisabledError);
+                    }
+                    // Replace
+                    else if (CurrentValue.FanEnabled && (CurrentValue.FanGPIO != theModel.FanGPIO || CurrentValue.FanTemperature != theModel.FanTemperature))
+                    {
+                        var Task = ProcessRunner.GetProcessResultAsync(c_SedCommand, Utils.Hardware.ConfigPath + " -i -e \"s/^.*dtoverlay=gpio-fan.*/dtoverlay=gpio-fan,gpiopin=" + theModel.FanGPIO + ",temp=" + theModel.FanTemperature + "000/\"");
+                        Task.Wait();
+                        LoggingActions.LogTaskResult(Log, Task, EventLogEntryCodes.PerformanceFanGPIOOrTempChanged, EventLogEntryCodes.PerformanceFanGPIOOrTempChangedError);
+                    }
                 }
             }
         }

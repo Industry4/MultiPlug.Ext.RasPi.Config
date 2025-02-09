@@ -27,7 +27,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             Task<ProcessResult>[] Tasks = new Task<ProcessResult>[3];
 
             Tasks[0] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/etc/hostname");
-            Tasks[1] = ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i wlan0 get country");
+            Tasks[1] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_wifi_country");
             Tasks[2] = ProcessRunner.GetProcessResultAsync(c_IFConfigCommand);
 
             ReadResult ReadResult = DHCPCD.Read();
@@ -60,7 +60,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             Task.WaitAll(Tasks);
 
             var WiFiCountryResult = Tasks[1].Result.GetOutput().TrimEnd();
-            WiFiCountrySet = WiFiCountryResult != c_WiFiCountryNotSet;
+            WiFiCountrySet = WiFiCountryResult != c_WiFiCountryNotSet || WiFiCountryResult != string.Empty;
 
             HostName = Tasks[0].Result.Okay() ? Tasks[0].Result.GetOutput().TrimEnd() : string.Empty;
             WiFiCountry = WiFiCountrySet ? WiFiCountryResult : string.Empty;
@@ -90,15 +90,9 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             {
                 LoggingActions.LogTaskResult(Log, SSIDTasks[i], EventLogEntryCodes.SSIDSettingsGetError);
 
-                var SSIDs = ProcessSSIDs(SSIDTasks[i]);
+                SSIDs = ProcessSSIDs(SSIDTasks[i], NICInterfaces[i].Name);
 
-                foreach(var SSID in SSIDs)
-                {
-                    ConnectedSSIDs.Add(new ConnectedSSID { Wlan = NICInterfaces[i].Name, SSID = SSID });
-                }
             }
-
-            SSIDs = ConnectedSSIDs.ToArray();
 
             // Log only if errors have occured
             LoggingActions.LogTaskResult(Log, Tasks[0], EventLogEntryCodes.HostNameSettingsGetError);
@@ -238,41 +232,34 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             return true;
         }
 
-        internal bool DeleteWiFi(string id, string theWlanId)
+        internal bool DeleteWiFi(string id, string theWlanId, string ssid)
         {
             // TODO All Results aren't being catched.
 
-            Task<ProcessResult> ScanTask = ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theWlanId + " list_networks");
+            bool Result;
 
-            ScanTask.Wait();
-
-            bool Result = ScanTask.Result.Okay();
-
-            if (Result)
+            if (Utils.Hardware.isUsingNetworkManager == false)
             {
-                string[] SSIDS = ScanTask.Result.GetOutput().Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
-                    .Where(line => line.Contains(id))
-                    .Select(line => line.Substring(0, line.IndexOf("\t")))
-                    .ToArray();
+                var Task = ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theWlanId + " remove_network " + id);
+                Task.Wait();
+                if (!Task.Result.Okay()) { return false; }
 
-                if( SSIDS.Any())
-                {
-                    var Task = ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theWlanId + " remove_network " + SSIDS[0]);           
-                    Task.Wait();
-                    if( ! Task.Result.Okay() ){ return false; }
+                Task = ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theWlanId + " save_config");
+                Task.Wait();
+                if (!Task.Result.Okay()) { return false; }
 
-                    Task = ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theWlanId + " save_config");
-                    Task.Wait();
-                    if( ! Task.Result.Okay() ) { return false; }
+                Task = ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theWlanId + " reconfigure");
+                Task.Wait();
+                Result = Task.Result.Okay();
 
-                    Task = ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theWlanId + " reconfigure");
-                    Task.Wait();
-                    Result = Task.Result.Okay();
-                }
-                else
-                {
-                    Result = false;
-                }
+            }
+            else
+            {
+                Task<ProcessResult> ScanTask = ProcessRunner.GetProcessResultAsync("nmcli", "con delete " + ssid);
+
+                ScanTask.Wait();
+
+                Result = ScanTask.Result.Okay();
             }
 
             return Result;
@@ -284,17 +271,21 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
         }
 
 
-        internal static string[] ProcessSSIDs(Task<ProcessResult> theTask)
+        internal static ConnectedSSID[] ProcessSSIDs(Task<ProcessResult> theTask, string theWlan)
         {
             if (theTask.Result.Okay())
             {
                 return theTask.Result.GetOutput().Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
                     .Skip(1) // Skip the Heading
-                    .Select( d => d.Split(new char[] { '\t' })[1] )
+                    .Select( Row =>
+                    {
+                        var RowItems = Row.Split(new char[] { '\t' });
+                        return new ConnectedSSID { Wlan = theWlan, SSID = RowItems[1], Id = RowItems[0] };
+                    })
                     .ToArray();
             }
 
-            return new string[0];
+            return new ConnectedSSID[0];
         }
 
         private Task<ProcessResult> SetWiFiSSIDPassphraseSequence(NetworkProperties theModel)
@@ -303,28 +294,35 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             {
                 Log?.Invoke(EventLogEntryCodes.SSIDChanging, new string[] { theModel.NewSSID });
 
-                var AddNetworkTask = await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " add_network");
-
-                var NewNetworkId = AddNetworkTask.GetOutput().Trim();
-
-                ProcessResult SetSSID = await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " set_network " + NewNetworkId + " ssid '\"" + theModel.NewSSID + "\"'");
-
-                ProcessResult SetPassphrase;
-
-                if (string.IsNullOrEmpty(theModel.NewPassphrase))
+                if (Utils.Hardware.isUsingNetworkManager == false)
                 {
-                    SetPassphrase = await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " set_network " + NewNetworkId + " key_mgmt NONE");
+                    var AddNetworkTask = await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " add_network");
+
+                    var NewNetworkId = AddNetworkTask.GetOutput().Trim();
+
+                    ProcessResult SetSSID = await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " set_network " + NewNetworkId + " ssid '\"" + theModel.NewSSID + "\"'");
+
+                    ProcessResult SetPassphrase;
+
+                    if (string.IsNullOrEmpty(theModel.NewPassphrase))
+                    {
+                        SetPassphrase = await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " set_network " + NewNetworkId + " key_mgmt NONE");
+                    }
+                    else
+                    {
+                        SetPassphrase = await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " set_network " + NewNetworkId + " psk '\"" + theModel.NewPassphrase + "\"'");
+                    }
+
+                    await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " enable_network " + NewNetworkId);
+                    await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " save_config");
+                    await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " reconfigure");
+
+                    return new ProcessResult(0, string.Empty, string.Empty);
                 }
                 else
                 {
-                    SetPassphrase = await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " set_network " + NewNetworkId + " psk '\"" + theModel.NewPassphrase + "\"'");
+                    return await ProcessRunner.GetProcessResultAsync(c_NetworkMonitorCliCommand , "device wifi connect " + theModel.NewSSID + " password " + theModel.NewPassphrase + " ifname " + theModel.NewWiFiNIC);
                 }
-
-                await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " enable_network " + NewNetworkId);
-                await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " save_config");
-                await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + theModel.NewWiFiNIC + " reconfigure");
-
-                return new ProcessResult(0, string.Empty, string.Empty);
             });
         }
 

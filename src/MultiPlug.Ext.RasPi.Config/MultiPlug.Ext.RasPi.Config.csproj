@@ -96,6 +96,7 @@
     <Compile Include="Models\Components\Boot\BootProperties.cs" />
     <Compile Include="Models\Components\Home\API\DiskSpace.cs" />
     <Compile Include="Models\Components\Home\API\Temperatures.cs" />
+    <Compile Include="Models\Components\Localisation\WifiCountryModel.cs" />
     <Compile Include="Models\Components\Memory\MemoryProperties.cs" />
     <Compile Include="Models\Components\Network\ConnectedSSID.cs" />
     <Compile Include="Models\Components\Performance\PerformanceProperties.cs" />

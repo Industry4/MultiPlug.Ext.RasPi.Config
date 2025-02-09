@@ -27,7 +27,7 @@
                         <div class="span6"><b>Desktop or CLI</b></div>
                         <div class="span6">
                             <select name="BootBehaviour">
-                                <option value="0"></option>
+                                <option value="0">Select to Change</option>
                                 <option value="1">Console</option>
                                 <option value="2">Console with Autologin</option>
                                 <option value="3">Desktop</option>
@@ -35,19 +35,28 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row-fluid">
-                        <div class="span6"><b>Wait for Network at Boot</b></div>
-                        <div class="span6"><input type="checkbox" name="NetworkWait" value="true" @Raw(Model.Extension.Model.NetworkWait ? "checked=checked" : "")></div>
-                    </div>
+                    @if (!MultiPlug.Ext.RasPi.Config.Utils.Hardware.isRunningRaspberryPi5)
+                    {
+                        <div class="row-fluid">
+                            <div class="span6"><b>Wait for Network at Boot</b></div>
+                            <div class="span6"><input type="checkbox" name="NetworkWait" value="true" @Raw(Model.Extension.Model.NetworkWait ? "checked=checked" : "")></div>
+                        </div>
+                    }
                     <div class="row-fluid">
                         <div class="span6"><b>Splash Screen</b></div>
-                        <div class="span6"><input type="checkbox" name="SplashScreen" value="true" @Raw(Model.Extension.Model.SplashScreen ? "checked=checked" : "")></div>
+                        <div class="span6">
+                            <select name="SplashScreen">
+                                <option value="0">Select to Change</option>
+                                <option value="1">Enable</option>
+                                <option value="2">Disable</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="row-fluid">
                         <div class="span6"><b>Boot Order</b></div>
                         <div class="span6">
                             <select name="BootOrder">
-                                <option value="0"></option>
+                                <option value="0">Select to Change</option>
                                 <option value="1">SD Card</option>
                                 <option value="2">USB</option>
                                 <option value="3">Network</option>
@@ -58,7 +67,7 @@
                         <div class="span6"><b>Boot ROM Version</b></div>
                         <div class="span6">
                             <select name="BootROM">
-                                <option value="0"></option>
+                                <option value="0">Select to Change</option>
                                 <option value="1">Latest</option>
                                 <option value="2">Default</option>
                             </select>

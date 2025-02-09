@@ -28,5 +28,8 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Components
         internal const string c_IFDown = "ifdown";
         internal const string c_IFUp = "ifup";
         internal const string c_JournalCommand = "journalctl";
+        internal const string c_RFKillCommand = "rfkill";
+        internal const string c_NetworkMonitorCliCommand = "nmcli";
+        internal const string c_IWCommand = "iw";
     }
 }

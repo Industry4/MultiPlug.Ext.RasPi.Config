@@ -20,21 +20,16 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Boot
 
         internal BootProperties RepopulateAndGetProperties()
         {
-            if (!Utils.Hardware.isRunningRaspberryPi) { return this; }
-
-            Task<ProcessResult>[] Tasks = new Task<ProcessResult>[2];
-
-            Tasks[0] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_boot_wait");
-            Tasks[1] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_boot_splash");
-
-            Task.WaitAll(Tasks);
-
-            NetworkWait     = Tasks[0].Result.Okay() ? Tasks[0].Result.GetOutput().TrimEnd().Equals("0") : false;
-            SplashScreen    = Tasks[1].Result.Okay() ? Tasks[1].Result.GetOutput().TrimEnd().Equals("0") : false;
-
-            // Log only if errors have occured
-            LoggingActions.LogTaskResult(Log, Tasks[0], EventLogEntryCodes.NetworkWaitSettingsGetError);
-            LoggingActions.LogTaskResult(Log, Tasks[1], EventLogEntryCodes.SplashScreenSettingsGetError);
+            if ( ! Utils.Hardware.isRunningRaspberryPi ) { return this; }
+            if ( ! Utils.Hardware.isRunningRaspberryPi5 )
+            {
+                Task<ProcessResult>[] Tasks = new Task<ProcessResult>[1];
+                Tasks[0]        = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_boot_wait");
+                Task.WaitAll(Tasks);
+                NetworkWait     = Tasks[0].Result.Okay() ? Tasks[0].Result.GetOutput().TrimEnd().Equals("0") : false;
+                // Log only if errors have occured
+                LoggingActions.LogTaskResult(Log, Tasks[0], EventLogEntryCodes.NetworkWaitSettingsGetError);
+            }
 
             return this;
         }
@@ -63,7 +58,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Boot
 
             Task<ProcessResult> SetNetworkWait = null;
 
-            if (NetworkWait != theModel.NetworkWait)
+            if (Utils.Hardware.isRunningRaspberryPi5 == false && NetworkWait != theModel.NetworkWait)
             {
                 LoggingActions.LogTaskAction(Log, theModel.NetworkWait, EventLogEntryCodes.NetworkWaitSettingTrue, EventLogEntryCodes.NetworkWaitSettingFalse);
                 SetNetworkWait = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_boot_wait " + (theModel.NetworkWait ? "0" : "1"));
@@ -72,10 +67,10 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Boot
 
             Task<ProcessResult> SetSplashScreen = null;
 
-            if (SplashScreen != theModel.SplashScreen)
+            if (theModel.SplashScreen != 0)
             {
-                LoggingActions.LogTaskAction(Log, theModel.SplashScreen, EventLogEntryCodes.SplashScreenSettingTrue, EventLogEntryCodes.SplashScreenSettingFalse);
-                SetSplashScreen = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_boot_splash " + (theModel.SplashScreen ? "0" : "1"));
+                LoggingActions.LogTaskAction(Log, theModel.SplashScreen == 1, EventLogEntryCodes.SplashScreenSettingTrue, EventLogEntryCodes.SplashScreenSettingFalse);
+                SetSplashScreen = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_boot_splash " + (theModel.SplashScreen == 1 ? "1" : "0"));
                 Tasks.Add(SetSplashScreen);
             }
 

@@ -27,14 +27,34 @@
                     <div class="row-fluid">
                         <div class="span6"><b>WiFi Country</b></div>
                         <div class="span6">
+@if (Model.Extension.Model.CanChangeWifiCountry)
+{
                             <select name="WifiCountry">
                                 <option value="">Not Set / Unset</option>
 
                                 @foreach (var item in Model.Extension.Model.WifiCountries)
                                 {
-                                    <option value="@item[0]" @Raw(item[2])>@item[1]</option>
+                                    if (item.AlphaTwo == Model.Extension.Model.WifiCountry)
+                                    {
+                                        <option value="@item.AlphaTwo" selected="selected">@item.Country</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.AlphaTwo">@item.Country</option>
+                                    }
                                 }
                             </select>
+}
+else
+{
+                                foreach (var item in Model.Extension.Model.WifiCountries)
+                                {
+                                    if (item.AlphaTwo == Model.Extension.Model.WifiCountry)
+                                    {
+                                        @item.Country
+                                    }
+                                }
+}
                         </div>
                     </div>
                     <div class="row-fluid">
@@ -51,7 +71,14 @@
                             <select name="TimeZone">
                                 @foreach (var item in Model.Extension.Model.TimeZones)
                                 {
-                                    <option value="@item[0]" @Raw(item[1])>@item[0]</option>
+                                    if (item == Model.Extension.Model.TimeZone)
+                                    {
+                                        <option value="@item" selected="selected">@item</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
                                 }
                             </select>
                         </div>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MultiPlug.Ext.RasPi.Config.Utils.Swan;
 using MultiPlug.Ext.RasPi.Config.Diagnostics;
@@ -90,8 +91,18 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Home
         {
             if (theTask.Result.Okay())
             {
-                return theTask.Result.GetOutput().Split(new string[] { "\n", "\r\n" }, 2, StringSplitOptions.RemoveEmptyEntries)[1]
-                                                                .Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries)[4].TrimEnd('%');
+                try
+                {
+                    return theTask.Result.GetOutput()
+                        .Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries) // Each Line
+                        .Where( line => line.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).Last().Equals("/") /* Mounted on */)
+                        .First() // Should be only 1
+                        .Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries)[4 /* % Used */].TrimEnd('%');
+                }
+                catch
+                {
+                    return string.Empty;
+                }
             }
 
             return string.Empty;

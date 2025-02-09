@@ -172,7 +172,7 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
         HATSettingsGetVendorError = 152,
 
         NetworkWaitSettingsGetError = 153,
-        SplashScreenSettingsGetError = 154,
+        //SplashScreenSettingsGetError = 154,
 
         HostNameSettingsGetError = 155,
         //WiFiCountrySettingsGetError = 156,

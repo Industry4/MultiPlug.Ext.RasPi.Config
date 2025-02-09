@@ -29,7 +29,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             Tasks[2] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_vnc");
             Tasks[3] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_spi");
             Tasks[4] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_i2c");
-            Tasks[5] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_serial");
+            Tasks[5] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_serial_hw");
             Tasks[6] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_onewire");
             Tasks[7] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_rgpio");
 
@@ -117,7 +117,28 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             {
                 AskToRestart = true;
                 LoggingActions.LogTaskAction(Log, theModel.Serial, EventLogEntryCodes.SerialSettingEnabling, EventLogEntryCodes.SerialSettingDisabling);
-                SetSerial = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_serial " + (theModel.Serial ? c_Enabled : c_Disabled));
+
+                // This is a recreation of do_serial_hw() in raspi-config which will be available in future/newer versions (included with Raspberry Pi 5) but not older.
+                // So recreated here for backward compatibility. todo, use do_serial_hw() in future.
+
+                if ( Utils.Hardware.isRunningRaspberryPi5 )
+                {
+                    // Raspberry Pi 5
+                    if(theModel.Serial)
+                    {
+                        SetSerial = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint set_config_var dtparam=uart0 on " + Utils.Hardware.ConfigPath );
+                    }
+                    else
+                    {
+                        SetSerial = ProcessRunner.GetProcessResultAsync(c_SedCommand, Utils.Hardware.ConfigPath + " -i -e \"/dtparam=uart0.*/d\"");
+                    }
+                }
+                else
+                {
+                    // Raspberry Pi 4 or less
+                    SetSerial = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint set_config_var enable_uart " + ((!theModel.Serial) ? c_Enabled : c_Disabled) + " " + Utils.Hardware.ConfigPath );
+                }
+
                 Tasks.Add(SetSerial);
             }
 

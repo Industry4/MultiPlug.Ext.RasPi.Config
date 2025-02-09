@@ -4,7 +4,7 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Components.Localisation
 {
     public class LocalisationProperties : SharedProperties
     {
-        public string[][] WifiCountries { get; set; }
+        public WifiCountryModel[] WifiCountries { get; set; }
         [DataMember]
         public string WifiCountry { get; set; }
         [DataMember]
@@ -17,11 +17,12 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Components.Localisation
         public bool FakeHWClockEnabled { get; set; }
         [DataMember]
         public string TimeZone { get; set; }
-        public string[][] TimeZones { get; set; }
+        public string[] TimeZones { get; set; }
         public bool SetTime { get; set; }
         public bool SetDate { get; set; }
         public bool HWClockPresent { get; set; }
         [DataMember]
         public bool WiFiCountrySyncEnabled { get; set; }
+        public bool CanChangeWifiCountry { get; set; }
     }
 }

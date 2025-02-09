@@ -17,13 +17,19 @@
                 <p style="font-size:26px; line-height: 54px; text-align: center; margin: 0px;">Raspberry Pi Configuration</p>
             </div>
             <div class="span3" style="text-align: right;">
+@if (MultiPlug.Ext.RasPi.Config.Utils.Hardware.isRunningRaspberryPi5 == false)
+{
                 <button id="btn-save" form="formsave" type="submit" value="submit" style="height:54px; width:65px" class="item btn btn-green"><i class="icon-save icon-large"></i><p>Save</p></button>
+}
             </div>
         </div>
     </div>
 
     @Include("MultiPlug.Ext.RasPi.Config.RaspPiConfig_Settings_Navigation")
 
+
+@if (MultiPlug.Ext.RasPi.Config.Utils.Hardware.isRunningRaspberryPi5 == false)
+{
     <form id="formsave" action="" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded">
         <div class="row-fluid">
             <div class="span12">
@@ -39,7 +45,7 @@
                             <select name="FanGPIO">
                                 @for (int item = Model.Extension.Model.GPIOMin; item <= Model.Extension.Model.GPIOMax; item++)
                                 {
-                                    <option value="@item"@isSelected(item, Model.Extension.Model.FanGPIO)>@item</option>
+                                    <option value="@item" @isSelected(item, Model.Extension.Model.FanGPIO)>@item</option>
                                 }
                             </select>
                         </div>
@@ -50,7 +56,7 @@
                             <select name="FanTemperature">
                                 @for (int item = Model.Extension.Model.FanTemperatureMin; item <= Model.Extension.Model.FanTemperatureMax; item++)
                                 {
-                                    <option value="@item"@isSelected(item, Model.Extension.Model.FanTemperature)>@item</option>
+                                    <option value="@item" @isSelected(item, Model.Extension.Model.FanTemperature)>@item</option>
                                 }
                             </select>
                         </div>
@@ -59,4 +65,6 @@
             </div>
         </div>
     </form>
+}
+
 </section>

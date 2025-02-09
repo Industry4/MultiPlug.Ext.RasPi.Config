@@ -6,5 +6,6 @@ namespace MultiPlug.Ext.RasPi.Config.Models.Components.Network
     {
         public string Wlan { get; set; }
         public string SSID { get; set; }
+        public string Id { get; set; }
     }
 }
