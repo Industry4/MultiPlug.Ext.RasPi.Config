@@ -129,13 +129,13 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
                         switch (i)
                         {
                             case 0:
-                                NTPServer1 = SplitBySpace[i];
+                                NTPServer1 = SplitBySpace[i].Trim();
                                 break;
                             case 1:
-                                NTPServer2 = SplitBySpace[i];
+                                NTPServer2 = SplitBySpace[i].Trim();
                                 break;
                             case 2:
-                                NTPServer3 = SplitBySpace[i];
+                                NTPServer3 = SplitBySpace[i].Trim();
                                 break;
                         }
                     }
