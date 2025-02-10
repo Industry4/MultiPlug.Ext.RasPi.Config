@@ -90,9 +90,11 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             {
                 LoggingActions.LogTaskResult(Log, SSIDTasks[i], EventLogEntryCodes.SSIDSettingsGetError);
 
-                SSIDs = ProcessSSIDs(SSIDTasks[i], NICInterfaces[i].Name);
+                ConnectedSSIDs.AddRange(ProcessSSIDs(SSIDTasks[i], NICInterfaces[i].Name));
 
             }
+
+            SSIDs = ConnectedSSIDs.ToArray();
 
             // Log only if errors have occured
             LoggingActions.LogTaskResult(Log, Tasks[0], EventLogEntryCodes.HostNameSettingsGetError);
