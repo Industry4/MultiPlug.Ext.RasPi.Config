@@ -4,6 +4,11 @@
     {
         return theIntValue.ToString() == theStringValue ? " selected" : string.Empty;
     }
+
+    public string isActive(bool isActive)
+    {
+        return isActive ? "<span class=\"label label-red\">Active</span>" : "<span class=\"label label-green\">OK</span>";
+    }
 }
 
 <section class="row-fluid">
@@ -27,10 +32,9 @@
 
     @Include("MultiPlug.Ext.RasPi.Config.RaspPiConfig_Settings_Navigation")
 
-
+    <form id="formsave" action="" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded">
 @if (MultiPlug.Ext.RasPi.Config.Utils.Hardware.isRunningRaspberryPi5 == false)
 {
-    <form id="formsave" action="" method="post" accept-charset="utf-8" enctype="application/x-www-form-urlencoded">
         <div class="row-fluid">
             <div class="span12">
                 <h3 class="box-header">Temperature Control</h3>
@@ -64,7 +68,45 @@
                 </div>
             </div>
         </div>
-    </form>
 }
-
+        <div class="row-fluid">
+            <div class="span12">
+                <h3 class="box-header">Current Throttled State and History</h3>
+                <div class="box">
+                    <div class="row-fluid">
+                        <div class="span6"><b>Undervoltage Detected</b></div>
+                        <div class="span6">@Raw(isActive(Model.Extension.Model.UndervoltageDetected))</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>Undervoltage Has Occurred</b></div>
+                        <div class="span6">@Raw(isActive(Model.Extension.Model.UndervoltageHasOccurred))</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>Arm Frequency Capped</b></div>
+                        <div class="span6">@Raw(isActive(Model.Extension.Model.ArmFrequencyCapped))</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>Arm Frequency Capping Has Occurred</b></div>
+                        <div class="span6">@Raw(isActive(Model.Extension.Model.ArmFrequencyCappingHasOccurred))</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>Currently Throttled</b></div>
+                        <div class="span6">@Raw(isActive(Model.Extension.Model.CurrentlyThrottled))</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>Throttling Has Occurred</b></div>
+                        <div class="span6">@Raw(isActive(Model.Extension.Model.ThrottlingHasOccurred))</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>Soft Temperature Limit Active</b></div>
+                        <div class="span6">@Raw(isActive(Model.Extension.Model.SoftTemperatureLimitActive))</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span6"><b>Soft Temperature Limit Has Occurred</b></div>
+                        <div class="span6">@Raw(isActive(Model.Extension.Model.SoftTemperatureLimitHasOccurred))</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </section>
