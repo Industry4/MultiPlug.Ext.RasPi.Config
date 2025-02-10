@@ -214,6 +214,8 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
         ExpandRootFsError = 188,
 
         TimesyncdRestarted = 189,
-        TimesyncdRestartError = 190
+        TimesyncdRestartError = 190,
+
+        PerformanceGetThrottled = 191
     }
 }

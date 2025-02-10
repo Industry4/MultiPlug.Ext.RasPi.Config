@@ -133,6 +133,9 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Performance
                 }
             }
 
+            // Log only if errors have occured
+            LoggingActions.LogTaskResult(Log, Tasks[0], EventLogEntryCodes.PerformanceGetThrottled);
+
             return this;
         }
 

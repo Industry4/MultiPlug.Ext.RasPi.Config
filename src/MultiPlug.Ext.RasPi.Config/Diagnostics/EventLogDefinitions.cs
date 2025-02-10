@@ -197,6 +197,7 @@ namespace MultiPlug.Ext.RasPi.Config.Diagnostics
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.PerformanceFanDisabledError,  Source = (uint) EventLogEntryCodes.SourcePerformance, StringFormat = "Error while disabling the Fan. Message: {0}", Type = EventLogEntryType.Error   },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.PerformanceFanGPIOOrTempChanged, Source = (uint) EventLogEntryCodes.SourcePerformance, StringFormat = "Fan GPIO or Temp set", Type = EventLogEntryType.Information  },
             new EventLogDefinition { Code = (uint) EventLogEntryCodes.PerformanceFanGPIOOrTempChangedError, Source = (uint) EventLogEntryCodes.SourcePerformance, StringFormat = "Error while setting Fan GPIO or Temp. Message: {0}", Type = EventLogEntryType.Error   },
+            new EventLogDefinition { Code = (uint) EventLogEntryCodes.PerformanceGetThrottled, Source = (uint) EventLogEntryCodes.SourcePerformance, StringFormat = "Error while getting current throttled state and history. Message: {0}", Type = EventLogEntryType.Error   }
         };
     }
 }
