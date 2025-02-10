@@ -73,7 +73,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             Time                = Tasks[5].Result.Okay() ? Tasks[5].Result.GetOutput().TrimEnd() : string.Empty;
             TimeSyncdEnabled    = Tasks[6].Result.Okay(); // Will Error if inactive
             FakeHWClockEnabled  = Tasks[7].Result.Okay(); // Will Error if inactive
-            HWClockPresent      = Tasks[8].Result.Okay(); // Will Error if inactive
+            HWClockPresent      = Tasks[8].Result.Okay(); // Will Error if not Present
 
             CanChangeWifiCountry = true;
 
@@ -218,7 +218,8 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             Task<ProcessResult> StartFakeHWClock = null;
             Task<ProcessResult> DisableFakeHWClock = null;
 
-            if (FakeHWClockEnabled != theModel.FakeHWClockEnabled)
+            // Raspberry Pi 5 always has a RTC
+            if (Utils.Hardware.isRunningRaspberryPi5 == false && FakeHWClockEnabled != theModel.FakeHWClockEnabled)
             {
                 LoggingActions.LogTaskAction(Log, theModel.FakeHWClockEnabled, EventLogEntryCodes.FakeHwClockEnabling, EventLogEntryCodes.FakeHwClockStopping);
 
