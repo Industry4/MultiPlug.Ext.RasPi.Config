@@ -6,13 +6,13 @@ Raspberry Pi Configuration Extension for the [MultiPlug .Net Edge Computing Plat
 
 The functionality mirrors most of the functionality found in the command line tool [raspi-config](https://www.raspberrypi.org/documentation/configuration/raspi-config.md). Due to MultiPlug's browser based interface, visual setting haven't been included.
 
-* General overview - Raspberry Pi Model - OS Version, Hostname, Date and Time, Temperature and Disk Space.
+* General overview - Raspberry Pi Model - OS Version, Hostname, Date and Time, Temperature, Disk Space and Linux Journal.
 * Network - Hostname, static values for IP Address, IP 6 Address, Routers and Domain Name Servers for all Eth and Wlan, Wireless SSID and Passphrase.
-* Localisation - Wifi Country, Time, Time Zone, Date
+* Localisation - Wifi Country, Time, Time Zone, Date and NTP Servers
 * Interfacing - Camera, SSH, VNC, SPI, I2C, Serial, 1-Wire, Remote GPIO
-* Performance - Temperature control via Fan
+* Performance - Temperature control via Fan and Current Throttled State and History
 * Boot - Desktop or CLI, Boot Order, Boot BOM Version
-* Memory - Current Disk and RAM usage
+* Memory - Current Disk, RAM usage and Expand Root File System
 * Users - Set user passwords
 * Hardware Attached On Top (HAT) Details
 * REST Json API for Temperature and Disk Space
@@ -49,9 +49,6 @@ More Screenshots can be viewed on [the Wiki](https://github.com/Industry4/MultiP
 The Extension can be accessed from: [http://multiplug.local/extensions/multiplug.ext.raspi.config//](http://multiplug.local/extensions/multiplug.ext.raspi.config/)
  *Replace multiplug.local for the IP Address of the MultiPlug instance*
  
-### Known Bugs
-* None
-
 ### Prerequisites - Installing MultiPlug
 
 The MultiPlug .Net Edge Computing Platform must be installed on Raspberry Pi OS.
@@ -104,10 +101,3 @@ This project is licensed under the MIT License
 
 * Uses calls to raspi-config shell commands using undocumented nonint feature.
 * Uses Process Runner from Unosquare Swan (Stuff we all need).
-
-Thanks for the support from:
-* Seemin Suleri
-* Julian Singh
-* Ian Rathbone
-* Julius Angwenyi
-* Brainboxes Ltd

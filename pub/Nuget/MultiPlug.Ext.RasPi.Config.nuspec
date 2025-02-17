@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>MultiPlug.Ext.RasPi.Config</id>
-    <version>1.0.17</version>
+    <version>1.0.18</version>
     <title>Raspberry Pi Configuration Extension for MultiPlug</title>
     <authors>4IR.UK</authors>
     <owners>4IR.UK</owners>
@@ -13,6 +13,11 @@
     <repository type="git" url="https://github.com/Industry4/MultiPlug.Ext.RasPi.Config" />
     <license type="expression">MIT</license>
     <releaseNotes>Run this extension only on a Raspberry Pi using the .Net Mono runtime.
+1.0.18 Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/18
+Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/17
+Bug: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/16
+Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/15
+Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/12
 1.0.17 Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/14
 1.0.16 Bug: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/13
 1.0.15 No Change - Deployment Issue. 13 unlucky for some
@@ -37,13 +42,13 @@ Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/1
 1.0.2 Bug: Changed encoder value to UTF-8
 1.0.1 Enhancement: Raspberry Pi IP Address Configuration
 1.0.0 Nuget name reserve.</releaseNotes>
-    <copyright>4IR.UK British Systems 2024</copyright>
+    <copyright>4IR.UK British Systems 2025</copyright>
     <tags>MultiPlug Edge_Computing Raspberry Pi Raspberry_Pi IoT</tags>
     <dependencies>
       <group targetFramework=".NETFramework4.7.2">
-        <dependency id="MultiPlug.Base" version="1.0.65" />
-        <dependency id="MultiPlug.Extension.Core" version="1.0.63" />
-        <dependency id="MultiPlug.Core" version="2.2.77" />
+        <dependency id="MultiPlug.Base" version="1.0.74" />
+        <dependency id="MultiPlug.Extension.Core" version="1.0.64" />
+        <dependency id="MultiPlug.Core" version="2.2.80" />
       </group>
     </dependencies>
   </metadata>
