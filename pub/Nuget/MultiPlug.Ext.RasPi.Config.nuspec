@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>MultiPlug.Ext.RasPi.Config</id>
-    <version>1.0.18</version>
+    <version>1.0.19</version>
     <title>Raspberry Pi Configuration Extension for MultiPlug</title>
     <authors>4IR.UK</authors>
     <owners>4IR.UK</owners>
@@ -13,6 +13,7 @@
     <repository type="git" url="https://github.com/Industry4/MultiPlug.Ext.RasPi.Config" />
     <license type="expression">MIT</license>
     <releaseNotes>Run this extension only on a Raspberry Pi using the .Net Mono runtime.
+1.0.19 Bug: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/19
 1.0.18 Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/18
 Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/17
 Bug: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/16
