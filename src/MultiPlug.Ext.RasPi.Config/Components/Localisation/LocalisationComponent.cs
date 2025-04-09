@@ -49,7 +49,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
         {
             if (!Utils.Hardware.isRunningRaspberryPi) { return this; }
 
-            Task<ProcessResult>[] Tasks = new Task<ProcessResult>[11];
+            Task<ProcessResult>[] Tasks = new Task<ProcessResult>[12];
 
             Tasks[0] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/usr/share/zoneinfo/iso3166.tab");
             Tasks[1] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_wifi_country");
@@ -62,6 +62,7 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             Tasks[8] = ProcessRunner.GetProcessResultAsync(c_HardwareClockCommand, "-r");
             Tasks[9] = ProcessRunner.GetProcessResultAsync(c_IFConfigCommand);
             Tasks[10] = ProcessRunner.GetProcessResultAsync(c_GrepCommand, "-P '(?=^((?!#).)*$)NTP=' /etc/systemd/timesyncd.conf"); //Ignore Commented out
+            Tasks[11] = ProcessRunner.GetProcessResultAsync(c_RFKillCommand, "list");
 
             Task.WaitAll(Tasks);
 
@@ -76,6 +77,14 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             HWClockPresent      = Tasks[8].Result.Okay(); // Will Error if not Present
 
             CanChangeWifiCountry = true;
+
+            if(Tasks[11].Result.Okay())
+            {
+                if(Tasks[11].Result.GetOutput().Contains("yes"))
+                {
+                    WifiCountry = string.Empty;
+                }
+            }
 
             var NICInterfaces = Tasks[9].Result.Okay() ? IFCONFIG.Parse(Tasks[9].Result.GetOutput()) : new NICInterface[0];
             NICInterfaces = NICInterfaces.Where(i => i.Name.StartsWith("wlan", StringComparison.OrdinalIgnoreCase)).ToArray();
