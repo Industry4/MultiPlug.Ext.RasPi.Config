@@ -57,13 +57,15 @@
                         <div class="span6"><b>1-Wire</b></div>
                         <div class="span6"><input type="checkbox" name="OneWire" value="true" @Raw(Model.Extension.Model.OneWire ? "checked=checked" : "")></div>
                     </div>
+@if (MultiPlug.Ext.RasPi.Config.Utils.Hardware.isOSRaspbianBullseye)
+{
                     <div class="row-fluid">
                         <div class="span6"><b>Remote GPIO</b></div>
                         <div class="span6">
                             <input type="checkbox" name="RemoteGPIO" value="true" @Raw(Model.Extension.Model.RemoteGPIO ? "checked=checked" : "")>
                         </div>
-
                     </div>
+}
                 </div>
             </div>
         </div>

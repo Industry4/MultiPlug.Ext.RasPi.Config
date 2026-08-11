@@ -31,7 +31,8 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             Tasks[4] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_i2c");
             Tasks[5] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_serial_hw");
             Tasks[6] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_onewire");
-            Tasks[7] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_rgpio");
+            // Newer version of Raspiberry Pi OS (raspi-config) don't have Remote GPIO https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/22
+            Tasks[7] = Utils.Hardware.isOSRaspbianBullseye ? ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_rgpio") : Task<ProcessResult>.Run(() => { return new ProcessResult(-1, string.Empty, string.Empty); });
 
             Task.WaitAll(Tasks);
 
@@ -42,7 +43,11 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             this.I2C        = Tasks[4].Result.Okay() ? Tasks[4].Result.GetOutput().TrimEnd().Equals(c_Enabled) : false;
             this.Serial     = Tasks[5].Result.Okay() ? Tasks[5].Result.GetOutput().TrimEnd().Equals(c_Enabled) : false;
             this.OneWire    = Tasks[6].Result.Okay() ? Tasks[6].Result.GetOutput().TrimEnd().Equals(c_Enabled) : false;
-            this.RemoteGPIO = Tasks[7].Result.Okay() ? Tasks[7].Result.GetOutput().TrimEnd().Equals(c_Enabled) : false;
+            if(Utils.Hardware.isOSRaspbianBullseye)
+            {
+                this.RemoteGPIO = Tasks[7].Result.Okay() ? Tasks[7].Result.GetOutput().TrimEnd().Equals(c_Enabled) : false;
+            }
+
 
             // Log only if errors have occured
             LoggingActions.LogTaskResult(Log, Tasks[0], EventLogEntryCodes.CameraSettingGetError);
@@ -52,7 +57,10 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             LoggingActions.LogTaskResult(Log, Tasks[4], EventLogEntryCodes.I2CSettingGetError);
             LoggingActions.LogTaskResult(Log, Tasks[5], EventLogEntryCodes.SerialSettingGetError);
             LoggingActions.LogTaskResult(Log, Tasks[6], EventLogEntryCodes.OneWireSettingGetError);
-            LoggingActions.LogTaskResult(Log, Tasks[7], EventLogEntryCodes.RemoteGPIOSettingGetError);
+            if(Utils.Hardware.isOSRaspbianBullseye)
+            {
+                LoggingActions.LogTaskResult(Log, Tasks[7], EventLogEntryCodes.RemoteGPIOSettingGetError);
+            }
 
             return this;
         }
@@ -118,12 +126,11 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
                 AskToRestart = true;
                 LoggingActions.LogTaskAction(Log, theModel.Serial, EventLogEntryCodes.SerialSettingEnabling, EventLogEntryCodes.SerialSettingDisabling);
 
-                // This is a recreation of do_serial_hw() in raspi-config which will be available in future/newer versions (included with Raspberry Pi 5) but not older.
+                // This is a recreation of do_serial_hw() in raspi-config which will be available in future/newer versions (included with Debian Bookworm and Trixie) but not older.
                 // So recreated here for backward compatibility. todo, use do_serial_hw() in future.
 
-                if ( Utils.Hardware.isRunningRaspberryPi5 )
+                if (Utils.Hardware.isOSRaspbianBullseye == false)
                 {
-                    // Raspberry Pi 5
                     if(theModel.Serial)
                     {
                         SetSerial = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint set_config_var dtparam=uart0 on " + Utils.Hardware.ConfigPath );
@@ -135,7 +142,6 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
                 }
                 else
                 {
-                    // Raspberry Pi 4 or less
                     SetSerial = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint set_config_var enable_uart " + ((!theModel.Serial) ? c_Enabled : c_Disabled) + " " + Utils.Hardware.ConfigPath );
                 }
 
@@ -154,11 +160,14 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
 
             Task<ProcessResult> SetRemoteGPIO = null;
 
-            if ( RemoteGPIO != theModel.RemoteGPIO)
+            if(Utils.Hardware.isOSRaspbianBullseye)
             {
-                LoggingActions.LogTaskAction(Log, theModel.RemoteGPIO, EventLogEntryCodes.RemoteGPIOSettingEnabling, EventLogEntryCodes.RemoteGPIOSettingDisabling);
-                SetRemoteGPIO = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_rgpio " + (theModel.RemoteGPIO ? c_Enabled : c_Disabled));
-                Tasks.Add(SetRemoteGPIO);
+                if ( RemoteGPIO != theModel.RemoteGPIO)
+                {
+                    LoggingActions.LogTaskAction(Log, theModel.RemoteGPIO, EventLogEntryCodes.RemoteGPIOSettingEnabling, EventLogEntryCodes.RemoteGPIOSettingDisabling);
+                    SetRemoteGPIO = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint do_rgpio " + (theModel.RemoteGPIO ? c_Enabled : c_Disabled));
+                    Tasks.Add(SetRemoteGPIO);
+                }
             }
 
             Task.WaitAll( Tasks.ToArray() );
@@ -173,7 +182,10 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Interfacing
             LoggingActions.LogTaskResult(Log, SetI2C, theModel.I2C, EventLogEntryCodes.I2CSettingEnabled, EventLogEntryCodes.I2CSettingDisabled, EventLogEntryCodes.I2CSettingError);
             LoggingActions.LogTaskResult(Log, SetSerial, theModel.Serial, EventLogEntryCodes.SerialSettingEnabled, EventLogEntryCodes.SerialSettingDisabled, EventLogEntryCodes.SerialSettingError);
             LoggingActions.LogTaskResult(Log, SetOneWire, theModel.OneWire, EventLogEntryCodes.OneWireSettingEnabled, EventLogEntryCodes.OneWireSettingDisabled, EventLogEntryCodes.OneWireSettingError);
-            LoggingActions.LogTaskResult(Log, SetRemoteGPIO, theModel.RemoteGPIO, EventLogEntryCodes.RemoteGPIOSettingEnabled, EventLogEntryCodes.RemoteGPIOSettingDisabled, EventLogEntryCodes.RemoteGPIOSettingError);
+            if (Utils.Hardware.isOSRaspbianBullseye)
+            {
+                LoggingActions.LogTaskResult(Log, SetRemoteGPIO, theModel.RemoteGPIO, EventLogEntryCodes.RemoteGPIOSettingEnabled, EventLogEntryCodes.RemoteGPIOSettingDisabled, EventLogEntryCodes.RemoteGPIOSettingError);
+            }
         }
     }
 }
