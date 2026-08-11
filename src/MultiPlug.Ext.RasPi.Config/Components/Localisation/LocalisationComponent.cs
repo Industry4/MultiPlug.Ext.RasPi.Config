@@ -59,7 +59,8 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             Tasks[5] = ProcessRunner.GetProcessResultAsync(c_DateCommand, "+%T");
             Tasks[6] = ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "is-active systemd-timesyncd");
             Tasks[7] = ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "is-active fake-hwclock");
-            Tasks[8] = ProcessRunner.GetProcessResultAsync(c_HardwareClockCommand, "-r");
+            // For RaspberryPi5, Don't SyncRTC manually, we will let the OS do that.
+            Tasks[8] = Utils.Hardware.isRunningRaspberryPi5 ? Task<ProcessResult>.Run( () => { return new ProcessResult(-1, string.Empty, string.Empty); }) : ProcessRunner.GetProcessResultAsync(c_HardwareClockCommand, "-r");
             Tasks[9] = ProcessRunner.GetProcessResultAsync(c_IFConfigCommand);
             Tasks[10] = ProcessRunner.GetProcessResultAsync(c_GrepCommand, "-P '(?=^((?!#).)*$)NTP=' /etc/systemd/timesyncd.conf"); //Ignore Commented out
             Tasks[11] = ProcessRunner.GetProcessResultAsync(c_RFKillCommand, "list");
@@ -158,7 +159,6 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Localisation
             LoggingActions.LogTaskResult(Log, Tasks[3], EventLogEntryCodes.TimeZoneSettingGetError);
             LoggingActions.LogTaskResult(Log, Tasks[4], EventLogEntryCodes.DateSettingGetError);
             LoggingActions.LogTaskResult(Log, Tasks[5], EventLogEntryCodes.TimeSettingGetError);
-            LoggingActions.LogTaskResult(Log, Tasks[8], EventLogEntryCodes.NICInterfacesGetError);
 
             return this;
         }
