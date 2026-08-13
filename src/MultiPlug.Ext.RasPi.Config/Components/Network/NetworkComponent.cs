@@ -24,6 +24,92 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
         {
             if (!Utils.Hardware.isRunningRaspberryPi) { return this; }
 
+            if(Utils.Hardware.isOSRaspbianBullseye)
+            {
+                return LegacyBullseye();
+            }
+
+            Task<ProcessResult>[] Tasks = new Task<ProcessResult>[3];
+
+            Tasks[0] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/etc/hostname");
+            Tasks[1] = ProcessRunner.GetProcessResultAsync(c_LinuxRaspconfigCommand, "nonint get_wifi_country");
+            Tasks[2] = ProcessRunner.GetProcessResultAsync(c_IFConfigCommand);
+
+            ReadResult ReadResult = NetworkManager.GetDevices();
+
+            var wlans = ReadResult.Properties.Where(nic => nic.Id.StartsWith("wlan", StringComparison.OrdinalIgnoreCase)).ToArray();
+
+            foreach (var item in wlans)
+            {
+                if (item.IPAddress == null) { item.IPAddress = string.Empty; }
+                if (item.IP6Address == null) { item.IP6Address = string.Empty; }
+                if (item.Routers == null) { item.Routers = new string[0]; }
+                if (item.DomainNameServers == null) { item.DomainNameServers = new string[0]; }
+            }
+
+            var eths = ReadResult.Properties.Where(nic => nic.Id.StartsWith("eth", StringComparison.OrdinalIgnoreCase)).ToArray();
+
+            foreach(var item in eths)
+            {
+                if (item.IPAddress == null) { item.IPAddress = string.Empty; }
+                if ( item.IP6Address == null){ item.IP6Address = string.Empty;}
+                if (item.Routers == null) { item.Routers = new string[0]; }
+                if (item.DomainNameServers == null) { item.DomainNameServers = new string[0]; }
+            }
+
+            Wlans = wlans;
+            Eths = eths;
+
+            ReadResult = null;
+
+            Task.WaitAll(Tasks);
+
+            var WiFiCountryResult = Tasks[1].Result.GetOutput().TrimEnd();
+            WiFiCountrySet = WiFiCountryResult != c_WiFiCountryNotSet || WiFiCountryResult != string.Empty;
+
+            HostName = Tasks[0].Result.Okay() ? Tasks[0].Result.GetOutput().TrimEnd() : string.Empty;
+            WiFiCountry = WiFiCountrySet ? WiFiCountryResult : string.Empty;
+            Interfaces = Tasks[2].Result.Okay() ? IFCONFIG.Parse(Tasks[2].Result.GetOutput()) : new NICInterface[0];
+
+            var NICInterfaces = Interfaces.Where(i => i.Name.StartsWith("wlan", StringComparison.OrdinalIgnoreCase)).ToArray();
+
+            WPASupplicant.ManageInterfaceCountChanges(NICInterfaces);
+
+            Task<ProcessResult>[] SSIDTasks = new Task<ProcessResult>[NICInterfaces.Length];
+
+            for (int i = 0; i < NICInterfaces.Length; i++)
+            {
+                SSIDTasks[i] = GetSSIDs(NICInterfaces[i].Name);
+            }
+
+            Task.WaitAll(SSIDTasks);
+
+            List<ConnectedSSID> ConnectedSSIDs = new List<ConnectedSSID>();
+
+            for (int i = 0; i < NICInterfaces.Length; i++)
+            {
+                LoggingActions.LogTaskResult(Log, SSIDTasks[i], EventLogEntryCodes.SSIDSettingsGetError);
+
+                ConnectedSSIDs.AddRange(ProcessSSIDs(SSIDTasks[i], NICInterfaces[i].Name));
+            }
+
+            SSIDs = ConnectedSSIDs.ToArray();
+
+            // Log only if errors have occured
+            LoggingActions.LogTaskResult(Log, Tasks[0], EventLogEntryCodes.HostNameSettingsGetError);
+            LoggingActions.LogTaskResult(Log, Tasks[1], EventLogEntryCodes.WiFiCountrySettingGetError);
+            LoggingActions.LogTaskResult(Log, Tasks[2], EventLogEntryCodes.NICInterfacesGetError);
+            return this;
+        }
+
+        /// <summary>
+        /// Supports Legacy Bullseye (11)
+        /// </summary>
+        /// <returns></returns>
+        private NetworkProperties LegacyBullseye()
+        {
+            if (!Utils.Hardware.isRunningRaspberryPi) { return this; }
+
             Task<ProcessResult>[] Tasks = new Task<ProcessResult>[3];
 
             Tasks[0] = ProcessRunner.GetProcessResultAsync(c_CatCommand, "/etc/hostname");
@@ -44,10 +130,10 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
 
             var eths = ReadResult.Properties.Where(nic => nic.Id.StartsWith("eth", StringComparison.OrdinalIgnoreCase)).ToArray();
 
-            foreach(var item in eths)
+            foreach (var item in eths)
             {
                 if (item.IPAddress == null) { item.IPAddress = string.Empty; }
-                if ( item.IP6Address == null){ item.IP6Address = string.Empty;}
+                if (item.IP6Address == null) { item.IP6Address = string.Empty; }
                 if (item.Routers == null) { item.Routers = new string[0]; }
                 if (item.DomainNameServers == null) { item.DomainNameServers = new string[0]; }
             }
@@ -122,50 +208,52 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
         }
 
 
-        private bool HasSettingsChanged(NICProperties[] theCurrent, NICProperties[] theNew)
+        private NICProperties[] HasSettingsChanged(NICProperties[] theCurrent, NICProperties[] theNew)
         {
-            if (theCurrent.Length != theNew.Length)
-            {
-                return true;
-            }
-            else if (!ContainsEqualNICIds(theCurrent.OrderBy(e => e.Id).ToArray(), theNew.OrderBy(e => e.Id).ToArray()))
-            {
-                return true;
-            }
-            else
-            {
-                NICProperties[] CurrentSettingsSorted = theCurrent.OrderBy(e => e.Id).ToArray();
-                NICProperties[] NewSettingsSorted = theNew.OrderBy(e => e.Id).ToArray();
+            var ListOfChangedNICs = new List<NICProperties>();
 
-                for (int i = 0; i < CurrentSettingsSorted.Length; i++)
+            foreach(var NewNICProperties in theNew)
+            {
+                var Search = theCurrent.FirstOrDefault(CurrentNICProperties => CurrentNICProperties.Id == NewNICProperties.Id);
+
+                if(Search == null)
                 {
-                    if (CurrentSettingsSorted[i].IPAddress != NewSettingsSorted[i].IPAddress)
+                    // Will this ever happen?
+                    ListOfChangedNICs.Add(NewNICProperties); // New NIC
+                }
+                else
+                {
+                    if (NewNICProperties.IPAddress != Search.IPAddress)
                     {
-                        if (string.IsNullOrEmpty(NewSettingsSorted[i].IPAddress)) { Log?.Invoke(EventLogEntryCodes.NICIP4DynamicChanging, new string[] { NewSettingsSorted[i].Id }); }
-                        else { Log?.Invoke(EventLogEntryCodes.NICIP4StaticChanging, new string[] { NewSettingsSorted[i].Id, NewSettingsSorted[i].IPAddress }); }
-                        return true;
+                        if (string.IsNullOrEmpty(NewNICProperties.IPAddress)) { Log?.Invoke(EventLogEntryCodes.NICIP4DynamicChanging, new string[] { NewNICProperties.Id }); }
+                        else { Log?.Invoke(EventLogEntryCodes.NICIP4StaticChanging, new string[] { NewNICProperties.Id, NewNICProperties.IPAddress }); }
+                        ListOfChangedNICs.Add(NewNICProperties);
+                        continue;
                     }
-                    else if (CurrentSettingsSorted[i].IP6Address != NewSettingsSorted[i].IP6Address)
+                    if (NewNICProperties.IP6Address != Search.IP6Address)
                     {
-                        if (string.IsNullOrEmpty(NewSettingsSorted[i].IP6Address)) { Log?.Invoke(EventLogEntryCodes.NICIP6DynamicChanging, new string[] { NewSettingsSorted[i].Id }); }
-                        else { Log?.Invoke(EventLogEntryCodes.NICIP6StaticChanging, new string[] { NewSettingsSorted[i].Id, NewSettingsSorted[i].IPAddress }); }
-                        return true;
+                        if (string.IsNullOrEmpty(NewNICProperties.IP6Address)) { Log?.Invoke(EventLogEntryCodes.NICIP6DynamicChanging, new string[] { NewNICProperties.Id }); }
+                        else { Log?.Invoke(EventLogEntryCodes.NICIP6StaticChanging, new string[] { NewNICProperties.Id, NewNICProperties.IPAddress }); }
+                        ListOfChangedNICs.Add(NewNICProperties);
+                        continue;
                     }
-                    if (!CurrentSettingsSorted[i].Routers.OrderBy(e => e).SequenceEqual(NewSettingsSorted[i].Routers.OrderBy(e => e)))
+                    if (!NewNICProperties.Routers.OrderBy(e => e).SequenceEqual(Search.Routers.OrderBy(e => e)))
                     {
-                        Log?.Invoke(EventLogEntryCodes.NICRoutersChanging, new string[] { NewSettingsSorted[i].Id, string.Join(" ", NewSettingsSorted[i].Routers) });
-                        return true;
+                        Log?.Invoke(EventLogEntryCodes.NICRoutersChanging, new string[] { NewNICProperties.Id, string.Join(" ", NewNICProperties.Routers) });
+                        ListOfChangedNICs.Add(NewNICProperties);
+                        continue;
                     }
 
-                    if (!CurrentSettingsSorted[i].DomainNameServers.OrderBy(e => e).SequenceEqual(NewSettingsSorted[i].DomainNameServers.OrderBy(e => e)))
+                    if (!NewNICProperties.DomainNameServers.OrderBy(e => e).SequenceEqual(Search.DomainNameServers.OrderBy(e => e)))
                     {
-                        Log?.Invoke(EventLogEntryCodes.NICDNSChanging, new string[] { NewSettingsSorted[i].Id, string.Join(" ", NewSettingsSorted[i].DomainNameServers) });
-                        return true;
+                        Log?.Invoke(EventLogEntryCodes.NICDNSChanging, new string[] { NewNICProperties.Id, string.Join(" ", NewNICProperties.DomainNameServers) });
+                        ListOfChangedNICs.Add(NewNICProperties);
+                        continue;
                     }
                 }
             }
 
-            return false;
+            return ListOfChangedNICs.ToArray();
         }
 
 
@@ -174,23 +262,29 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             List<Task<ProcessResult>> Tasks = new List<Task<ProcessResult>>();
             bool AskToRestart = false;
 
-            bool EthsChanges = false;
-            bool WlansChanges = false;
-
             NetworkProperties CurrentSettings = Core.Instance.Network.RepopulateAndGetProperties();
 
             if (theModel.Eths == null) { theModel.Eths = new NICProperties[0]; }
             if (theModel.Wlans == null) { theModel.Wlans = new NICProperties[0]; }
 
-            // TODO Lots of Duplicate Code
-            EthsChanges = HasSettingsChanged(CurrentSettings.Eths, theModel.Eths);
-            WlansChanges = HasSettingsChanged(CurrentSettings.Wlans, theModel.Wlans);
+            // 13/08/2026 Some of the flow doesn't make sense becasue it's a copy of the flow of a previous version/method. 
+            // It's kept as-is for future maintenance-understandings but needs (TODO) refactoring.
+            var EthsChanges = HasSettingsChanged(CurrentSettings.Eths, theModel.Eths);
+            var WlansChanges = HasSettingsChanged(CurrentSettings.Wlans, theModel.Wlans);
 
             Task<ProcessResult> IPAddressTask = null;
-            if (EthsChanges || WlansChanges)
+            if (EthsChanges.Any() || WlansChanges.Any())
             {
-                IPAddressTask = FlushNetworkSequence(EthsChanges, WlansChanges, theModel.Eths, theModel.Wlans);
-                Tasks.Add(IPAddressTask);
+                if (Utils.Hardware.isOSRaspbianBullseye)
+                {
+                    IPAddressTask = FlushNetworkSequence(theModel.Eths, theModel.Wlans);
+                    Tasks.Add(IPAddressTask);
+                }
+                else
+                {
+                    IPAddressTask = NetworkManager.UpdateDevices(EthsChanges, WlansChanges);
+                    Tasks.Add(IPAddressTask);
+                }
             }
 
             Task<ProcessResult> HostNameTask = null;
@@ -219,19 +313,6 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             LoggingActions.LogTaskResult(Log, IPAddressTask, EventLogEntryCodes.NICIPChangesComplete, EventLogEntryCodes.NICIPChangesError);
             LoggingActions.LogTaskResult(Log, HostNameTask, EventLogEntryCodes.HostNameChanged, EventLogEntryCodes.HostNameChangeError);
             LoggingActions.LogTaskResult(Log, SetWiFiSSIDPassphrase, EventLogEntryCodes.SSIDChanged, EventLogEntryCodes.SSIDChangeError);
-        }
-
-        private bool ContainsEqualNICIds(NICProperties[] theNICProperties1, NICProperties[] theNICProperties2)
-        {
-            for(int i = 0; i < theNICProperties1.Length; i++)
-            {
-                if(theNICProperties1[i].Id != theNICProperties2[i].Id)
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         internal bool DeleteWiFi(string id, string theWlanId, string ssid)
@@ -328,46 +409,41 @@ namespace MultiPlug.Ext.RasPi.Config.Components.Network
             });
         }
 
-        private Task<ProcessResult> FlushNetworkSequence( bool isAnyEthChanges, bool isAnyWlanChanges, NICProperties[] theEth, NICProperties[] theWlan)
+        private Task<ProcessResult> FlushNetworkSequence(NICProperties[] theEth, NICProperties[] theWlan)
         {
             return Task.Run(async () =>
             {
                 await DHCPCD.UpdateResultAsync(theEth.Concat( theWlan ).ToArray());
                 await ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "daemon-reload");
                 await ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "stop dhcpcd.service");
-                if (isAnyEthChanges)
-                {
-                    foreach(var Eth in theEth)
-                    {
-                        InterfacesD.Write(Eth);
-                    }
 
-                    foreach (var Eth in theEth)
-                    {
-                        await ProcessRunner.GetProcessResultAsync(c_IPCommand, "addr flush dev " + Eth.Id);
-                    }
-                }
-                if (isAnyWlanChanges)
+                foreach(var Eth in theEth)
                 {
-                    foreach (var Wlan in theWlan)
-                    {
-                        InterfacesD.Write(Wlan);
-                    }
-
-                    foreach (var Wlan in theWlan)
-                    {
-                        await ProcessRunner.GetProcessResultAsync(c_IPCommand, "addr flush dev " + Wlan.Id);
-                    }
+                    InterfacesD.Write(Eth);
                 }
+
+                foreach (var Eth in theEth)
+                {
+                    await ProcessRunner.GetProcessResultAsync(c_IPCommand, "addr flush dev " + Eth.Id);
+                }
+
+
+                foreach (var Wlan in theWlan)
+                {
+                    InterfacesD.Write(Wlan);
+                }
+
+                foreach (var Wlan in theWlan)
+                {
+                    await ProcessRunner.GetProcessResultAsync(c_IPCommand, "addr flush dev " + Wlan.Id);
+                }
+
                 await ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "start dhcpcd.service");
                 await ProcessRunner.GetProcessResultAsync(c_SystemCtlCommand, "restart networking.service");
 
-                if (isAnyWlanChanges)
+                foreach (var Wlan in theWlan)
                 {
-                    foreach (var Wlan in theWlan)
-                    {
-                        await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + Wlan.Id + " reconfigure");
-                    }
+                    await ProcessRunner.GetProcessResultAsync(c_WPACliCommand, "-i " + Wlan.Id + " reconfigure");
                 }
 
                 foreach (var Eth in theEth)
