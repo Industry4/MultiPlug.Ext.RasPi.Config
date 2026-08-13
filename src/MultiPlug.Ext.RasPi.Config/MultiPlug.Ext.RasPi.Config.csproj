@@ -64,6 +64,7 @@
     <Compile Include="Components\Network\IFCONFIG.cs" />
     <Compile Include="Components\Network\InterfacesD.cs" />
     <Compile Include="Components\Network\NetworkComponent.cs" />
+    <Compile Include="Components\Network\NetworkManager.cs" />
     <Compile Include="Components\Network\WPASupplicant.cs" />
     <Compile Include="Components\Performance\PerformanceComponent.cs" />
     <Compile Include="Controllers\API\APIEndpoint.cs" />

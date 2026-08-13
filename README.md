@@ -9,7 +9,7 @@ The functionality mirrors most of the functionality found in the command line to
 * General overview - Raspberry Pi Model - OS Version, Hostname, Date and Time, Temperature, Disk Space and Linux Journal.
 * Network - Hostname, static values for IP Address, IP 6 Address, Routers and Domain Name Servers for all Eth and Wlan, Wireless SSID and Passphrase.
 * Localisation - Wifi Country, Time, Time Zone, Date and NTP Servers
-* Interfacing - Camera, SSH, VNC, SPI, I2C, Serial, 1-Wire, Remote GPIO
+* Interfacing - Camera, SSH, VNC, SPI, I2C, Serial, 1-Wire
 * Performance - Temperature control via Fan and Current Throttled State and History
 * Boot - Desktop or CLI, Boot Order, Boot BOM Version
 * Memory - Current Disk, RAM usage and Expand Root File System

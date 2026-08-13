@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>MultiPlug.Ext.RasPi.Config</id>
-    <version>1.0.19</version>
+    <version>1.0.20</version>
     <title>Raspberry Pi Configuration Extension for MultiPlug</title>
     <authors>4IR.UK</authors>
     <owners>4IR.UK</owners>
@@ -13,6 +13,9 @@
     <repository type="git" url="https://github.com/Industry4/MultiPlug.Ext.RasPi.Config" />
     <license type="expression">MIT</license>
     <releaseNotes>Run this extension only on a Raspberry Pi using the .Net Mono runtime.
+1.0.20 Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/22
+Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/21
+Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/20
 1.0.19 Bug: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/19
 1.0.18 Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/18
 Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/17
@@ -43,7 +46,7 @@ Enhancement: https://github.com/Industry4/MultiPlug.Ext.RasPi.Config/issues/1
 1.0.2 Bug: Changed encoder value to UTF-8
 1.0.1 Enhancement: Raspberry Pi IP Address Configuration
 1.0.0 Nuget name reserve.</releaseNotes>
-    <copyright>4IR.UK British Systems 2025</copyright>
+    <copyright>4IR.UK British Systems 2026</copyright>
     <tags>MultiPlug Edge_Computing Raspberry Pi Raspberry_Pi IoT</tags>
     <dependencies>
       <group targetFramework=".NETFramework4.7.2">
